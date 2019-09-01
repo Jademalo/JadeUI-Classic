@@ -1,0 +1,19 @@
+UIPARENT_MANAGED_FRAME_POSITIONS = {};
+-- Frames
+UIPARENT_MANAGED_FRAME_POSITIONS["MultiBarBottomLeft"] = {baseY = 17, reputation = 9, maxLevel = -5, anchorTo = "ActionButton1", point = "BOTTOMLEFT", rpoint = "TOPLEFT"};
+UIPARENT_MANAGED_FRAME_POSITIONS["GroupLootFrame1"] = {baseY = 60, bottomEither = 42, pet = 42, reputation = 9};
+UIPARENT_MANAGED_FRAME_POSITIONS["TutorialFrameParent"] = {baseY = 55, bottomEither = 47, pet = 42, reputation = 9};
+UIPARENT_MANAGED_FRAME_POSITIONS["FramerateLabel"] = {baseY = 64, bottomEither = 42, pet = 42, reputation = 9};
+UIPARENT_MANAGED_FRAME_POSITIONS["CastingBarFrame"] = {baseY = 60, bottomEither = 40, pet = 40, reputation = 9};
+UIPARENT_MANAGED_FRAME_POSITIONS["ChatFrame1"] = {baseY = 85, bottomLeft = 17, pet = 17, reputation = 9, maxLevel = -5, anchorTo = "UIParent", point = "BOTTOMLEFT", rpoint = "BOTTOMLEFT", xOffset = 32};
+UIPARENT_MANAGED_FRAME_POSITIONS["ChatFrame2"] = {baseY = 85, bottomRight = 17, rightLeft = -88, rightRight = -43, reputation = 9, maxLevel = -5, anchorTo = "UIParent", point = "BOTTOMRIGHT", rpoint = "BOTTOMRIGHT", xOffset = -32};
+UIPARENT_MANAGED_FRAME_POSITIONS["ShapeshiftBarFrame"] = {baseY = 0, bottomLeft = 45, reputation = 9, maxLevel = -5, anchorTo = "MainMenuBar", point = "BOTTOMLEFT", rpoint = "TOPLEFT", xOffset = 30};
+
+-- Vars
+UIPARENT_MANAGED_FRAME_POSITIONS["CONTAINER_OFFSET_X"] = {baseX = 0, rightLeft = 90, rightRight = 45, isVar = "xAxis"};
+UIPARENT_MANAGED_FRAME_POSITIONS["CONTAINER_OFFSET_Y"] = {baseY = 70, bottomEither = 27, bottomRight = 0, reputation = 9, isVar = "yAxis", pet = 23};
+UIPARENT_MANAGED_FRAME_POSITIONS["BATTLEFIELD_TAB_OFFSET_Y"] = {baseY = 210, bottomRight = 40, reputation = 9, isVar = "yAxis"};
+UIPARENT_MANAGED_FRAME_POSITIONS["PETACTIONBAR_YPOS"] = {baseY = 97, bottomLeft = 43, reputation = 9, maxLevel = -5, isVar = "yAxis"};
+
+
+Try changing how some of this works to prevent things moving around. I think this is what's responsible for the top bar moving as well as the pet bar being weird
