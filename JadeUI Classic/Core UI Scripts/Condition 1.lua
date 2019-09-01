@@ -102,7 +102,7 @@ end
 function moveUnitFramesFunc()
     --Player Frame
     PlayerFrame:ClearAllPoints()
-    PlayerFrame:SetPoint("BOTTOMRIGHT", PlayerFrame:GetParent(), "BOTTOM", -163, 200)
+    PlayerFrame:SetPoint("BOTTOMRIGHT", PlayerFrame:GetParent(), "BOTTOM", - 163, 200)
     PlayerFrame.SetPoint = function()end
 
     --Target Frame
@@ -113,7 +113,7 @@ function moveUnitFramesFunc()
     if not isClassic then
         --Focus Frame
         FocusFrame:ClearAllPoints()
-        FocusFrame:SetPoint("BOTTOMLEFT", FocusFrame:GetParent(), "BOTTOM", -163, 250)
+        FocusFrame:SetPoint("BOTTOMLEFT", FocusFrame:GetParent(), "BOTTOM", - 163, 250)
         FocusFrame.SetPoint = function()end
     end
 end
@@ -127,7 +127,7 @@ function moveMinimapFunc()
 
     --Buff Bar
     BuffFrame:ClearAllPoints()
-    BuffFrame:SetPoint("TOPRIGHT", BuffFrame:GetParent(), "TOPRIGHT", -13, -13)
+    BuffFrame:SetPoint("TOPRIGHT", BuffFrame:GetParent(), "TOPRIGHT", - 13, - 13)
     BuffFrame.SetPoint = function()end
 end
 
@@ -137,10 +137,10 @@ function minimapScaleFunc()
         MinimapCluster:SetScale(minimapScale)
 
         if not moveMinimap then
-            local buffOffset = (MinimapCluster:GetWidth()*minimapScale) + 8
+            local buffOffset = (MinimapCluster:GetWidth() * minimapScale) + 8
 
             BuffFrame:ClearAllPoints()
-            BuffFrame:SetPoint("TOPRIGHT", BuffFrame:GetParent(), "TOPRIGHT", -buffOffset, -13)
+            BuffFrame:SetPoint("TOPRIGHT", BuffFrame:GetParent(), "TOPRIGHT", - buffOffset, - 13)
             BuffFrame.SetPoint = function()end
         end
     end
@@ -165,7 +165,7 @@ end
 
 
 function moveFramerateLabel()
-    FramerateLabel:SetPoint("BOTTOM",FramerateLabel:GetParent(), "BOTTOM", 0, 200)
+    FramerateLabel:SetPoint("BOTTOM", FramerateLabel:GetParent(), "BOTTOM", 0, 200)
 end
 
 
@@ -173,7 +173,7 @@ function moveBlizzXPBar()
     --Exp Bar
     MainMenuExpBar:ClearAllPoints()
     MainMenuExpBar:SetParent(jadeUI)
-    MainMenuExpBar:SetPoint("BOTTOM", xpCover, "BOTTOM", 0, -3)
+    MainMenuExpBar:SetPoint("BOTTOM", xpCover, "BOTTOM", 0, - 3)
     MainMenuExpBar:SetWidth(586)
     MainMenuExpBar:SetFrameStrata("BACKGROUND")
 
@@ -203,7 +203,7 @@ end
 
 function moveBagBar()
     --Bag Bar
-    CharacterMicroButton:SetPoint("BOTTOMLEFT", mainBar, "BOTTOM", -285, 2)
+    CharacterMicroButton:SetPoint("BOTTOMLEFT", mainBar, "BOTTOM", - 285, 2)
     MainMenuBarBackpackButton:SetParent(buttonParent)
     MainMenuBarBackpackButton:SetPoint("BOTTOMRIGHT", mainBar, "BOTTOM", 293, 2)
 
@@ -218,9 +218,9 @@ function moveActionBars()
     ActionButton1:ClearAllPoints()
     for i = 1, 12 do
         _G["ActionButton" .. i]:SetParent(buttonParent)
-        _G["ActionButton" .. i]:SetFrameLevel(topBar:GetFrameLevel()+1)
+        _G["ActionButton" .. i]:SetFrameLevel(topBar:GetFrameLevel() + 1)
     end
-    ActionButton1:SetPoint("LEFT", topBar, "LEFT", 111, -63)
+    ActionButton1:SetPoint("LEFT", topBar, "LEFT", 111, - 63)
 
     --Bottom Left Action Bar
     local _, multiRel = MultiBarBottomLeft:GetPoint()
@@ -232,11 +232,11 @@ function moveActionBars()
     --Bottom Right Action Bar
     MultiBarBottomRight:ClearAllPoints()
     MultiBarBottomRight:SetParent(buttonParent)
-    MultiBarBottomRight:SetPoint("TOPLEFT", multiRel, "BOTTOMLEFT", 42, -5)
+    MultiBarBottomRight:SetPoint("TOPLEFT", multiRel, "BOTTOMLEFT", 42, - 5)
 
     --Bottom Right Action Bar Second Row
     MultiBarBottomRightButton7:ClearAllPoints()
-    MultiBarBottomRightButton7:SetPoint("TOPLEFT", MultiBarBottomRightButton1, "BOTTOMLEFT", 0, -5)
+    MultiBarBottomRightButton7:SetPoint("TOPLEFT", MultiBarBottomRightButton1, "BOTTOMLEFT", 0, - 5)
 
 end
 
@@ -244,7 +244,7 @@ end
 function moveStanceBar()
     StanceBarFrame:ClearAllPoints()
     StanceBarFrame:SetParent(buttonParent)
-    StanceBarFrame:SetPoint("BOTTOMLEFT", topBar, "TOPLEFT", 162, -120)
+    StanceBarFrame:SetPoint("BOTTOMLEFT", topBar, "TOPLEFT", 162, - 120)
     --StanceBarFrame.SetPoint = function()end
 end
 
@@ -253,7 +253,7 @@ function movePetBar()
     PetActionBarFrame:ClearAllPoints()
     PetActionBarFrame:SetParent(buttonParent)
     PetActionBarFrame:SetScale(0.7)
-    PetActionBarFrame:SetPoint("BOTTOMLEFT", topBar, "TOPLEFT", 144, -171)
+    PetActionBarFrame:SetPoint("BOTTOMLEFT", topBar, "TOPLEFT", 144, - 171)
     --PetActionBarFrame.SetPoint = function()end
 end
 

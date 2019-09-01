@@ -1,3 +1,4 @@
+--Trigger 1
 UPDATE_FACTION
 
 function()
@@ -31,5 +32,15 @@ function()
 
         return barValue, barMax, true
 
+    end
+end
+
+
+--Trigger 2
+UPDATE_FACTION
+
+function(event, arg1, arg2, ...)
+    if event == "UPDATE_FACTION" then
+        return true
     end
 end

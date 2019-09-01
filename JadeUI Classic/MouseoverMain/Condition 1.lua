@@ -17,11 +17,11 @@ if not blizzXPBar then
 
         setFramesMain("MEDIUM")
 
-        if xpText.subRegions[1] then
-            xpText.subRegions[1]:Show()
+        if xpText.subRegions[3] then
+            xpText.subRegions[3]:Show()
         end
-        if repText.subRegions[1] then
-            repText.subRegions[1]:Show()
+        if repText.subRegions[3] then
+            repText.subRegions[3]:Show()
         end
 
     end)
@@ -30,11 +30,11 @@ if not blizzXPBar then
 
         setFramesMain("BACKGROUND")
 
-        if xpText.subRegions[1] then
-            xpText.subRegions[1]:Hide()
+        if xpText.subRegions[3] then
+            xpText.subRegions[3]:Hide()
         end
-        if repText.subRegions[1] then
-            repText.subRegions[1]:Hide()
+        if repText.subRegions[3] then
+            repText.subRegions[3]:Hide()
         end
 
     end)

@@ -15,8 +15,8 @@ if not blizzXPBar then
         setFramesMain("MEDIUM")
         setFramesSmall("MEDIUM")
 
-        if repTextSmall.subRegions[1] then
-            repTextSmall.subRegions[1]:Show()
+        if repTextSmall.subRegions[3] then
+            repTextSmall.subRegions[3]:Show()
         end
 
     end)
@@ -26,8 +26,8 @@ if not blizzXPBar then
         setFramesMain("BACKGROUND")
         setFramesSmall("BACKGROUND")
 
-        if repTextSmall.subRegions[1] then
-            repTextSmall.subRegions[1]:Hide()
+        if repTextSmall.subRegions[3] then
+            repTextSmall.subRegions[3]:Hide()
         end
 
     end)
