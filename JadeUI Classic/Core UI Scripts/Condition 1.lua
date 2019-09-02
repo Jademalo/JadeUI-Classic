@@ -150,7 +150,7 @@ end
 function moveCastingBar()
     --Casting Bar
     CastingBarFrame:ClearAllPoints()
-    CastingBarFrame:SetPoint("BOTTOM", CastingBarFrame:GetParent(), "BOTTOM", 0, 230)
+    CastingBarFrame:SetPoint("BOTTOM", CastingBarFrame:GetParent(), "BOTTOM", 0, 248)
     CastingBarFrame.SetPoint = function()end
 end
 
@@ -158,7 +158,7 @@ end
 function moveTutorialFrame()
     --Tutorial Frame
     TutorialFrameParent:ClearAllPoints()
-    TutorialFrameParent:SetPoint("BOTTOM", TutorialFrameParent:GetParent(), "BOTTOM", 0, 230)
+    TutorialFrameParent:SetPoint("BOTTOM", TutorialFrameParent:GetParent(), "BOTTOM", 0, 300)
     TutorialFrameParent.SetPoint = function()end
 end
 
@@ -166,21 +166,6 @@ end
 
 function moveFramerateLabel()
     FramerateLabel:SetPoint("BOTTOM", FramerateLabel:GetParent(), "BOTTOM", - 190, 85)
-end
-
-
-function moveBlizzXPBar()
-    --Exp Bar
-    MainMenuExpBar:ClearAllPoints()
-    MainMenuExpBar:SetParent(jadeUI)
-    MainMenuExpBar:SetPoint("BOTTOM", xpCover, "BOTTOM", 0, - 3)
-    MainMenuExpBar:SetWidth(586)
-    MainMenuExpBar:SetFrameStrata("BACKGROUND")
-
-    MainMenuXPBarTexture0:Hide()
-    MainMenuXPBarTexture1:Hide()
-    MainMenuXPBarTexture2:Hide()
-    MainMenuXPBarTexture3:Hide()
 end
 
 
@@ -264,10 +249,25 @@ function moveActionBars()
 end
 
 
+function moveBlizzXPBar()
+    --Exp Bar
+    MainMenuExpBar:ClearAllPoints()
+    MainMenuExpBar:SetParent(jadeUI)
+    MainMenuExpBar:SetPoint("BOTTOM", xpCover, "BOTTOM", 0, - 3)
+    MainMenuExpBar:SetWidth(586)
+    MainMenuExpBar:SetFrameStrata("BACKGROUND")
+
+    MainMenuXPBarTexture0:Hide()
+    MainMenuXPBarTexture1:Hide()
+    MainMenuXPBarTexture2:Hide()
+    MainMenuXPBarTexture3:Hide()
+end
+
+
 function moveStanceBar()
     StanceBarFrame:ClearAllPoints()
     StanceBarFrame:SetParent(buttonParent)
-    StanceBarFrame:SetPoint("BOTTOMLEFT", topBar, "TOPLEFT", 162, - 120)
+    StanceBarFrame:SetPoint("BOTTOMLEFT", topBar, "TOPLEFT", 133, - 120)
     --StanceBarFrame.SetPoint = function()end
 end
 
