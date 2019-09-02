@@ -11,5 +11,5 @@
 [] Finish trying to implement the blizzard XP and rep bars
 [x] Maybe try to make sure that all of the bartender buttons align perfectly with the default UI buttons. pet bar is slightly out I know.
 [] Fix the weird issues that happen with stances and action bar paging
-[]
-[]
+[] Figure out how and why the pet bar sometimes just moves away randomly, and if there's any way to fix that
+[x] Figure out why after dragging a button, all of the buttons come back

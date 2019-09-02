@@ -1,4 +1,4 @@
---If anything about the pet bar or faction changes, force the pet bar back into position
+--If the actionbars are shown eg when dragging a spell, hide the extra buttons
 if not IsAddOnLoaded("Bartender4") then
-    movePetBar()
+    hideButtons()
 end
