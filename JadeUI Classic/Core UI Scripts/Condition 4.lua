@@ -1,8 +1,4 @@
+--If anything about the pet bar or faction changes, force the pet bar back into position
 if not IsAddOnLoaded("Bartender4") then
-    if isClassic then
-        C_Timer.After(0.1, function()
-            movePetBar()
-            moveActionBars()
-        end)
-    end
+    movePetBar()
 end

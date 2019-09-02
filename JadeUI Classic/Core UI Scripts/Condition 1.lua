@@ -188,6 +188,27 @@ end
 --------------------------------------------
 --Functions to move Blizzard Action Bars
 --------------------------------------------
+function preventActionBarMovement()
+    UIPARENT_MANAGED_FRAME_POSITIONS["MainMenuBar"] = nil
+    UIPARENT_MANAGED_FRAME_POSITIONS["StanceBarFrame"] = nil
+    UIPARENT_MANAGED_FRAME_POSITIONS["PossessBarFrame"] = nil
+    UIPARENT_MANAGED_FRAME_POSITIONS["MultiCastActionBarFrame"] = nil
+    UIPARENT_MANAGED_FRAME_POSITIONS["PETACTIONBAR_YPOS"] = nil
+    UIPARENT_MANAGED_FRAME_POSITIONS["MultiBarBottomLeft"] = nil
+    UIPARENT_MANAGED_FRAME_POSITIONS["TutorialFrameParent"] = nil
+    UIPARENT_MANAGED_FRAME_POSITIONS["FramerateLabel"] = nil
+    UIPARENT_MANAGED_FRAME_POSITIONS["CastingBarFrame"] = nil
+    UIPARENT_MANAGED_FRAME_POSITIONS["ExtraActionBarFrame"] = nil
+
+    MainMenuBar:EnableMouse(false)
+    MainMenuBar:UnregisterEvent("DISPLAY_SIZE_CHANGED")
+    MainMenuBar:UnregisterEvent("UI_SCALE_CHANGED")
+
+    local animations = {MainMenuBar.slideOut:GetAnimations()}
+    animations[1]:SetOffset(0, 0)
+end
+
+
 function moveMicroMenu()
     --Micro Menu
     CharacterMicroButton:SetParent(buttonParent)
@@ -272,4 +293,66 @@ function hideButtons()
     MultiBarBottomRightButton7:Hide()
     MultiBarBottomRightButton11:Hide()
     MultiBarBottomRightButton12:Hide()
+end
+
+
+
+--------------------------------------------
+--Core functions to apply changes
+--------------------------------------------
+--Move various Blizzard frames
+function blizzUIMove()
+    if moveUnitFrames then
+        moveUnitFramesFunc()
+    end
+
+    if moveMinimap then
+        moveMinimapFunc()
+    end
+
+    if isClassic then
+        moveTutorialFrame()
+    end
+
+    minimapScaleFunc()
+    moveCastingBar()
+    moveFramerateLabel()
+end
+
+
+--Move Blizzard Bars
+function blizzBarMove()
+    --Move Bars
+    moveMicroMenu()
+    moveBagBar()
+    moveActionBars()
+    hideButtons()
+
+    if blizzXPBar then
+        moveBlizzXPBar()
+    end
+
+    local forms = GetNumShapeshiftForms()
+    if forms > 0 then
+        moveStanceBar()
+    end
+    if UnitExists("pet") then
+        movePetBar()
+    end
+
+    --Other Variables
+    if stanceBarHide then
+        StanceBarFrame:Hide()
+    end
+end
+
+
+--Fix Bartender so the two bottom buttons go below the menu/bag
+function bartenderFix()
+    BT4Button54:SetFrameLevel(1)
+    BT4Button58:SetFrameLevel(1)
+
+    if stanceBarHide then
+        BT4BarStanceBar:Hide()
+    end
 end

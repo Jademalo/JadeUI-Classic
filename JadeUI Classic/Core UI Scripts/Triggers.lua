@@ -31,7 +31,7 @@ end
 
 
 --Trigger 4
-PET_BAR_UPDATE
+PET_BAR_UPDATE, UPDATE_FACTION
 
 function()
     return true
