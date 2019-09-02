@@ -97,7 +97,7 @@ end
 
 
 --------------------------------------------
---Functions to move Blizzard Frames
+--Functions to move basic Blizzard Frames
 --------------------------------------------
 function moveUnitFramesFunc()
     --Player Frame
@@ -183,8 +183,10 @@ function moveBlizzXPBar()
     MainMenuXPBarTexture3:Hide()
 end
 
+
+
 --------------------------------------------
---Move Blizzard Action Bars
+--Functions to move Blizzard Action Bars
 --------------------------------------------
 function moveMicroMenu()
     --Micro Menu
