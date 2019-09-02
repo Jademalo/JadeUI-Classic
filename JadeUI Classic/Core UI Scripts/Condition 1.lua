@@ -165,7 +165,7 @@ end
 
 
 function moveFramerateLabel()
-    FramerateLabel:SetPoint("BOTTOM", FramerateLabel:GetParent(), "BOTTOM", 0, 200)
+    FramerateLabel:SetPoint("BOTTOM", FramerateLabel:GetParent(), "BOTTOM", - 190, 85)
 end
 
 

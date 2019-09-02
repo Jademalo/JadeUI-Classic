@@ -8,3 +8,8 @@
 [] move fps up 100 pixels
 [] Try to remove the different things in UIPARENT offsets
 [] maybe change it so that I move the menu bar and hide the different elements, rather than changing the parent of everything
+[] Finish trying to implement the blizzard XP and rep bars
+[] Maybe try to make sure that all of the bartender buttons align perfectly with the default UI buttons. pet bar is slightly out I know.
+[]
+[]
+[]
