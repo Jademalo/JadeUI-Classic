@@ -1,15 +1,15 @@
 [] Work out the correct clipping of the top of the XP bar / bottom of the rep bar
-[] Work out the correct text size for the mini rep bar
+[x] Work out the correct text size for the mini rep bar
 [] Implement something to work out if the keyring is available or not, rather than having a filler toggle. Maybe bartender button?
-[] Fix Pet Bar and Stance Bar half pixel offset in bartender possibly
+[x] Fix Pet Bar and Stance Bar half pixel offset in bartender possibly
 [] Find a way to remove hotkey text from the actionbars
-[] Move cast bar up 22 pixels
-[] Move tutorial frames up 100 pixels
-[] move fps up 100 pixels
-[] Try to remove the different things in UIPARENT offsets
+[x] Move cast bar up 22 pixels
+[x] Move tutorial frames up 100 pixels
+[x] move fps up 100 pixels
+[x] Try to remove the different things in UIPARENT offsets
 [] maybe change it so that I move the menu bar and hide the different elements, rather than changing the parent of everything
 [] Finish trying to implement the blizzard XP and rep bars
-[] Maybe try to make sure that all of the bartender buttons align perfectly with the default UI buttons. pet bar is slightly out I know.
-[]
+[x] Maybe try to make sure that all of the bartender buttons align perfectly with the default UI buttons. pet bar is slightly out I know.
+[] Fix the weird issues that happen with stances and action bar paging
 []
 []
