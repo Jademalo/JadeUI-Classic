@@ -1,0 +1,10 @@
+package-as: Classic-G13
+
+ignore:
+    - .travis.yml
+    - README.md
+    - Media/Base Documents
+    - WeakAura
+
+move-folders:
+    JadeUI-Classic/Standalone: JadeUI-Classic

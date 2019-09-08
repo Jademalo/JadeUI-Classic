@@ -1,0 +1,22 @@
+#@retail@
+## Interface: 80200
+#@end-retail@
+#@non-retail@
+# ## Interface: 11302
+#@end-non-retail@
+
+## Title: JadeUI Classic
+## Notes: A Redesigned Blizzard interface for use with a Logitech G13
+
+## Version: @project-version@
+
+## Author: Jademalo
+
+## OptionalDeps: Bartender4
+
+
+## Core ##
+JadeUI-Classic.lua
+BlizzHide.lua
+ArtFrame.lua
+XPBar.lua
