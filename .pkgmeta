@@ -8,3 +8,4 @@ ignore:
 
 move-folders:
     JadeUI-Classic/Standalone: JadeUI-Classic
+    JadeUI-Classic/Media/background/G13Classic: JadeUI-Classic/Media
