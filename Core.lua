@@ -1,14 +1,13 @@
 --------------------------------------------
---Check for project type
---------------------------------------------
-local isVanilla = (LE_EXPANSION_LEVEL_CURRENT == LE_EXPANSION_CLASSIC)
-local isTBC = (LE_EXPANSION_LEVEL_CURRENT == LE_EXPANSION_BURNING_CRUSADE)
-local isWrath = (LE_EXPANSION_LEVEL_CURRENT == LE_EXPANSION_NORTHREND)
-
---------------------------------------------
 --Variables
 --------------------------------------------
 local addonName, JadeUI = ... --Discard the addon name and set the namespace table as a variable
+
+--Check for project type
+JadeUI.isVanilla = (LE_EXPANSION_LEVEL_CURRENT == LE_EXPANSION_CLASSIC)
+JadeUI.isTBC = (LE_EXPANSION_LEVEL_CURRENT == LE_EXPANSION_BURNING_CRUSADE)
+JadeUI.isWrath = (LE_EXPANSION_LEVEL_CURRENT == LE_EXPANSION_NORTHREND)
+
 JadeUIBar = CreateFrame("Frame", "JadeUI Main Frame", UIParent)
 
 --------------------------------------------------------------------------------
@@ -16,7 +15,7 @@ JadeUIBar = CreateFrame("Frame", "JadeUI Main Frame", UIParent)
 --------------------------------------------------------------------------------
 local function startupPrint() --Startup message
     print ("~JadeUI~")
-    if isVanilla or isTBC or isWrath then
+    if JadeUI.isVanilla or JadeUI.isTBC or JadeUI.isWrath then
         print("Classic WoW Detected")
     end
 end
@@ -43,16 +42,29 @@ JadeUIBar:SetScript("OnEvent", function(self, event, arg1, arg2)
         JadeUIDB.moveUnitFrames = (JadeUIDB.moveUnitFrames or 0)
         JadeUIDB.stanceBarHide = (JadeUIDB.stanceBarHide or 0)
         JadeUIDB.keyCover = (JadeUIDB.keyCover or 0)
+        startupPrint()
     end
 
     if event == "PLAYER_ENTERING_WORLD" then
         JadeUIBar:SetFrameStrata("BACKGROUND")
         JadeUIBar:SetSize(745, 210)
         JadeUIBar:SetPoint("BOTTOM", UIParent, "BOTTOM")
-        JadeUI.createArtFrame()
-        MainMenuBar:Hide()
+        JadeUI.createArtFrame() --Create the main art frame for the bars
         --local width,height = GetPhysicalScreenSize()
         --UIParent:SetScale((768/height)*2)
+
+        --Move various Blizzard frames
+        JadeUI.blizzUIMove()
+        MainMenuBar:Hide() --Hide Blizzard Main Bars
+
+--[[         --Move Blizzard Bars if not using Bartender
+        if not C_AddOns.IsAddOnLoaded("Bartender4") then
+            JadeUI.preventActionBarMovement() --Disable Blizzard dynamic UI positioning
+            JadeUI.blizzBarMove() --Move the Blizzard Action Bars
+            MainMenuBar:Hide() --Hide Blizzard Main Bar
+        else
+            JadeUI.bartenderFix() --Fix some issues with Bartender
+        end ]]
     end
 
 end)
