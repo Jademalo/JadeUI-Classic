@@ -1,1 +1,0 @@
-local JadeUI = juicTable

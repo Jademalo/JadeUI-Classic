@@ -16,6 +16,6 @@
 
 ## Core ##
 Core.lua
-BlizzHide.lua
+BlizzUI.lua
 ArtFrame.lua
 XPBar.lua
