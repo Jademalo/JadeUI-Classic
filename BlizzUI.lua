@@ -168,7 +168,7 @@ local function moveBlizzXPBar()
     --Exp Bar
     MainMenuExpBar:ClearAllPoints()
     MainMenuExpBar:SetParent(JadeUIBar)
-    MainMenuExpBar:SetPoint("BOTTOM", JadeUI.g13MaxCover, "BOTTOM", 0, - 3)
+    MainMenuExpBar:SetPoint("BOTTOM", JadeUI.g13XPBar, "BOTTOM", 0, - 3)
     MainMenuExpBar:SetWidth(586)
     MainMenuExpBar:SetFrameStrata("BACKGROUND")
 
