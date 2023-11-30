@@ -62,6 +62,39 @@ optionsPanel:SetScript("OnEvent", function(self, event, arg1, arg2)
         print(JadeUIDB.showTalents)
 
 
+        local dropDown = CreateFrame("Frame", "Endstop Menu", optionsPanel, "UIDropDownMenuTemplate")
+        dropDown:SetPoint("TOPLEFT", 20, -80)
+        UIDropDownMenu_SetWidth(dropDown, 200) -- Use in place of dropDown:SetWidth
+        -- Bind an initializer function to the dropdown; see previous sections for initializer function examples.
+
+
+        local function EndstopHandler()
+            if arg1 == 0 then
+                JadeUI.rightEndstop:Hide()
+                JadeUI.leftEndstop:Hide()
+            elseif arg1 == 1 then
+                JadeUI.rightEndstop:SetTexture(JadeUI.endstopDwarfTexture)
+                JadeUI.rightEndstop:Show()
+                JadeUI.leftEndstop:Show()
+            elseif arg1 == 2 then
+                JadeUI.rightEndstop:SetTexture(JadeUI.endstopHumanTexture)
+                JadeUI.rightEndstop:Show()
+                JadeUI.leftEndstop:Show()
+            end
+        end
+
+        UIDropDownMenu_Initialize(dropDown, function(frame, level, menuList)
+            local info = UIDropDownMenu_CreateInfo()
+
+            info.func = EndstopHandler() --This is called whenever an option is clicked, we're setting it to a separate handler function that's the same for all 3
+            info.text, info.arg1 = "None", 0
+            UIDropDownMenu_AddButton(info)
+            info.text, info.arg1 = "Gryphon", 1
+            UIDropDownMenu_AddButton(info)
+            info.text, info.arg1 = "Eagle", 2
+            UIDropDownMenu_AddButton(info)
+        end)
+
 
         InterfaceOptions_AddCategory(optionsPanel)  -- see InterfaceOptions API
     end

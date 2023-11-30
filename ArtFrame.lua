@@ -24,7 +24,8 @@ local g13XPBarTexture = "Interface/AddOns/JadeUI-Classic/Media/G13XPBar.tga"
 local petBarTexture = "Interface/AddOns/JadeUI-Classic/Media/PetBar.tga"
 --@end-non-debug@]===]
 
-local endstopTexture = "Interface/MAINMENUBAR/UI-MainMenuBar-EndCap-Dwarf"
+JadeUI.endstopDwarfTexture = "Interface/MAINMENUBAR/UI-MainMenuBar-EndCap-Dwarf"
+JadeUI.endstopHumanTexture = "Interface/MAINMENUBAR/UI-MainMenuBar-EndCap-Human"
 
 --------------------------------------------
 --Functions
@@ -43,12 +44,12 @@ function JadeUI.createArtFrame()
 
    JadeUI.leftEndstop = JadeUIBar:CreateTexture()
    JadeUI.leftEndstop:SetPoint("BOTTOMRIGHT", JadeUIBar, "BOTTOM", -268, 0)
-   JadeUI.leftEndstop:SetTexture(endstopTexture)
+   JadeUI.leftEndstop:SetTexture(JadeUI.endstopDwarfTexture)
    JadeUI.leftEndstop:SetDrawLayer("BACKGROUND", 1)
 
    JadeUI.rightEndstop = JadeUIBar:CreateTexture()
    JadeUI.rightEndstop:SetPoint("BOTTOMLEFT", JadeUIBar, "BOTTOM", 268, 0)
-   JadeUI.rightEndstop:SetTexture(endstopTexture)
+   JadeUI.rightEndstop:SetTexture(JadeUI.endstopDwarfTexture)
    JadeUI.rightEndstop:SetTexCoord(1, 0, 0, 1) --Mirror Texture
    JadeUI.rightEndstop:SetDrawLayer("BACKGROUND", 1)
 
