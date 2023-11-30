@@ -1,0 +1,45 @@
+name: Bump Version
+
+on: 
+  pull_request_target:
+    types:
+      - closed
+  workflow_dispatch:
+    inputs:
+      bumpLevel:
+        description: 'Version Type'
+        required: true
+        default: 'minor' 
+        type: choice
+        options:
+        - major
+        - minor
+        - patch 
+
+jobs:
+  tag_merge:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: '0'
+    - name: Bump version and push tag
+      id: tag_version
+      uses: mathieudutour/github-tag-action@v6.0
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        
+  tag_manual:
+    if: "${{ github.event.inputs.bumpLevel != '' }}"
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: '0'
+    - name: Bump version and push tag
+      id: tag_version
+      uses: mathieudutour/github-tag-action@v6.0
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        default_bump: ${{ inputs.bumpLevel }}

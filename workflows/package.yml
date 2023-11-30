@@ -1,0 +1,64 @@
+# description of this workflow, can be anything you want
+name: Package with Artifacts
+
+# we need to let GitHub know _when_ we want to release, typically only when we create a new tag.
+# this will target only tags, and not all pushes to the master branch.
+# this part can be heavily customized to your liking, like targeting only tags that match a certain word,
+# other branches or even pullrequests.
+
+# https://docs.github.com/en/free-pro-team@latest/actions/reference/events-that-trigger-workflows#example-using-multiple-events-with-activity-types-or-configuration
+# workflows don't show up in the action list until they have been run once.
+# if a push to a branch would trigger a workflow, it uses the workflow file in
+# the branch or tag that triggered it.
+# branches-ignore means that master won't trigger from it's own workflow.
+# multiple commits in a single push will only run once.
+
+on:
+  push:
+    branches-ignore:
+      - master
+    tags-ignore:
+      - v[0-9]+.[0-9]+*
+  workflow_dispatch:
+
+# a workflow is built up as jobs, and within these jobs are steps
+jobs:
+
+  # "package" is a job, you can name it anything you want
+  package:
+
+    # we can run our steps on pretty much anything, but the "ubuntu-latest" image is a safe bet
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # we first have to clone the AddOn project, this is a required step
+      - name: Clone Project
+        uses: actions/checkout@v1
+        with:
+          # you can specify how much of the commit history you want to fetch,
+          # which is useful for controlling the length of the automated changelog
+          fetch-depth: 50
+
+
+      # once cloned, we just run the GitHub Action for the packager project
+      - name: Package
+        uses: BigWigsMods/packager@v2
+        with:
+          args: -d
+
+      # add variables for the name of the folder being added as an artifact
+      - name: Set Name Variables
+        run: |
+          echo "version=$(git describe)" >> $GITHUB_ENV
+          cd .release
+          echo "folder_name=$(ls -d */ | sed 's:/*$::')" >> $GITHUB_ENV
+
+      # upload the artifact
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.folder_name }}-${{ env.version }}
+          path: |
+            .release/*/
+            !.release/*.zip
