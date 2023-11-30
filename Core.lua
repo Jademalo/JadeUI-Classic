@@ -42,6 +42,7 @@ JadeUIBar:SetScript("OnEvent", function(self, event, arg1, arg2)
         JadeUIDB.moveUnitFrames = (JadeUIDB.moveUnitFrames or 0)
         JadeUIDB.stanceBarHide = (JadeUIDB.stanceBarHide or 0)
         JadeUIDB.keyCover = (JadeUIDB.keyCover or 0)
+        JadeUIDB.showTalents = (JadeUIDB.showTalents or 0)
         startupPrint()
     end
 
@@ -62,6 +63,7 @@ JadeUIBar:SetScript("OnEvent", function(self, event, arg1, arg2)
             JadeUIButtonParent = CreateFrame("Frame", "JadeUI Button Parent", JadeUIBar)
             JadeUI.blizzBarMove() --Move the Blizzard Action Bars
             MainMenuBar:Hide() --Hide Blizzard Main Bar
+            microMenuHook()
         else
             JadeUI.bartenderFix() --Fix some issues with Bartender
         end

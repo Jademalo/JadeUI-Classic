@@ -11,6 +11,8 @@
 
 ## Author: @project-author@
 
+## SavedVariables: JadeUIDB
+
 ## OptionalDeps: Bartender4
 
 

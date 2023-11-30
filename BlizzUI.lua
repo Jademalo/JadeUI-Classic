@@ -82,18 +82,39 @@ end
 --Functions to move Blizzard Action Bars
 --------------------------------------------
 
-local function moveMicroMenu()
-    --Micro Menu
+function microMenuHook()
+    local spacing = 2
     CharacterMicroButton:SetParent(JadeUIButtonParent)
-    SpellbookMicroButton:SetParent(JadeUIButtonParent)
-    if TalentMicroButton then
-        TalentMicroButton:SetParent(JadeUIButtonParent)
+    CharacterMicroButton:SetPoint("BOTTOMLEFT", JadeUI.g13MainBar, "BOTTOM", - 288, 2)
+    TalentMicroButton:SetParent(JadeUIButtonParent)
+    if JadeUIDB.showTalents == true or (playerLevel >= SHOW_SPEC_LEVEL) then
+        spacing = -2.5
+        TalentMicroButton:Show()
+        TalentMicroButton:SetPoint("BOTTOMLEFT", SpellbookMicroButton, "BOTTOMRIGHT", spacing, 0)
+        QuestLogMicroButton:SetParent(JadeUIButtonParent)
+        QuestLogMicroButton:SetPoint("BOTTOMLEFT", TalentMicroButton, "BOTTOMRIGHT", spacing, 0)
+    else
+        QuestLogMicroButton:SetParent(JadeUIButtonParent)
+        QuestLogMicroButton:SetPoint("BOTTOMLEFT", SpellbookMicroButton, "BOTTOMRIGHT", spacing, 0)
     end
-    QuestLogMicroButton:SetParent(JadeUIButtonParent)
+    SpellbookMicroButton:SetParent(JadeUIButtonParent)
+    SpellbookMicroButton:SetPoint("BOTTOMLEFT", CharacterMicroButton, "BOTTOMRIGHT", spacing, 0)
     SocialsMicroButton:SetParent(JadeUIButtonParent)
+    SocialsMicroButton:SetPoint("BOTTOMLEFT", QuestLogMicroButton, "BOTTOMRIGHT", spacing, 0)
     WorldMapMicroButton:SetParent(JadeUIButtonParent)
+    WorldMapMicroButton:SetPoint("BOTTOMLEFT", SocialsMicroButton, "BOTTOMRIGHT", spacing, 0)
     MainMenuMicroButton:SetParent(JadeUIButtonParent)
+    MainMenuMicroButton:SetPoint("BOTTOMLEFT", WorldMapMicroButton, "BOTTOMRIGHT", spacing, 0)
     HelpMicroButton:SetParent(JadeUIButtonParent)
+    HelpMicroButton:SetPoint("BOTTOMLEFT", MainMenuMicroButton, "BOTTOMRIGHT", spacing, 0)
+end
+
+
+
+local function moveMicroMenu()
+
+    hooksecurefunc("UpdateMicroButtons", microMenuHook)
+
 end
 
 
