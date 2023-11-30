@@ -30,49 +30,49 @@ local endstopTexture = "Interface/MAINMENUBAR/UI-MainMenuBar-EndCap-Dwarf"
 --Functions
 --------------------------------------------
 function JadeUI.createArtFrame()
-    local g13MainBar = JadeUIBar:CreateTexture()
-    g13MainBar:SetPoint("BOTTOM", JadeUIBar, "BOTTOM")
-    g13MainBar:SetTexture(g13MainBarTexture)
-    g13MainBar:SetDrawLayer("BACKGROUND", 0)
+   JadeUI.g13MainBar = JadeUIBar:CreateTexture()
+   JadeUI.g13MainBar:SetPoint("BOTTOM", JadeUIBar, "BOTTOM")
+   JadeUI.g13MainBar:SetTexture(g13MainBarTexture)
+   JadeUI.g13MainBar:SetDrawLayer("BACKGROUND", 0)
 
-    local g13TopBar = JadeUIBar:CreateTexture()
-    g13TopBar:SetPoint("BOTTOM", JadeUIBar, "BOTTOM", 0, 43)
-    g13TopBar:SetTexture(g13TopBarTexture)
-    g13TopBar:SetDrawLayer("BACKGROUND", 0)
-
-
-    local leftEndstop = JadeUIBar:CreateTexture()
-    leftEndstop:SetPoint("BOTTOMRIGHT", JadeUIBar, "BOTTOM", -268, 0)
-    leftEndstop:SetTexture(endstopTexture)
-    leftEndstop:SetDrawLayer("BACKGROUND", 1)
-
-    local rightEndstop = JadeUIBar:CreateTexture()
-    rightEndstop:SetPoint("BOTTOMLEFT", JadeUIBar, "BOTTOM", 268, 0)
-    rightEndstop:SetTexture(endstopTexture)
-    rightEndstop:SetTexCoord(1, 0, 0, 1) --Mirror Texture
-    rightEndstop:SetDrawLayer("BACKGROUND", 1)
+   JadeUI.g13TopBar = JadeUIBar:CreateTexture()
+   JadeUI.g13TopBar:SetPoint("BOTTOM", JadeUIBar, "BOTTOM", 0, 43)
+   JadeUI.g13TopBar:SetTexture(g13TopBarTexture)
+   JadeUI.g13TopBar:SetDrawLayer("BACKGROUND", 0)
 
 
-    local g13XPBar = JadeUIBar:CreateTexture()
-    g13XPBar:SetPoint("BOTTOM", JadeUIBar, "BOTTOM", 0, 43)
-    g13XPBar:SetTexture(g13XPBarTexture)
-    g13XPBar:SetDrawLayer("BACKGROUND", -3)
+   JadeUI.leftEndstop = JadeUIBar:CreateTexture()
+   JadeUI.leftEndstop:SetPoint("BOTTOMRIGHT", JadeUIBar, "BOTTOM", -268, 0)
+   JadeUI.leftEndstop:SetTexture(endstopTexture)
+   JadeUI.leftEndstop:SetDrawLayer("BACKGROUND", 1)
 
-    local g13RepBar = JadeUIBar:CreateTexture()
-    g13RepBar:SetPoint("BOTTOM", JadeUIBar, "BOTTOM", 0, 51)
-    g13RepBar:SetTexture(g13RepBarTexture)
-    g13RepBar:SetDrawLayer("BACKGROUND", -2)
-
-    local g13MaxCover = JadeUIBar:CreateTexture()
-    g13MaxCover:SetPoint("BOTTOM", JadeUIBar, "BOTTOM", 0, 43)
-    g13MaxCover:SetTexture(g13MaxCoverTexture)
-    g13MaxCover:SetDrawLayer("BACKGROUND", -1)
+   JadeUI.rightEndstop = JadeUIBar:CreateTexture()
+   JadeUI.rightEndstop:SetPoint("BOTTOMLEFT", JadeUIBar, "BOTTOM", 268, 0)
+   JadeUI.rightEndstop:SetTexture(endstopTexture)
+   JadeUI.rightEndstop:SetTexCoord(1, 0, 0, 1) --Mirror Texture
+   JadeUI.rightEndstop:SetDrawLayer("BACKGROUND", 1)
 
 
-    local petBar = JadeUIBar:CreateTexture()
-    petBar:SetParent(PetActionBarFrame)
-    petBar:SetPoint("LEFT", PetActionBarFrame, "LEFT", 0, 8.5)
-    petBar:SetTexture(petBarTexture)
+   JadeUI.g13XPBar = JadeUIBar:CreateTexture()
+   JadeUI.g13XPBar:SetPoint("BOTTOM", JadeUIBar, "BOTTOM", 0, 43)
+   JadeUI.g13XPBar:SetTexture(g13XPBarTexture)
+   JadeUI.g13XPBar:SetDrawLayer("BACKGROUND", -3)
+
+   JadeUI.g13RepBar = JadeUIBar:CreateTexture()
+   JadeUI.g13RepBar:SetPoint("BOTTOM", JadeUIBar, "BOTTOM", 0, 51)
+   JadeUI.g13RepBar:SetTexture(g13RepBarTexture)
+   JadeUI.g13RepBar:SetDrawLayer("BACKGROUND", -2)
+
+   JadeUI.g13MaxCover = JadeUIBar:CreateTexture()
+   JadeUI.g13MaxCover:SetPoint("BOTTOM", JadeUIBar, "BOTTOM", 0, 43)
+   JadeUI.g13MaxCover:SetTexture(g13MaxCoverTexture)
+   JadeUI.g13MaxCover:SetDrawLayer("BACKGROUND", -1)
+
+
+   JadeUI.petBar = JadeUIBar:CreateTexture()
+   JadeUI.petBar:SetParent(PetActionBarFrame)
+   JadeUI.petBar:SetPoint("LEFT", PetActionBarFrame, "LEFT", 0, 8.5)
+   JadeUI.petBar:SetTexture(petBarTexture)
 
 
 

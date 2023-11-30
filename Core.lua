@@ -46,25 +46,25 @@ JadeUIBar:SetScript("OnEvent", function(self, event, arg1, arg2)
     end
 
     if event == "PLAYER_ENTERING_WORLD" then
-        JadeUIBar:SetFrameStrata("BACKGROUND")
+        JadeUIBar:SetFrameStrata("MEDIUM")
         JadeUIBar:SetSize(745, 210)
         JadeUIBar:SetPoint("BOTTOM", UIParent, "BOTTOM")
         JadeUI.createArtFrame() --Create the main art frame for the bars
-        --local width,height = GetPhysicalScreenSize()
-        --UIParent:SetScale((768/height)*2)
+        local width,height = GetPhysicalScreenSize()
+        UIParent:SetScale((768/height)*1)
 
         --Move various Blizzard frames
         JadeUI.blizzUIMove()
-        MainMenuBar:Hide() --Hide Blizzard Main Bars
 
---[[         --Move Blizzard Bars if not using Bartender
+        --Move Blizzard Bars if not using Bartender
         if not C_AddOns.IsAddOnLoaded("Bartender4") then
             JadeUI.preventActionBarMovement() --Disable Blizzard dynamic UI positioning
+            JadeUIButtonParent = CreateFrame("Frame", "JadeUI Button Parent", JadeUIBar)
             JadeUI.blizzBarMove() --Move the Blizzard Action Bars
             MainMenuBar:Hide() --Hide Blizzard Main Bar
         else
             JadeUI.bartenderFix() --Fix some issues with Bartender
-        end ]]
+        end
     end
 
 end)
