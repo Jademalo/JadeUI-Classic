@@ -87,7 +87,7 @@ function microMenuHook()
     CharacterMicroButton:SetParent(JadeUIButtonParent)
     CharacterMicroButton:SetPoint("BOTTOMLEFT", JadeUI.g13MainBar, "BOTTOM", - 288, 2)
     TalentMicroButton:SetParent(JadeUIButtonParent)
-    if JadeUIDB.showTalents == true or (playerLevel >= SHOW_SPEC_LEVEL) then
+    if JadeUIDB.showTalents == true or (UnitLevel("player") >= SHOW_SPEC_LEVEL) then
         spacing = -2.5
         TalentMicroButton:Show()
         TalentMicroButton:SetPoint("BOTTOMLEFT", SpellbookMicroButton, "BOTTOMRIGHT", spacing, 0)
@@ -114,19 +114,25 @@ end
 local function moveMicroMenu()
 
     hooksecurefunc("UpdateMicroButtons", microMenuHook)
+    microMenuHook()
 
 end
 
 
 local function moveBagBar()
     --Bag Bar
-    CharacterMicroButton:SetPoint("BOTTOMLEFT", JadeUI.g13MainBar, "BOTTOM", - 285, 2)
     MainMenuBarBackpackButton:SetParent(JadeUIButtonParent)
     MainMenuBarBackpackButton:SetPoint("BOTTOMRIGHT", JadeUI.g13MainBar, "BOTTOM", 293, 2)
+
+    if not GetCVarBool("showKeyring") then
+        SetCVar("showKeyring", 1)
+    end
+    KeyRingButton:SetParent(JadeUIButtonParent)
 
     for i = 0, 3 do
         _G["CharacterBag" .. i .. "Slot"]:SetParent(JadeUIButtonParent)
     end
+
 end
 
 
