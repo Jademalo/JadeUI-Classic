@@ -33,16 +33,6 @@ JadeUIBar:RegisterEvent("PLAYER_ENTERING_WORLD")
 JadeUIBar:SetScript("OnEvent", function(self, event, arg1, arg2)
 
     if event == "ADDON_LOADED" and arg1 == addonName then
-        JadeUIDB = JadeUIDB or {} --Create a table for saved variables
-        JadeUIDB.blizzXPBar = (JadeUIDB.blizzXPBar or 0)
-        JadeUIDB.endstopType = (JadeUIDB.endstopType or 0)
-        JadeUIDB.mouseover = (JadeUIDB.mouseover or 0)
-        JadeUIDB.moveMinimap = (JadeUIDB.moveMinimap or 0)
-        JadeUIDB.minimapScale = (JadeUIDB.minimapScale or 0)
-        JadeUIDB.moveUnitFrames = (JadeUIDB.moveUnitFrames or 0)
-        JadeUIDB.stanceBarHide = (JadeUIDB.stanceBarHide or 0)
-        JadeUIDB.keyCover = (JadeUIDB.keyCover or 0)
-        JadeUIDB.showTalents = (JadeUIDB.showTalents or 0)
         startupPrint()
     end
 

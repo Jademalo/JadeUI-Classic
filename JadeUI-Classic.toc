@@ -21,3 +21,4 @@ Core.lua
 BlizzUI.lua
 ArtFrame.lua
 XPBar.lua
+Options.lua
