@@ -29,6 +29,21 @@ optionsPanel:SetScript("OnEvent", function(self, event, arg1, arg2)
         local itemSpacingTop = -30
         local itemSpacing = -5
 
+        local function addTooltip(frame) --Adds tooltipText and tooltipRequirement to a frame
+            frame:SetScript("OnEnter", function(self)
+                if self.tooltipText then
+                    GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+                    GameTooltip:SetText(self.tooltipText, nil, nil, nil, nil, 1)
+                    GameTooltip:Show()
+                end
+                if self.tooltipRequirement then
+                    GameTooltip:AddLine(self.tooltipRequirement, 1.0, 1.0, 1.0, 1)
+                    GameTooltip:Show()
+                end
+            end )
+            frame:SetScript("OnLeave", function(self) GameTooltip:Hide() end)
+        end
+
         -- add widgets to the panel as desired
         local title = optionsPanel:CreateFontString("ARTWORK", nil, "GameFontNormalLarge")
         title:SetPoint("TOP")
@@ -36,7 +51,10 @@ optionsPanel:SetScript("OnEvent", function(self, event, arg1, arg2)
 
         local cb = CreateFrame("CheckButton", nil, optionsPanel, "InterfaceOptionsCheckButtonTemplate")
         cb:SetPoint("TOPLEFT", 20, itemSpacingTop)
-        cb.Text:SetText("Show talent button regardless of level")
+        local text = "Show Talent Button"
+        cb.Text:SetText(text)
+        cb.tooltipText = text --Yellow tooltip name
+        cb.tooltipRequirement = "This option will display the talent button in the Menu Bar regardless of player level" --White tooltip description
         -- there already is an existing OnClick script that plays a sound, hook it
         cb:HookScript("OnClick", function(_, btn, down)
             JadeUIDB.showTalents = cb:GetChecked()
@@ -47,7 +65,10 @@ optionsPanel:SetScript("OnEvent", function(self, event, arg1, arg2)
 
         local cb2 = CreateFrame("CheckButton", nil, optionsPanel, "InterfaceOptionsCheckButtonTemplate")
         cb2:SetPoint("TOPLEFT", cb, "BOTTOMLEFT", 0, itemSpacing)
-        cb2.Text:SetText("Move the Unitframes")
+        local text = "Move Unitframes"
+        cb2.Text:SetText(text)
+        cb2.tooltipText = text --Yellow tooltip name
+        cb2.tooltipRequirement = "Move the player unitframes down to the bottom centre of the screen\nReload required to disable" --White tooltip description
         -- there already is an existing OnClick script that plays a sound, hook it
         cb2:HookScript("OnClick", function(_, btn, down)
             JadeUIDB.moveUnitFrames = cb2:GetChecked()
@@ -61,7 +82,10 @@ optionsPanel:SetScript("OnEvent", function(self, event, arg1, arg2)
 
         local cb3 = CreateFrame("CheckButton", nil, optionsPanel, "InterfaceOptionsCheckButtonTemplate")
         cb3:SetPoint("TOPLEFT", cb2, "BOTTOMLEFT", 0, itemSpacing)
-        cb3.Text:SetText("Move the Minimap")
+        local text = "Move Minimap"
+        cb3.Text:SetText(text)
+        cb3.tooltipText = text --Yellow tooltip name
+        cb3.tooltipRequirement = "Move the Minimap down to the bottom right corner of the screen\nReload required to disable" --White tooltip description
         -- there already is an existing OnClick script that plays a sound, hook it
         cb3:HookScript("OnClick", function(_, btn, down)
             JadeUIDB.moveMinimap = cb3:GetChecked()
@@ -75,7 +99,10 @@ optionsPanel:SetScript("OnEvent", function(self, event, arg1, arg2)
 
         local cb4 = CreateFrame("CheckButton", nil, optionsPanel, "InterfaceOptionsCheckButtonTemplate")
         cb4:SetPoint("TOPLEFT", cb3, "BOTTOMLEFT", 0, itemSpacing)
-        cb4.Text:SetText("Scale the UI 1:1")
+        local text = "1:1 UI Scale"
+        cb4.Text:SetText(text)
+        cb4.tooltipText = text --Yellow tooltip name
+        cb4.tooltipRequirement = "Set the UI scaling so that elements display at a 1:1 pixel ratio" --White tooltip description
         -- there already is an existing OnClick script that plays a sound, hook it
         cb4:HookScript("OnClick", function(_, btn, down)
             JadeUIDB.pixelScale = cb4:GetChecked()
@@ -90,6 +117,7 @@ optionsPanel:SetScript("OnEvent", function(self, event, arg1, arg2)
         endstopLabel:SetText('Select endstop artwork:')
 
         local endstopDropDown = CreateFrame("Frame", "Endstop Menu", optionsPanel, "UIDropDownMenuTemplate")
+        addTooltip(endstopDropDown) --Add a tooltip to the dropdown
 
         local function endstopDropDownHandler(self, arg1, arg2, checked) --Arguments have to be (self, arg1, arg2, checked), self being info from UIDropDownMenu_CreateInfo (self.arg1 and arg1 are the same)  - https://www.townlong-yak.com/framexml/latest/UIDropDownMenu.lua#276
             JadeUI.setEndstop(self.value)
@@ -111,7 +139,12 @@ optionsPanel:SetScript("OnEvent", function(self, event, arg1, arg2)
 
         endstopDropDown:SetPoint("TOPLEFT", endstopLabel, "BOTTOMLEFT", -15, -5)
         UIDropDownMenu_SetWidth(endstopDropDown, 100)
+        endstopDropDown.tooltipText = "Select Endstop Artwork"
+        endstopDropDown.tooltipRequirement = "Select the artwork to be displayed for the endstops on the main bar"
         UIDropDownMenu_Initialize(endstopDropDown, endstopDropDownInitialise)
+
+
+
 
 
         InterfaceOptions_AddCategory(optionsPanel)  -- see InterfaceOptions API
