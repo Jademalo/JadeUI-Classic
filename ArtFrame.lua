@@ -43,12 +43,12 @@ function JadeUI.createArtFrame()
 
 
    JadeUI.leftEndstop = JadeUIBar:CreateTexture()
-   JadeUI.leftEndstop:SetPoint("BOTTOMRIGHT", JadeUIBar, "BOTTOM", -268, 0)
+   JadeUI.leftEndstop:SetPoint("BOTTOMRIGHT", JadeUIBar, "BOTTOM", -267, 0)
    JadeUI.leftEndstop:SetTexture(JadeUI.endstopDwarfTexture)
    JadeUI.leftEndstop:SetDrawLayer("BACKGROUND", 1)
 
    JadeUI.rightEndstop = JadeUIBar:CreateTexture()
-   JadeUI.rightEndstop:SetPoint("BOTTOMLEFT", JadeUIBar, "BOTTOM", 268, 0)
+   JadeUI.rightEndstop:SetPoint("BOTTOMLEFT", JadeUIBar, "BOTTOM", 267, 0)
    JadeUI.rightEndstop:SetTexture(JadeUI.endstopDwarfTexture)
    JadeUI.rightEndstop:SetTexCoord(1, 0, 0, 1) --Mirror Texture
    JadeUI.rightEndstop:SetDrawLayer("BACKGROUND", 1)

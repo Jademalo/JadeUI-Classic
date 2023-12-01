@@ -122,12 +122,15 @@ end
 local function moveBagBar()
     --Bag Bar
     MainMenuBarBackpackButton:SetParent(JadeUIButtonParent)
-    MainMenuBarBackpackButton:SetPoint("BOTTOMRIGHT", JadeUI.g13MainBar, "BOTTOM", 293, 2)
+    --MainMenuBarBackpackButton:SetPoint("BOTTOMRIGHT", JadeUI.g13MainBar, "BOTTOM", 293, 2) --Accurate to actual bag bar
+    MainMenuBarBackpackButton:SetPoint("BOTTOMRIGHT", JadeUI.g13MainBar, "BOTTOM", 292, 3) --Better Fitting
 
     if not GetCVarBool("showKeyring") then
         SetCVar("showKeyring", 1)
     end
     KeyRingButton:SetParent(JadeUIButtonParent)
+    --KeyRingButton:SetPoint("RIGHT", CharacterBag3Slot, "LEFT", -5, -1) --Accurate to actual bag bar
+    KeyRingButton:SetPoint("RIGHT", CharacterBag3Slot, "LEFT", -5, -1) --Better fitting
 
     for i = 0, 3 do
         _G["CharacterBag" .. i .. "Slot"]:SetParent(JadeUIButtonParent)
