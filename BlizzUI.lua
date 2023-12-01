@@ -32,6 +32,22 @@ local function moveMinimapFunc()
     MinimapCluster:ClearAllPoints()
     MinimapCluster:SetPoint("BOTTOMRIGHT", MinimapCluster:GetParent(), "BOTTOMRIGHT", 0, 0)
     MinimapCluster.SetPoint = function()end
+    --Zone Text
+    MinimapZoneTextButton:ClearAllPoints()
+    MinimapZoneTextButton:SetPoint("CENTER", MinimapZoneTextButton:GetParent(), "CENTER", 0, -77)
+    MinimapZoneTextButton.SetPoint = function()end
+    --Minimap Toggle Button
+    MinimapToggleButton:ClearAllPoints()
+    MinimapToggleButton:SetPoint("CENTER", MinimapToggleButton:GetParent(), "BOTTOMRIGHT", -15, 19)
+    MinimapToggleButton.SetPoint = function()end
+    --Minimap Top Border
+    MinimapBorderTop:ClearAllPoints()
+    MinimapBorderTop:SetPoint("BOTTOMRIGHT", MinimapBorderTop:GetParent(), "BOTTOMRIGHT", 0, 0)
+    MinimapBorderTop.SetPoint = function()end
+    --Clock
+    TimeManagerClockButton:ClearAllPoints()
+    TimeManagerClockButton:SetPoint("CENTER", TimeManagerClockButton:GetParent(), "CENTER", 0, 75)
+    TimeManagerClockButton.SetPoint = function()end
 
     --Buff Bar
     BuffFrame:ClearAllPoints()
