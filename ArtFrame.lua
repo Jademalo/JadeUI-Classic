@@ -24,8 +24,8 @@ local g13XPBarTexture = "Interface/AddOns/JadeUI-Classic/Media/G13XPBar.tga"
 local petBarTexture = "Interface/AddOns/JadeUI-Classic/Media/PetBar.tga"
 --@end-non-debug@]===]
 
-JadeUI.endstopDwarfTexture = "Interface/MAINMENUBAR/UI-MainMenuBar-EndCap-Dwarf"
-JadeUI.endstopHumanTexture = "Interface/MAINMENUBAR/UI-MainMenuBar-EndCap-Human"
+JadeUI.endstopGryphonTexture = "Interface/MAINMENUBAR/UI-MainMenuBar-EndCap-Dwarf"
+JadeUI.endstopLionTexture = "Interface/MAINMENUBAR/UI-MainMenuBar-EndCap-Human"
 
 --------------------------------------------
 --Functions
@@ -75,6 +75,26 @@ function JadeUI.createArtFrame()
    JadeUI.petBar:SetPoint("LEFT", PetActionBarFrame, "LEFT", 0, 8.5)
    JadeUI.petBar:SetTexture(petBarTexture)
 
+end
 
 
+--Sets the endstop texture based on a variable passed to it
+function JadeUI.setEndstop(type)
+   if type == 0 then
+      JadeUI.rightEndstop:Hide()
+      JadeUI.leftEndstop:Hide()
+
+   elseif type == 1 then
+      JadeUI.rightEndstop:SetTexture(JadeUI.endstopGryphonTexture)
+      JadeUI.leftEndstop:SetTexture(JadeUI.endstopGryphonTexture)
+      JadeUI.rightEndstop:Show()
+      JadeUI.leftEndstop:Show()
+
+   elseif type == 2 then
+      JadeUI.rightEndstop:SetTexture(JadeUI.endstopLionTexture)
+      JadeUI.leftEndstop:SetTexture(JadeUI.endstopLionTexture)
+      JadeUI.rightEndstop:Show()
+      JadeUI.leftEndstop:Show()
+
+   end
 end

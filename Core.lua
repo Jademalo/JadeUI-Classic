@@ -41,6 +41,8 @@ JadeUIBar:SetScript("OnEvent", function(self, event, arg1, arg2)
         JadeUIBar:SetSize(745, 210)
         JadeUIBar:SetPoint("BOTTOM", UIParent, "BOTTOM")
         JadeUI.createArtFrame() --Create the main art frame for the bars
+        print(JadeUIDB.endstopType)
+        JadeUI.setEndstop(JadeUIDB.endstopType) --Set the endstop type based on the saved variable
         local width,height = GetPhysicalScreenSize()
         UIParent:SetScale((768/height)*1)
 
