@@ -58,7 +58,6 @@ optionsPanel:SetScript("OnEvent", function(self, event, arg1, arg2)
             end
         end)
         cb2:SetChecked(JadeUIDB.moveUnitFrames)
-        print(JadeUIDB.moveUnitFrames)
 
         local cb3 = CreateFrame("CheckButton", nil, optionsPanel, "InterfaceOptionsCheckButtonTemplate")
         cb3:SetPoint("TOPLEFT", cb2, "BOTTOMLEFT", 0, itemSpacing)
@@ -73,7 +72,6 @@ optionsPanel:SetScript("OnEvent", function(self, event, arg1, arg2)
             end
         end)
         cb3:SetChecked(JadeUIDB.moveMinimap)
-        print(JadeUIDB.moveMinimap)
 
         local cb4 = CreateFrame("CheckButton", nil, optionsPanel, "InterfaceOptionsCheckButtonTemplate")
         cb4:SetPoint("TOPLEFT", cb3, "BOTTOMLEFT", 0, itemSpacing)
@@ -84,34 +82,36 @@ optionsPanel:SetScript("OnEvent", function(self, event, arg1, arg2)
             JadeUI.SetScale()
         end)
         cb4:SetChecked(JadeUIDB.pixelScale)
-        print(JadeUIDB.pixelScale)
 
 
         --Create a dropdown to manage Endstops
-        local dropDown = CreateFrame("Frame", "Endstop Menu", optionsPanel, "UIDropDownMenuTemplate")
-        dropDown:SetPoint("TOPLEFT", optionsPanel, "TOP", 0, itemSpacingTop)
-        --dropDown.Text:SetText("Endstop Type")
-        UIDropDownMenu_SetWidth(dropDown, 200) -- Use in place of dropDown:SetWidth
-        -- Bind an initializer function to the dropdown; see previous sections for initializer function examples.
+        local endstopLabel = optionsPanel:CreateFontString(nil, 'ARTWORK', 'GameFontHighlightSmall')
+        endstopLabel:SetPoint("TOPLEFT", optionsPanel, "TOP", 0, itemSpacingTop)
+        endstopLabel:SetText('Select endstop artwork:')
 
-        local function EndstopHandler(self, arg1, arg2, checked) --Arguments have to be (self, arg1, arg2, checked), self being info from UIDropDownMenu_CreateInfo (self.arg1 and arg1 are the same)  - https://www.townlong-yak.com/framexml/latest/UIDropDownMenu.lua#276
+        local endstopDropDown = CreateFrame("Frame", "Endstop Menu", optionsPanel, "UIDropDownMenuTemplate")
+
+        local function endstopDropDownHandler(self, arg1, arg2, checked) --Arguments have to be (self, arg1, arg2, checked), self being info from UIDropDownMenu_CreateInfo (self.arg1 and arg1 are the same)  - https://www.townlong-yak.com/framexml/latest/UIDropDownMenu.lua#276
             JadeUI.setEndstop(self.value)
             JadeUIDB.endstopType = self.value
-            print(value)
-            UIDropDownMenu_SetSelectedValue(dropDown,self.value) --This sets the label after 
+            UIDropDownMenu_SetSelectedValue(endstopDropDown,self.value) --This sets the label after selecting an option
         end
 
-        UIDropDownMenu_Initialize(dropDown, function(frame, level, menuList)
-            local info = UIDropDownMenu_CreateInfo()
-            info.func = EndstopHandler --This is called whenever an option is clicked, we're setting it to a separate handler function that's the same for all 3 so doesn't need redefined
-            info.text, info.value = "None", 0
-            UIDropDownMenu_AddButton(info) --Every time AddButton is run, a new instance of info is created as that button.
-            info.text, info.value = "Gryphon", 1
-            UIDropDownMenu_AddButton(info)
-            info.text, info.value = "Lion", 2
-            UIDropDownMenu_AddButton(info)
-            UIDropDownMenu_SetSelectedValue(frame, JadeUIDB.endstopType) --This sets the label initially based on the SavedVariable
-        end)
+        local function endstopDropDownInitialise(frame, level, menulist) --The initialisation function for the dropdown
+            local endstopTypes = { "None", "Gryphon", "Lion" }
+            for i, type in next, endstopTypes do
+                local info = UIDropDownMenu_CreateInfo()
+                info.text = type
+                info.value = i-1
+                info.func = endstopDropDownHandler
+                UIDropDownMenu_AddButton(info)
+            end
+            UIDropDownMenu_SetSelectedValue(endstopDropDown, JadeUIDB.endstopType) --This sets the label initially based on the SavedVariable
+        end
+
+        endstopDropDown:SetPoint("TOPLEFT", endstopLabel, "BOTTOMLEFT", -15, -5)
+        UIDropDownMenu_SetWidth(endstopDropDown, 100)
+        UIDropDownMenu_Initialize(endstopDropDown, endstopDropDownInitialise)
 
 
         InterfaceOptions_AddCategory(optionsPanel)  -- see InterfaceOptions API
