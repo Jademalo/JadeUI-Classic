@@ -94,23 +94,23 @@ optionsPanel:SetScript("OnEvent", function(self, event, arg1, arg2)
         UIDropDownMenu_SetWidth(dropDown, 200) -- Use in place of dropDown:SetWidth
         -- Bind an initializer function to the dropdown; see previous sections for initializer function examples.
 
-        local function EndstopHandler(self, arg1, arg2, checked)
+        local function EndstopHandler(self, arg1, arg2, checked) --Arguments have to be (self, arg1, arg2, checked), self being info from UIDropDownMenu_CreateInfo (self.arg1 and arg1 are the same)  - https://www.townlong-yak.com/framexml/latest/UIDropDownMenu.lua#276
             JadeUI.setEndstop(self.value)
             JadeUIDB.endstopType = self.value
-            print(self.value)
-            UIDropDownMenu_SetSelectedValue(dropDown,self.value)
+            print(value)
+            UIDropDownMenu_SetSelectedValue(dropDown,self.value) --This sets the label after 
         end
 
         UIDropDownMenu_Initialize(dropDown, function(frame, level, menuList)
             local info = UIDropDownMenu_CreateInfo()
             info.func = EndstopHandler --This is called whenever an option is clicked, we're setting it to a separate handler function that's the same for all 3 so doesn't need redefined
             info.text, info.value = "None", 0
-            UIDropDownMenu_AddButton(info)
+            UIDropDownMenu_AddButton(info) --Every time AddButton is run, a new instance of info is created as that button.
             info.text, info.value = "Gryphon", 1
             UIDropDownMenu_AddButton(info)
             info.text, info.value = "Lion", 2
             UIDropDownMenu_AddButton(info)
-            UIDropDownMenu_SetSelectedValue(frame, JadeUIDB.endstopType)
+            UIDropDownMenu_SetSelectedValue(frame, JadeUIDB.endstopType) --This sets the label initially based on the SavedVariable
         end)
 
 
