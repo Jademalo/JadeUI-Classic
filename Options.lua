@@ -26,8 +26,8 @@ optionsPanel:SetScript("OnEvent", function(self, event, arg1, arg2)
         local optionsPanel = CreateFrame("Frame")
         optionsPanel.name = "JadeUI Classic" --CreateFrame call puts "Name" in the global scope, so _G["Name"] will retrieve the panel. The panel.name is a field on the panel itself.
 
-        local itemSpacingTop = -30
         local itemSpacing = -5
+        local optionsList = {}
 
         local function addTooltip(frame) --Adds tooltipText and tooltipRequirement to a frame
             frame:SetScript("OnEnter", function(self)
@@ -44,76 +44,83 @@ optionsPanel:SetScript("OnEvent", function(self, event, arg1, arg2)
             frame:SetScript("OnLeave", function(self) GameTooltip:Hide() end)
         end
 
+        local function createCheckbox(name, description, savedVariable, itemSpacing)
+            local checkboxFrame = CreateFrame("CheckButton", nil, optionsPanel, "InterfaceOptionsCheckButtonTemplate")
+            if next(optionsList)==nil then --If there are no existing options in the list
+                checkboxFrame:SetPoint("TOPLEFT", 20, -30) --Set it to the top left of the options panel
+            else
+                checkboxFrame:SetPoint("TOPLEFT", optionsList[#optionsList], "BOTTOMLEFT", 0, itemSpacing) --Append it below the previous entry in the options list
+            end
+            table.insert(optionsList, checkboxFrame) --Add this frame to the options list
+            checkboxFrame.Text:SetText(name or "")
+            checkboxFrame.tooltipText = name or ""
+            checkboxFrame.tooltipRequirement = description or ""
+            checkboxFrame:SetChecked(savedVariable)
+            return checkboxFrame
+        end
+
+
+        local talentCheckbox = createCheckbox(
+            "Show Talent Button",
+            "This option will display the talent button in the Menu Bar regardless of player level",
+            JadeUIDB.showTalents,
+            itemSpacing
+        )
+        talentCheckbox:HookScript("OnClick", function(_, btn, down)
+            JadeUIDB.showTalents = talentCheckbox:GetChecked()
+            UpdateMicroButtons()
+        end)
+
+        local unitFramesCheckbox = createCheckbox(
+            "Move Unitframes",
+            "Move the player unitframes down to the bottom centre of the screen\nReload required to disable",
+            JadeUIDB.moveUnitFrames,
+            itemSpacing
+        )
+        unitFramesCheckbox:HookScript("OnClick", function(_, btn, down)
+            JadeUIDB.moveUnitFrames = unitFramesCheckbox:GetChecked()
+            if not unitFramesCheckbox:GetChecked() then
+                C_UI.Reload()
+            else
+                JadeUI.blizzUIMove()
+            end
+        end)
+
+        local minimapcheckbox = createCheckbox(
+            "Move Minimap",
+            "Move the Minimap down to the bottom right corner of the screen\nReload required to disable",
+            JadeUIDB.moveMinimap,
+            itemSpacing
+        )
+        minimapcheckbox:HookScript("OnClick", function(_, btn, down)
+            JadeUIDB.moveMinimap = minimapcheckbox:GetChecked()
+            if not minimapcheckbox:GetChecked() then
+                C_UI.Reload()
+            else
+                JadeUI.blizzUIMove()
+            end
+        end)
+
+        local uiScaleCheckbox = createCheckbox(
+            "1:1 UI Scale",
+            "Set the UI scaling so that elements display at a 1:1 pixel ratio",
+            JadeUIDB.pixelScale,
+            itemSpacing
+        )
+        uiScaleCheckbox:HookScript("OnClick", function(_, btn, down)
+            JadeUIDB.pixelScale = uiScaleCheckbox:GetChecked()
+            JadeUI.SetScale()
+        end)
+
         -- add widgets to the panel as desired
         local title = optionsPanel:CreateFontString("ARTWORK", nil, "GameFontNormalLarge")
         title:SetPoint("TOP")
         title:SetText("JadeUI Classic")
 
-        local cb = CreateFrame("CheckButton", nil, optionsPanel, "InterfaceOptionsCheckButtonTemplate")
-        cb:SetPoint("TOPLEFT", 20, itemSpacingTop)
-        local text = "Show Talent Button"
-        cb.Text:SetText(text)
-        cb.tooltipText = text --Yellow tooltip name
-        cb.tooltipRequirement = "This option will display the talent button in the Menu Bar regardless of player level" --White tooltip description
-        -- there already is an existing OnClick script that plays a sound, hook it
-        cb:HookScript("OnClick", function(_, btn, down)
-            JadeUIDB.showTalents = cb:GetChecked()
-            UpdateMicroButtons()
-        end)
-        cb:SetChecked(JadeUIDB.showTalents)
-        print(JadeUIDB.showTalents)
-
-        local cb2 = CreateFrame("CheckButton", nil, optionsPanel, "InterfaceOptionsCheckButtonTemplate")
-        cb2:SetPoint("TOPLEFT", cb, "BOTTOMLEFT", 0, itemSpacing)
-        local text = "Move Unitframes"
-        cb2.Text:SetText(text)
-        cb2.tooltipText = text --Yellow tooltip name
-        cb2.tooltipRequirement = "Move the player unitframes down to the bottom centre of the screen\nReload required to disable" --White tooltip description
-        -- there already is an existing OnClick script that plays a sound, hook it
-        cb2:HookScript("OnClick", function(_, btn, down)
-            JadeUIDB.moveUnitFrames = cb2:GetChecked()
-            if not cb2:GetChecked() then
-                C_UI.Reload()
-            else
-                JadeUI.blizzUIMove()
-            end
-        end)
-        cb2:SetChecked(JadeUIDB.moveUnitFrames)
-
-        local cb3 = CreateFrame("CheckButton", nil, optionsPanel, "InterfaceOptionsCheckButtonTemplate")
-        cb3:SetPoint("TOPLEFT", cb2, "BOTTOMLEFT", 0, itemSpacing)
-        local text = "Move Minimap"
-        cb3.Text:SetText(text)
-        cb3.tooltipText = text --Yellow tooltip name
-        cb3.tooltipRequirement = "Move the Minimap down to the bottom right corner of the screen\nReload required to disable" --White tooltip description
-        -- there already is an existing OnClick script that plays a sound, hook it
-        cb3:HookScript("OnClick", function(_, btn, down)
-            JadeUIDB.moveMinimap = cb3:GetChecked()
-            if not cb3:GetChecked() then
-                C_UI.Reload()
-            else
-                JadeUI.blizzUIMove()
-            end
-        end)
-        cb3:SetChecked(JadeUIDB.moveMinimap)
-
-        local cb4 = CreateFrame("CheckButton", nil, optionsPanel, "InterfaceOptionsCheckButtonTemplate")
-        cb4:SetPoint("TOPLEFT", cb3, "BOTTOMLEFT", 0, itemSpacing)
-        local text = "1:1 UI Scale"
-        cb4.Text:SetText(text)
-        cb4.tooltipText = text --Yellow tooltip name
-        cb4.tooltipRequirement = "Set the UI scaling so that elements display at a 1:1 pixel ratio" --White tooltip description
-        -- there already is an existing OnClick script that plays a sound, hook it
-        cb4:HookScript("OnClick", function(_, btn, down)
-            JadeUIDB.pixelScale = cb4:GetChecked()
-            JadeUI.SetScale()
-        end)
-        cb4:SetChecked(JadeUIDB.pixelScale)
-
 
         --Create a dropdown to manage Endstops
         local endstopLabel = optionsPanel:CreateFontString(nil, 'ARTWORK', 'GameFontHighlightSmall')
-        endstopLabel:SetPoint("TOPLEFT", optionsPanel, "TOP", 0, itemSpacingTop)
+        endstopLabel:SetPoint("TOPLEFT", optionsPanel, "TOP", 0, -30)
         endstopLabel:SetText('Select endstop artwork:')
 
         local endstopDropDown = CreateFrame("Frame", "Endstop Menu", optionsPanel, "UIDropDownMenuTemplate")
