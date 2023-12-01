@@ -98,3 +98,12 @@ function JadeUI.setEndstop(type)
 
    end
 end
+
+--Show/Hide the Max level cover depending on your level or tracked faction status
+function JadeUI.showXPCover()
+   if UnitLevel("player") < GetMaxPlayerLevel() or GetWatchedFactionInfo() then
+       JadeUI.g13MaxCover:Hide()
+   else
+       JadeUI.g13MaxCover:Show()
+   end
+end
