@@ -10,20 +10,21 @@ optionsPanel:SetScript("OnEvent", function(self, event, arg1, arg2)
 
     if event == "ADDON_LOADED" and arg1 == addonName then
         JadeUIDB = JadeUIDB or {} --Create a table for saved variables
-        JadeUIDB.showTalents = (JadeUIDB.showTalents or false)
-        JadeUIDB.moveUnitFrames = (JadeUIDB.moveUnitFrames or false)
-        JadeUIDB.moveMinimap = (JadeUIDB.moveMinimap or false)
-        JadeUIDB.endstopType = (JadeUIDB.endstopType or 1)
+            JadeUIDB.showTalents = (JadeUIDB.showTalents or false) --0 is truthy, so only false or nil will result in the default being read.
+            JadeUIDB.moveUnitFrames = (JadeUIDB.moveUnitFrames or false)
+            JadeUIDB.moveMinimap = (JadeUIDB.moveMinimap or false)
+            JadeUIDB.endstopType = (JadeUIDB.endstopType or 1)
+            JadeUIDB.pixelScale = (JadeUIDB.pixelScale or false)
 
-        JadeUIDB.blizzXPBar = (JadeUIDB.blizzXPBar or 0)
-        JadeUIDB.mouseover = (JadeUIDB.mouseover or 0)
-        JadeUIDB.minimapScale = (JadeUIDB.minimapScale or 0)
-        JadeUIDB.stanceBarHide = (JadeUIDB.stanceBarHide or 0)
-        JadeUIDB.keyCover = (JadeUIDB.keyCover or 0)
+            JadeUIDB.blizzXPBar = (JadeUIDB.blizzXPBar or 0)
+            JadeUIDB.mouseover = (JadeUIDB.mouseover or 0)
+            JadeUIDB.minimapScale = (JadeUIDB.minimapScale or 0)
+            JadeUIDB.stanceBarHide = (JadeUIDB.stanceBarHide or 0)
+            JadeUIDB.keyCover = (JadeUIDB.keyCover or 0)
         
 
         local optionsPanel = CreateFrame("Frame")
-        optionsPanel.name = "JadeUI Classic"
+        optionsPanel.name = "JadeUI Classic" --CreateFrame call puts "Name" in the global scope, so _G["Name"] will retrieve the panel. The panel.name is a field on the panel itself.
 
         -- add widgets to the panel as desired
         local title = optionsPanel:CreateFontString("ARTWORK", nil, "GameFontNormalLarge")
@@ -63,13 +64,24 @@ optionsPanel:SetScript("OnEvent", function(self, event, arg1, arg2)
         cb3:SetChecked(JadeUIDB.moveMinimap)
         print(JadeUIDB.moveMinimap)
 
+        local cb4 = CreateFrame("CheckButton", nil, optionsPanel, "InterfaceOptionsCheckButtonTemplate")
+        cb4:SetPoint("TOPLEFT", 20, -110)
+        cb4.Text:SetText("Scale the UI 1:1")
+        -- there already is an existing OnClick script that plays a sound, hook it
+        cb4:HookScript("OnClick", function(_, btn, down)
+            JadeUIDB.pixelScale = cb4:GetChecked()
+            JadeUI.SetScale()
+        end)
+        cb4:SetChecked(JadeUIDB.pixelScale)
+        print(JadeUIDB.pixelScale)
 
+
+        --Create a dropdown to manage Endstops
         local dropDown = CreateFrame("Frame", "Endstop Menu", optionsPanel, "UIDropDownMenuTemplate")
-        dropDown:SetPoint("TOPLEFT", 20, -110)
+        dropDown:SetPoint("TOPLEFT", optionsPanel, "TOP", 20, -20)
         dropDown.Text:SetText("Endstop Type")
         UIDropDownMenu_SetWidth(dropDown, 200) -- Use in place of dropDown:SetWidth
         -- Bind an initializer function to the dropdown; see previous sections for initializer function examples.
-
 
         local function EndstopHandler(self, arg1, arg2, checked)
             JadeUI.setEndstop(arg1)
@@ -78,7 +90,7 @@ optionsPanel:SetScript("OnEvent", function(self, event, arg1, arg2)
 
         UIDropDownMenu_Initialize(dropDown, function(frame, level, menuList)
             local info = UIDropDownMenu_CreateInfo()
-            info.func = EndstopHandler --This is called whenever an option is clicked, we're setting it to a separate handler function that's the same for all 3
+            info.func = EndstopHandler --This is called whenever an option is clicked, we're setting it to a separate handler function that's the same for all 3 so doesn't need redefined
             info.text, info.arg1, info.checked = "None", 0, JadeUIDB.endstopType == 0
             UIDropDownMenu_AddButton(info)
             info.text, info.arg1, info.checked = "Gryphon", 1, JadeUIDB.endstopType == 1

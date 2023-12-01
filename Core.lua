@@ -20,6 +20,16 @@ local function startupPrint() --Startup message
     end
 end
 
+function JadeUI.SetScale()
+    if JadeUIDB.pixelScale then
+        local width,height = GetPhysicalScreenSize()
+        UIParent:SetScale((768/height)*1)
+    else
+        UIParent:SetScale(C_CVar.GetCVar("uiScale"))
+    end
+end
+
+
 --------------------------------------------------------------------------------
 --Event Registration
 --------------------------------------------------------------------------------
@@ -43,8 +53,11 @@ JadeUIBar:SetScript("OnEvent", function(self, event, arg1, arg2)
         JadeUI.createArtFrame() --Create the main art frame for the bars
         print(JadeUIDB.endstopType)
         JadeUI.setEndstop(JadeUIDB.endstopType) --Set the endstop type based on the saved variable
-        local width,height = GetPhysicalScreenSize()
-        UIParent:SetScale((768/height)*1)
+
+        if JadeUIDB.pixelScale then
+            JadeUI.SetScale()
+        end
+
 
         --Move various Blizzard frames
         JadeUI.blizzUIMove()

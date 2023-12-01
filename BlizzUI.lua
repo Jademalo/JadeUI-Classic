@@ -82,7 +82,7 @@ end
 --Functions to move Blizzard Action Bars
 --------------------------------------------
 
-function microMenuHook()
+local function microMenuHook()
     local spacing = 2
     CharacterMicroButton:SetParent(JadeUIButtonParent)
     CharacterMicroButton:SetPoint("BOTTOMLEFT", JadeUI.g13MainBar, "BOTTOM", - 288, 2)
@@ -216,13 +216,13 @@ end
 --------------------------------------------
 --Move various Blizzard frames
 function JadeUI.blizzUIMove()
-    --if moveUnitFrames then
+    if JadeUIDB.moveUnitFrames then
         moveUnitFramesFunc()
-    --end
+    end
 
-    --if moveMinimap then
+    if JadeUIDB.moveMinimap then
         moveMinimapFunc()
-    --end
+    end
 
     if JadeUI.isVanilla then
         moveTutorialFrame()
