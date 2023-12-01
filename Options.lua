@@ -16,12 +16,13 @@ local function savedVariablesInit()
         JadeUIDB.showTalents = (JadeUIDB.showTalents or false) --0 is truthy, so only false or nil will result in the default being read.
         JadeUIDB.moveUnitFrames = (JadeUIDB.moveUnitFrames or false)
         JadeUIDB.moveMinimap = (JadeUIDB.moveMinimap or false)
+        JadeUIDB.minimapScale = (JadeUIDB.minimapScale or false)
+        JadeUIDB.minimapScaleFactor = (JadeUIDB.minimapScaleFactor or 1.33)
         JadeUIDB.endstopType = (JadeUIDB.endstopType or 1)
         JadeUIDB.pixelScale = (JadeUIDB.pixelScale or false)
 
         JadeUIDB.blizzXPBar = (JadeUIDB.blizzXPBar or 0)
         JadeUIDB.mouseover = (JadeUIDB.mouseover or 0)
-        JadeUIDB.minimapScale = (JadeUIDB.minimapScale or 0)
         JadeUIDB.stanceBarHide = (JadeUIDB.stanceBarHide or 0)
         JadeUIDB.keyCover = (JadeUIDB.keyCover or 0)
 end
@@ -110,7 +111,7 @@ local function buildLeftColumn()
         if not unitFramesCheckbox:GetChecked() then
             C_UI.Reload()
         else
-            JadeUI.blizzUIMove()
+            JadeUI.moveUnitFramesFunc()
         end
     end)
 
@@ -125,8 +126,19 @@ local function buildLeftColumn()
         if not minimapcheckbox:GetChecked() then
             C_UI.Reload()
         else
-            JadeUI.blizzUIMove()
+            JadeUI.MoveMinimapFunc()
         end
+    end)
+
+    --Checkbox for increasing the size of the Minimap
+    local minimapScaleCheckbox = createCheckbox(
+        "Minimap Size",
+        "Increase the size of the Minimap",
+        JadeUIDB.minimapScale
+    )
+    minimapScaleCheckbox:HookScript("OnClick", function(_, btn, down)
+        JadeUIDB.minimapScale = minimapScaleCheckbox:GetChecked()
+        JadeUI.MinimapScaleFunc()
     end)
 
     --Checkbox for forcing a specific UI Scale
@@ -139,6 +151,7 @@ local function buildLeftColumn()
         JadeUIDB.pixelScale = uiScaleCheckbox:GetChecked()
         JadeUI.SetScale()
     end)
+
 end
 
 
@@ -179,6 +192,10 @@ local function buildRightColumn()
     endstopDropDown.tooltipText = "Select Endstop Artwork"
     endstopDropDown.tooltipRequirement = "Select the artwork to be displayed for the endstops on the main bar"
     UIDropDownMenu_Initialize(endstopDropDown, endstopDropDownInitialise)
+
+    --Create a scroll bar to adjust Minimap scale
+    --TODO
+
 end
 
 

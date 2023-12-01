@@ -7,7 +7,7 @@ local addonName, JadeUI = ...
 --------------------------------------------
 --Functions to move basic Blizzard Frames
 --------------------------------------------
-local function moveUnitFramesFunc()
+function JadeUI.moveUnitFramesFunc()
     --Player Frame
     PlayerFrame:ClearAllPoints()
     PlayerFrame:SetPoint("BOTTOMRIGHT", PlayerFrame:GetParent(), "BOTTOM", - 163, 200)
@@ -27,23 +27,27 @@ local function moveUnitFramesFunc()
 end
 
 
-local function moveMinimapFunc()
+function JadeUI.MoveMinimapFunc()
     --Minimap
     MinimapCluster:ClearAllPoints()
     MinimapCluster:SetPoint("BOTTOMRIGHT", MinimapCluster:GetParent(), "BOTTOMRIGHT", 0, 0)
     MinimapCluster.SetPoint = function()end
+
     --Zone Text
     MinimapZoneTextButton:ClearAllPoints()
     MinimapZoneTextButton:SetPoint("CENTER", MinimapZoneTextButton:GetParent(), "CENTER", 0, -77)
     MinimapZoneTextButton.SetPoint = function()end
+
     --Minimap Toggle Button
     MinimapToggleButton:ClearAllPoints()
     MinimapToggleButton:SetPoint("CENTER", MinimapToggleButton:GetParent(), "BOTTOMRIGHT", -15, 19)
     MinimapToggleButton.SetPoint = function()end
+
     --Minimap Top Border
     MinimapBorderTop:ClearAllPoints()
     MinimapBorderTop:SetPoint("BOTTOMRIGHT", MinimapBorderTop:GetParent(), "BOTTOMRIGHT", 0, 0)
     MinimapBorderTop.SetPoint = function()end
+
     --Clock
     TimeManagerClockButton:ClearAllPoints()
     TimeManagerClockButton:SetPoint("CENTER", TimeManagerClockButton:GetParent(), "CENTER", 0, 75)
@@ -56,17 +60,22 @@ local function moveMinimapFunc()
 end
 
 
-local function minimapScaleFunc()
-    if minimapScale ~= 1 then
-        MinimapCluster:SetScale(minimapScale)
+function JadeUI.MinimapScaleFunc()
+    --TODO: Rewrite this to make it a slider rather than a fixed amount
+    if JadeUIDB.minimapScale then
+        --if JadeUIDB.minimapScaleFactor ~= 1 then
+            MinimapCluster:SetScale(JadeUIDB.minimapScaleFactor)
 
-        if not moveMinimap then
-            local buffOffset = (MinimapCluster:GetWidth() * minimapScale) + 8
+            if not moveMinimap then
+                local buffOffset = (MinimapCluster:GetWidth() * JadeUIDB.minimapScaleFactor) + 8
 
-            BuffFrame:ClearAllPoints()
-            BuffFrame:SetPoint("TOPRIGHT", BuffFrame:GetParent(), "TOPRIGHT", - buffOffset, - 13)
-            BuffFrame.SetPoint = function()end
-        end
+                BuffFrame:ClearAllPoints()
+                BuffFrame:SetPoint("TOPRIGHT", BuffFrame:GetParent(), "TOPRIGHT", - buffOffset, - 13)
+                BuffFrame.SetPoint = function()end
+            end
+        --end
+    else
+        MinimapCluster:SetScale(1)
     end
 end
 
@@ -236,18 +245,18 @@ end
 --Move various Blizzard frames
 function JadeUI.blizzUIMove()
     if JadeUIDB.moveUnitFrames then
-        moveUnitFramesFunc()
+        JadeUI.moveUnitFramesFunc()
     end
 
     if JadeUIDB.moveMinimap then
-        moveMinimapFunc()
+        JadeUI.MoveMinimapFunc()
     end
 
     if JadeUI.isVanilla then
         moveTutorialFrame()
     end
 
-    --minimapScaleFunc()
+    JadeUI.MinimapScaleFunc()
     moveCastingBar()
     moveFramerateLabel()
 end
