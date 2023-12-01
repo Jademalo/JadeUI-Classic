@@ -26,13 +26,16 @@ optionsPanel:SetScript("OnEvent", function(self, event, arg1, arg2)
         local optionsPanel = CreateFrame("Frame")
         optionsPanel.name = "JadeUI Classic" --CreateFrame call puts "Name" in the global scope, so _G["Name"] will retrieve the panel. The panel.name is a field on the panel itself.
 
+        local itemSpacingTop = -30
+        local itemSpacing = -5
+
         -- add widgets to the panel as desired
         local title = optionsPanel:CreateFontString("ARTWORK", nil, "GameFontNormalLarge")
         title:SetPoint("TOP")
         title:SetText("JadeUI Classic")
 
         local cb = CreateFrame("CheckButton", nil, optionsPanel, "InterfaceOptionsCheckButtonTemplate")
-        cb:SetPoint("TOPLEFT", 20, -20)
+        cb:SetPoint("TOPLEFT", 20, itemSpacingTop)
         cb.Text:SetText("Show talent button regardless of level")
         -- there already is an existing OnClick script that plays a sound, hook it
         cb:HookScript("OnClick", function(_, btn, down)
@@ -43,29 +46,37 @@ optionsPanel:SetScript("OnEvent", function(self, event, arg1, arg2)
         print(JadeUIDB.showTalents)
 
         local cb2 = CreateFrame("CheckButton", nil, optionsPanel, "InterfaceOptionsCheckButtonTemplate")
-        cb2:SetPoint("TOPLEFT", 20, -50)
+        cb2:SetPoint("TOPLEFT", cb, "BOTTOMLEFT", 0, itemSpacing)
         cb2.Text:SetText("Move the Unitframes")
         -- there already is an existing OnClick script that plays a sound, hook it
         cb2:HookScript("OnClick", function(_, btn, down)
             JadeUIDB.moveUnitFrames = cb2:GetChecked()
-            JadeUI.blizzUIMove()
+            if not cb2:GetChecked() then
+                C_UI.Reload()
+            else
+                JadeUI.blizzUIMove()
+            end
         end)
         cb2:SetChecked(JadeUIDB.moveUnitFrames)
         print(JadeUIDB.moveUnitFrames)
 
         local cb3 = CreateFrame("CheckButton", nil, optionsPanel, "InterfaceOptionsCheckButtonTemplate")
-        cb3:SetPoint("TOPLEFT", 20, -80)
+        cb3:SetPoint("TOPLEFT", cb2, "BOTTOMLEFT", 0, itemSpacing)
         cb3.Text:SetText("Move the Minimap")
         -- there already is an existing OnClick script that plays a sound, hook it
         cb3:HookScript("OnClick", function(_, btn, down)
             JadeUIDB.moveMinimap = cb3:GetChecked()
-            JadeUI.blizzUIMove()
+            if not cb3:GetChecked() then
+                C_UI.Reload()
+            else
+                JadeUI.blizzUIMove()
+            end
         end)
         cb3:SetChecked(JadeUIDB.moveMinimap)
         print(JadeUIDB.moveMinimap)
 
         local cb4 = CreateFrame("CheckButton", nil, optionsPanel, "InterfaceOptionsCheckButtonTemplate")
-        cb4:SetPoint("TOPLEFT", 20, -110)
+        cb4:SetPoint("TOPLEFT", cb3, "BOTTOMLEFT", 0, itemSpacing)
         cb4.Text:SetText("Scale the UI 1:1")
         -- there already is an existing OnClick script that plays a sound, hook it
         cb4:HookScript("OnClick", function(_, btn, down)
@@ -78,25 +89,28 @@ optionsPanel:SetScript("OnEvent", function(self, event, arg1, arg2)
 
         --Create a dropdown to manage Endstops
         local dropDown = CreateFrame("Frame", "Endstop Menu", optionsPanel, "UIDropDownMenuTemplate")
-        dropDown:SetPoint("TOPLEFT", optionsPanel, "TOP", 20, -20)
-        dropDown.Text:SetText("Endstop Type")
+        dropDown:SetPoint("TOPLEFT", optionsPanel, "TOP", 0, itemSpacingTop)
+        --dropDown.Text:SetText("Endstop Type")
         UIDropDownMenu_SetWidth(dropDown, 200) -- Use in place of dropDown:SetWidth
         -- Bind an initializer function to the dropdown; see previous sections for initializer function examples.
 
         local function EndstopHandler(self, arg1, arg2, checked)
-            JadeUI.setEndstop(arg1)
-            JadeUIDB.endstopType = arg1
+            JadeUI.setEndstop(self.value)
+            JadeUIDB.endstopType = self.value
+            print(self.value)
+            UIDropDownMenu_SetSelectedValue(dropDown,self.value)
         end
 
         UIDropDownMenu_Initialize(dropDown, function(frame, level, menuList)
             local info = UIDropDownMenu_CreateInfo()
             info.func = EndstopHandler --This is called whenever an option is clicked, we're setting it to a separate handler function that's the same for all 3 so doesn't need redefined
-            info.text, info.arg1, info.checked = "None", 0, JadeUIDB.endstopType == 0
+            info.text, info.value = "None", 0
             UIDropDownMenu_AddButton(info)
-            info.text, info.arg1, info.checked = "Gryphon", 1, JadeUIDB.endstopType == 1
+            info.text, info.value = "Gryphon", 1
             UIDropDownMenu_AddButton(info)
-            info.text, info.arg1, info.checked = "Lion", 2, JadeUIDB.endstopType == 2
+            info.text, info.value = "Lion", 2
             UIDropDownMenu_AddButton(info)
+            UIDropDownMenu_SetSelectedValue(frame, JadeUIDB.endstopType)
         end)
 
 
