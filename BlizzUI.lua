@@ -5,58 +5,46 @@ local addonName, JadeUI = ...
 
 
 --------------------------------------------
+--Functions
+--------------------------------------------
+--Move an already set frame, then remove SetPoint so the UI can't set it back again
+local function moveBlizzardFrame(frame, point, relativePoint, offsetX, offsetY)
+    frame:ClearAllPoints()
+    frame:SetPoint(point, frame:GetParent(), relativePoint, offsetX, offsetY)
+    frame.SetPoint = function()end
+end
+
+
+
+--------------------------------------------
 --Functions to move basic Blizzard Frames
 --------------------------------------------
 function JadeUI.moveUnitFramesFunc()
     --Player Frame
-    PlayerFrame:ClearAllPoints()
-    PlayerFrame:SetPoint("BOTTOMRIGHT", PlayerFrame:GetParent(), "BOTTOM", - 163, 200)
-    PlayerFrame.SetPoint = function()end
-
+    moveBlizzardFrame(PlayerFrame, "BOTTOMRIGHT", "BOTTOM", - 163, 200)
     --Target Frame
-    TargetFrame:ClearAllPoints()
-    TargetFrame:SetPoint("BOTTOMLEFT", TargetFrame:GetParent(), "BOTTOM", 162, 200)
-    TargetFrame.SetPoint = function()end
+    moveBlizzardFrame(TargetFrame, "BOTTOMLEFT", "BOTTOM", 162, 200)
 
     if not JadeUI.isVanilla then
         --Focus Frame
-        FocusFrame:ClearAllPoints()
-        FocusFrame:SetPoint("BOTTOMLEFT", FocusFrame:GetParent(), "BOTTOM", - 163, 250)
-        FocusFrame.SetPoint = function()end
+        moveBlizzardFrame(FocusFrame, "BOTTOMLEFT", "BOTTOM", - 163, 250)
     end
 end
 
 
 function JadeUI.MoveMinimapFunc()
     --Minimap
-    MinimapCluster:ClearAllPoints()
-    MinimapCluster:SetPoint("BOTTOMRIGHT", MinimapCluster:GetParent(), "BOTTOMRIGHT", 0, 0)
-    MinimapCluster.SetPoint = function()end
-
+    moveBlizzardFrame(MinimapCluster, "BOTTOMRIGHT", "BOTTOMRIGHT", 0, 0)
     --Zone Text
-    MinimapZoneTextButton:ClearAllPoints()
-    MinimapZoneTextButton:SetPoint("CENTER", MinimapZoneTextButton:GetParent(), "CENTER", 0, -77)
-    MinimapZoneTextButton.SetPoint = function()end
-
+    moveBlizzardFrame(MinimapZoneTextButton, "CENTER", "CENTER", 0, -77)
     --Minimap Toggle Button
-    MinimapToggleButton:ClearAllPoints()
-    MinimapToggleButton:SetPoint("CENTER", MinimapToggleButton:GetParent(), "BOTTOMRIGHT", -15, 19)
-    MinimapToggleButton.SetPoint = function()end
-
+    moveBlizzardFrame(MinimapToggleButton, "CENTER", "BOTTOMRIGHT", -15, 19)
     --Minimap Top Border
-    MinimapBorderTop:ClearAllPoints()
-    MinimapBorderTop:SetPoint("BOTTOMRIGHT", MinimapBorderTop:GetParent(), "BOTTOMRIGHT", 0, 0)
-    MinimapBorderTop.SetPoint = function()end
-
+    moveBlizzardFrame(MinimapBorderTop, "BOTTOMRIGHT", "BOTTOMRIGHT", 0, 0)
     --Clock
-    TimeManagerClockButton:ClearAllPoints()
-    TimeManagerClockButton:SetPoint("CENTER", TimeManagerClockButton:GetParent(), "CENTER", 0, 75)
-    TimeManagerClockButton.SetPoint = function()end
-
+    moveBlizzardFrame(TimeManagerClockButton, "CENTER", "CENTER", 0, 75)
     --Buff Bar
-    BuffFrame:ClearAllPoints()
-    BuffFrame:SetPoint("TOPRIGHT", BuffFrame:GetParent(), "TOPRIGHT", - 13, - 13)
-    BuffFrame.SetPoint = function()end
+    moveBlizzardFrame(BuffFrame, "TOPRIGHT", "TOPRIGHT", - 13, - 13)
 end
 
 
@@ -68,10 +56,7 @@ function JadeUI.MinimapScaleFunc()
 
             if not moveMinimap then
                 local buffOffset = (MinimapCluster:GetWidth() * JadeUIDB.minimapScaleFactor) + 8
-
-                BuffFrame:ClearAllPoints()
-                BuffFrame:SetPoint("TOPRIGHT", BuffFrame:GetParent(), "TOPRIGHT", - buffOffset, - 13)
-                BuffFrame.SetPoint = function()end
+                moveBlizzardFrame(BuffFrame, "TOPRIGHT", "TOPRIGHT", - buffOffset, - 13)
             end
         --end
     else
@@ -79,27 +64,6 @@ function JadeUI.MinimapScaleFunc()
     end
 end
 
-
-local function moveCastingBar()
-    --Casting Bar
-    CastingBarFrame:ClearAllPoints()
-    CastingBarFrame:SetPoint("BOTTOM", CastingBarFrame:GetParent(), "BOTTOM", 0, 248)
-    CastingBarFrame.SetPoint = function()end
-end
-
-
-local function moveTutorialFrame()
-    --Tutorial Frame
-    TutorialFrameParent:ClearAllPoints()
-    TutorialFrameParent:SetPoint("BOTTOM", TutorialFrameParent:GetParent(), "BOTTOM", 0, 300)
-    TutorialFrameParent.SetPoint = function()end
-end
-
-
-
-local function moveFramerateLabel()
-    FramerateLabel:SetPoint("BOTTOM", FramerateLabel:GetParent(), "BOTTOM", - 190, 85)
-end
 
 
 
@@ -192,19 +156,7 @@ local function moveActionBars()
 end
 
 
-local function moveBlizzXPBar()
-    --Exp Bar
-    MainMenuExpBar:ClearAllPoints()
-    MainMenuExpBar:SetParent(JadeUIBar)
-    MainMenuExpBar:SetPoint("BOTTOM", JadeUI.g13XPBar, "BOTTOM", 0, - 3)
-    MainMenuExpBar:SetWidth(586)
-    MainMenuExpBar:SetFrameStrata("BACKGROUND")
 
-    MainMenuXPBarTexture0:Hide()
-    MainMenuXPBarTexture1:Hide()
-    MainMenuXPBarTexture2:Hide()
-    MainMenuXPBarTexture3:Hide()
-end
 
 
 local function moveStanceBar()
@@ -244,21 +196,16 @@ end
 --------------------------------------------
 --Move various Blizzard frames
 function JadeUI.blizzUIMove()
-    if JadeUIDB.moveUnitFrames then
-        JadeUI.moveUnitFramesFunc()
-    end
+    moveBlizzardFrame(CastingBarFrame,"BOTTOM", "BOTTOM", 0, 248) --Casting Bar
+    FramerateLabel:SetPoint("BOTTOM", FramerateLabel:GetParent(), "BOTTOM", - 190, 85) --Framerate Label
 
-    if JadeUIDB.moveMinimap then
-        JadeUI.MoveMinimapFunc()
-    end
+    if JadeUIDB.moveUnitFrames then JadeUI.moveUnitFramesFunc() end --Unit Frames
+    if JadeUIDB.moveMinimap then JadeUI.MoveMinimapFunc() end --Minimap
+    JadeUI.MinimapScaleFunc() --Minimap Scale
 
-    if JadeUI.isVanilla then
-        moveTutorialFrame()
+    if JadeUI.isVanilla then 
+        moveBlizzardFrame(TutorialFrameParent,"BOTTOM", "BOTTOM", 0, 300) --Tutorial Frame
     end
-
-    JadeUI.MinimapScaleFunc()
-    moveCastingBar()
-    moveFramerateLabel()
 end
 
 --Prevent Blizzard bars from moving
@@ -289,10 +236,6 @@ function JadeUI.blizzBarMove()
     moveBagBar()
     moveActionBars()
     hideButtons()
-
-    if blizzXPBar then
-        moveBlizzXPBar()
-    end
 
     local forms = GetNumShapeshiftForms()
     if forms > 0 then

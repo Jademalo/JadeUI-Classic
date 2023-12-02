@@ -48,11 +48,12 @@ JadeUIBar:SetScript("OnEvent", function(self, event, arg1, arg2)
 
     if event == "PLAYER_ENTERING_WORLD" then
         JadeUIBar:SetFrameStrata("MEDIUM")
+        JadeUIBar:SetFrameLevel(1)
         JadeUIBar:SetSize(745, 210)
         JadeUIBar:SetPoint("BOTTOM", UIParent, "BOTTOM")
         JadeUI.createArtFrame() --Create the main art frame for the bars
         JadeUI.setEndstop(JadeUIDB.endstopType) --Set the endstop type based on the saved variable
-        JadeUI.showXPCover()
+
 
         if JadeUIDB.pixelScale then
             JadeUI.SetScale()
@@ -67,6 +68,8 @@ JadeUIBar:SetScript("OnEvent", function(self, event, arg1, arg2)
             JadeUI.preventActionBarMovement() --Disable Blizzard dynamic UI positioning
             JadeUIButtonParent = CreateFrame("Frame", "JadeUI Button Parent", JadeUIBar)
             JadeUI.blizzBarMove() --Move the Blizzard Action Bars
+            JadeUI.BlizzXPBarMove()
+            JadeUI.showMaxCover()
             MainMenuBar:Hide() --Hide Blizzard Main Bar
         else
             JadeUI.bartenderFix() --Fix some issues with Bartender
