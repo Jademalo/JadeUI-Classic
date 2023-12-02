@@ -73,6 +73,7 @@ JadeUIBar:SetScript("OnEvent", function(self, event, arg1, arg2)
             JadeUI.xpBar.BlizzRepBarMove()
             JadeUIBar:RegisterEvent("UPDATE_FACTION") --Register the update faction event to run Rep Bar Move after
             JadeUI.xpBar.showMaxCover()
+            JadeUIBar:RegisterEvent("PLAYER_LEVEL_UP") --Register the level up event to re-trigger the max cover after maxing
             MainMenuBar:Hide() --Hide Blizzard Main Bar
         else
             JadeUI.bartenderFix() --Fix some issues with Bartender
@@ -81,6 +82,10 @@ JadeUIBar:SetScript("OnEvent", function(self, event, arg1, arg2)
 
     if event == "UPDATE_FACTION" then
         JadeUI.xpBar.BlizzRepBarMove()
+    end
+
+    if event == "PLAYER_LEVEL_UP" then
+        JadeUI.xpBar.showMaxCover()
     end
 
 end)
