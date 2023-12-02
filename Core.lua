@@ -67,6 +67,7 @@ JadeUIBar:SetScript("OnEvent", function(self, event, arg1, arg2)
         if not C_AddOns.IsAddOnLoaded("Bartender4") then
             JadeUI.preventActionBarMovement() --Disable Blizzard dynamic UI positioning
             JadeUIButtonParent = CreateFrame("Frame", "JadeUI Button Parent", JadeUIBar)
+            JadeUIButtonParent:SetFrameLevel(3)
             JadeUI.blizzBarMove() --Move the Blizzard Action Bars
             JadeUI.xpBar.BlizzXPBarMove()
             JadeUI.xpBar.showMaxCover()
@@ -77,3 +78,18 @@ JadeUIBar:SetScript("OnEvent", function(self, event, arg1, arg2)
     end
 
 end)
+
+
+
+--[[ Frame levels
+Medium
+0 - UIParent
+1 - XP Bar
+2 - Art Bar
+3 - Buttons 
+4 - XP Bar Hover
+5 - Endstops
+
+When bar is hovered over, 
+
+]]

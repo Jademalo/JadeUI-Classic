@@ -43,29 +43,34 @@ local function addPanel(name, point, relativePoint, offsetX, offsetY, texture, l
    return panel
 end
 
-JadeUIBarArtPanel = CreateFrame("Frame","Jade UI Art Panel", JadeUIBar)
+
 
 
 
 function JadeUI.createArtFrame()
-   JadeUI.g13MainBar = JadeUIBar:CreateTexture("JadeUI Main Bar Texture")
-   JadeUI.g13MainBar:SetPoint("BOTTOM", JadeUIBar, "BOTTOM")
+
+   JadeUIBarArtPanel = CreateFrame("Frame","Jade UI Art Panel", JadeUIBar)
+   JadeUIBarArtPanel:SetPoint("BOTTOM", JadeUIBar, "BOTTOM", 0, 0)
+   JadeUIBarArtPanel:SetSize(745, 210)
+
+   JadeUI.g13MainBar = JadeUIBarArtPanel:CreateTexture("JadeUI Main Bar Texture")
+   JadeUI.g13MainBar:SetPoint("BOTTOM", JadeUIBarArtPanel, "BOTTOM")
    JadeUI.g13MainBar:SetTexture(textures.g13MainBarTexture)
    JadeUI.g13MainBar:SetDrawLayer("BACKGROUND", -6)
 
-   JadeUI.g13TopBar = JadeUIBar:CreateTexture("JadeUI Top Bar Texture")
-   JadeUI.g13TopBar:SetPoint("BOTTOM", JadeUIBar, "BOTTOM", 0, 43)
+   JadeUI.g13TopBar = JadeUIBarArtPanel:CreateTexture("JadeUI Top Bar Texture")
+   JadeUI.g13TopBar:SetPoint("BOTTOM", JadeUIBarArtPanel, "BOTTOM", 0, 43)
    JadeUI.g13TopBar:SetTexture(textures.g13TopBarTexture)
    JadeUI.g13TopBar:SetDrawLayer("BACKGROUND", 0)
 
 
-   JadeUI.leftEndstop = JadeUIBar:CreateTexture("JadeUI Left Endstop")
-   JadeUI.leftEndstop:SetPoint("BOTTOMRIGHT", JadeUIBar, "BOTTOM", -267, 0)
+   JadeUI.leftEndstop = JadeUIBarArtPanel:CreateTexture("JadeUI Left Endstop")
+   JadeUI.leftEndstop:SetPoint("BOTTOMRIGHT", JadeUIBarArtPanel, "BOTTOM", -267, 0)
    JadeUI.leftEndstop:SetTexture(textures.endstopDwarfTexture)
    JadeUI.leftEndstop:SetDrawLayer("ARTWORK")
 
-   JadeUI.rightEndstop = JadeUIBar:CreateTexture("JadeUI Right Endstop")
-   JadeUI.rightEndstop:SetPoint("BOTTOMLEFT", JadeUIBar, "BOTTOM", 267, 0)
+   JadeUI.rightEndstop = JadeUIBarArtPanel:CreateTexture("JadeUI Right Endstop")
+   JadeUI.rightEndstop:SetPoint("BOTTOMLEFT", JadeUIBarArtPanel, "BOTTOM", 267, 0)
    JadeUI.rightEndstop:SetTexture(textures.endstopDwarfTexture)
    JadeUI.rightEndstop:SetTexCoord(1, 0, 0, 1) --Mirror Texture
    JadeUI.rightEndstop:SetDrawLayer("ARTWORK")

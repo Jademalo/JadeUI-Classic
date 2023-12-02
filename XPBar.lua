@@ -11,15 +11,50 @@ local xpBar = JadeUI.xpBar
 --------------------------------------------
 --Functions
 --------------------------------------------
+
+local function hoverLevelIncrease()
+    MainMenuExpBar:SetFrameLevel(4)
+    ExhaustionTick:SetFrameLevel(4)
+end
+
+local function hoverLevelDecrease()
+    MainMenuExpBar:SetFrameLevel(1)
+    ExhaustionTick:SetFrameLevel(1)
+end
+
+
 local function moveBlizzXPBar()
     --Exp Bar
     MainMenuExpBar:ClearAllPoints()
     MainMenuExpBar:SetParent(JadeUIBar)
-    MainMenuExpBar:SetPoint("BOTTOM", JadeUIBar, "BOTTOM", 0, 43)
+    MainMenuExpBar:SetPoint("BOTTOM", JadeUIBar, "BOTTOM", 0, 40)
     MainMenuExpBar:SetWidth(588)
+    hoverLevelDecrease()
     ExhaustionTick_OnEvent(_,"PLAYER_XP_UPDATE") --Force an event to run ExhaustionTick_OnEvent which handles setting the exhaustion tick relative to the xp bar - https://github.com/Gethe/wow-ui-source/blob/bc566bcfb0633aa29255dc1bb65b4bbed00967a4/Interface/FrameXML/MainMenuBar.lua#L361
 
+    MainMenuExpBar:HookScript("OnEnter", function(self, motion)
+        hoverLevelIncrease()
+    end)
+    MainMenuExpBar:HookScript("OnLeave", function(self, motion)
+        hoverLevelDecrease()
+    end)
+
+--[[     local xpBarMouseover = CreateFrame("Frame", "XP Bar Mouseover", MainMenuExpBar)
+    xpBarMouseover:SetPoint("CENTER")
+    local width, height = xpBarMouseover:GetParent():GetSize()
+    xpBarMouseover:SetSize(width, height)
+    xpBarMouseover:SetScript("OnEnter", function(self, motion)
+        hoverLevelIncrease()
+    end)
+    xpBarMouseover:SetScript("OnLeave", function(self, motion)
+        hoverLevelDecrease()
+    end) ]]
+
+
+
 end
+
+
 
 
 local function createRepBarCover()
