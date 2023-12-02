@@ -14,6 +14,18 @@ local function moveBlizzardFrame(frame, point, relativePoint, offsetX, offsetY)
     frame.SetPoint = function()end
 end
 
+--Hook for moving the tooltip. Needs to be hooked to GameTooltip:SetPoint
+local gtHookSet = false
+local function gtHook(self, motion) 
+
+    if gtHookSet then return end --Don't infinitely fire from itself
+    gtHookSet = true
+
+    local point, relativeTo, relativePoint, offsetX, offsetY = GameTooltip:GetPoint()
+    GameTooltip:ClearAllPoints()
+    GameTooltip:SetPoint(point, relativeTo, relativePoint, offsetX-(MinimapCluster:GetWidth()*MinimapCluster:GetEffectiveScale()), offsetY) --Make sure to get the actual scaled width of the minimap
+    gtHookSet = false
+end
 
 
 --------------------------------------------
@@ -32,6 +44,7 @@ function JadeUI.moveUnitFramesFunc()
 end
 
 
+
 function JadeUI.MoveMinimapFunc()
     --Minimap
     moveBlizzardFrame(MinimapCluster, "BOTTOMRIGHT", "BOTTOMRIGHT", 0, 0)
@@ -45,6 +58,8 @@ function JadeUI.MoveMinimapFunc()
     moveBlizzardFrame(TimeManagerClockButton, "CENTER", "CENTER", 0, 75)
     --Buff Bar
     moveBlizzardFrame(BuffFrame, "TOPRIGHT", "TOPRIGHT", - 13, - 13)
+    --Tooltip
+    hooksecurefunc(GameTooltip, "SetPoint", gtHook)
 end
 
 
