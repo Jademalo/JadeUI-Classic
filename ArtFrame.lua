@@ -51,18 +51,13 @@ function JadeUI.createArtFrame()
 
    JadeUIBarArtPanel = CreateFrame("Frame","Jade UI Art Panel", JadeUIBar)
    JadeUIBarArtPanel:SetPoint("BOTTOM", JadeUIBar, "BOTTOM", 0, 0)
-   JadeUIBarArtPanel:SetSize(745, 210)
+   JadeUIBarArtPanel:SetSize(850, 100)
+   JadeUIBarArtPanel:SetFrameLevel(5)
 
    JadeUI.g13MainBar = JadeUIBarArtPanel:CreateTexture("JadeUI Main Bar Texture")
    JadeUI.g13MainBar:SetPoint("BOTTOM", JadeUIBarArtPanel, "BOTTOM")
    JadeUI.g13MainBar:SetTexture(textures.g13MainBarTexture)
    JadeUI.g13MainBar:SetDrawLayer("BACKGROUND", -6)
-
-   JadeUI.g13TopBar = JadeUIBarArtPanel:CreateTexture("JadeUI Top Bar Texture")
-   JadeUI.g13TopBar:SetPoint("BOTTOM", JadeUIBarArtPanel, "BOTTOM", 0, 43)
-   JadeUI.g13TopBar:SetTexture(textures.g13TopBarTexture)
-   JadeUI.g13TopBar:SetDrawLayer("BACKGROUND", 0)
-
 
    JadeUI.leftEndstop = JadeUIBarArtPanel:CreateTexture("JadeUI Left Endstop")
    JadeUI.leftEndstop:SetPoint("BOTTOMRIGHT", JadeUIBarArtPanel, "BOTTOM", -267, 0)
@@ -76,13 +71,32 @@ function JadeUI.createArtFrame()
    JadeUI.rightEndstop:SetDrawLayer("ARTWORK")
 
 
-
-
-
-   JadeUI.petBar = JadeUIBar:CreateTexture("JadeUI Pet Bar Texture")
+   JadeUI.petBar = JadeUIBarArtPanel:CreateTexture("JadeUI Pet Bar Texture")
    JadeUI.petBar:SetParent(PetActionBarFrame)
    JadeUI.petBar:SetPoint("LEFT", PetActionBarFrame, "LEFT", 0, 8.5)
    JadeUI.petBar:SetTexture(textures.petBarTexture)
+
+
+
+
+
+   JadeUIBarTopArtPanel = CreateFrame("Frame","Jade UI Top Art Panel", JadeUIBarArtPanel)
+   JadeUIBarTopArtPanel:SetPoint("BOTTOM", JadeUIBarArtPanel, "BOTTOM", 0, 0)
+   JadeUIBarTopArtPanel:SetSize(450, 210)
+   JadeUIBarTopArtPanel:SetFrameLevel(3)
+
+   JadeUI.g13TopBar = JadeUIBarTopArtPanel:CreateTexture("JadeUI Top Bar Texture")
+   JadeUI.g13TopBar:SetPoint("BOTTOM", JadeUIBarTopArtPanel, "BOTTOM", 0, 43)
+   JadeUI.g13TopBar:SetTexture(textures.g13TopBarTexture)
+   JadeUI.g13TopBar:SetDrawLayer("BACKGROUND", 0)
+
+
+
+
+
+
+
+
 
 end
 

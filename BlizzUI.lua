@@ -133,7 +133,7 @@ local function moveActionBars()
     ActionButton1:ClearAllPoints()
     for i = 1, 12 do
         _G["ActionButton" .. i]:SetParent(JadeUIButtonParent)
-        _G["ActionButton" .. i]:SetFrameLevel(JadeUIBar:GetFrameLevel() + 1)
+        _G["ActionButton" .. i]:SetFrameLevel(JadeUIButtonParent:GetFrameLevel() + 1)
     end
     ActionButton1:SetPoint("CENTER", JadeUIBar, "CENTER", -127, 2)
 
@@ -142,6 +142,7 @@ local function moveActionBars()
     MultiBarBottomLeft:ClearAllPoints()
     MultiBarBottomLeft:SetParent(JadeUIButtonParent)
     MultiBarBottomLeft:SetPoint("BOTTOMLEFT", multiRel, "TOPLEFT", 0, 7)
+    MultiBarBottomLeft:SetFrameLevel(JadeUIButtonParent:GetFrameLevel() + 1)
     --MultiBarBottomLeft.SetPoint = function()end
 
     --Bottom Right Action Bar
@@ -151,7 +152,7 @@ local function moveActionBars()
 
     --Bottom Right Action Bar Second Row
     MultiBarBottomRightButton7:ClearAllPoints()
-    MultiBarBottomRightButton7:SetPoint("TOPLEFT", MultiBarBottomRightButton1, "BOTTOMLEFT", 0, - 5)
+    MultiBarBottomRightButton7:SetPoint("TOPLEFT", MultiBarBottomRightButton1, "BOTTOMLEFT", 0, - 7)
 
 end
 

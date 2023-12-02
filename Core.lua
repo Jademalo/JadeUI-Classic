@@ -67,14 +67,20 @@ JadeUIBar:SetScript("OnEvent", function(self, event, arg1, arg2)
         if not C_AddOns.IsAddOnLoaded("Bartender4") then
             JadeUI.preventActionBarMovement() --Disable Blizzard dynamic UI positioning
             JadeUIButtonParent = CreateFrame("Frame", "JadeUI Button Parent", JadeUIBar)
-            JadeUIButtonParent:SetFrameLevel(3)
+            JadeUIButtonParent:SetFrameLevel(6) --Children are given +1 to their parent
             JadeUI.blizzBarMove() --Move the Blizzard Action Bars
             JadeUI.xpBar.BlizzXPBarMove()
+            JadeUI.xpBar.BlizzRepBarMove()
+            JadeUIBar:RegisterEvent("UPDATE_FACTION") --Register the update faction event to run Rep Bar Move after
             JadeUI.xpBar.showMaxCover()
             MainMenuBar:Hide() --Hide Blizzard Main Bar
         else
             JadeUI.bartenderFix() --Fix some issues with Bartender
         end
+    end
+
+    if event == "UPDATE_FACTION" then
+        JadeUI.xpBar.BlizzRepBarMove()
     end
 
 end)
@@ -84,11 +90,11 @@ end)
 --[[ Frame levels
 Medium
 0 - UIParent
-1 - XP Bar
-2 - Art Bar
-3 - Buttons 
-4 - XP Bar Hover
-5 - Endstops
+2 - XP Bar
+4 - Top Button Texture
+5 - Main Art Bar + Top Button Texture
+6 - Buttons
+
 
 When bar is hovered over, 
 
