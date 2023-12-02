@@ -68,8 +68,8 @@ JadeUIBar:SetScript("OnEvent", function(self, event, arg1, arg2)
             JadeUI.preventActionBarMovement() --Disable Blizzard dynamic UI positioning
             JadeUIButtonParent = CreateFrame("Frame", "JadeUI Button Parent", JadeUIBar)
             JadeUI.blizzBarMove() --Move the Blizzard Action Bars
-            JadeUI.BlizzXPBarMove()
-            JadeUI.showMaxCover()
+            JadeUI.xpBar.BlizzXPBarMove()
+            JadeUI.xpBar.showMaxCover()
             MainMenuBar:Hide() --Hide Blizzard Main Bar
         else
             JadeUI.bartenderFix() --Fix some issues with Bartender
