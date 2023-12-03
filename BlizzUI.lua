@@ -60,6 +60,10 @@ function JadeUI.MoveMinimapFunc()
     moveBlizzardFrame(BuffFrame, "TOPRIGHT", "TOPRIGHT", - 13, - 13)
     --Tooltip
     hooksecurefunc(GameTooltip, "SetPoint", gtHook)
+    --Quest Watch Frame
+    local _,_,_,_,buffQfix = BuffFrame:GetPoint()
+    QuestWatchFrame:SetParent(BuffFrame)
+    moveBlizzardFrame(QuestWatchFrame, "TOPRIGHT", "BOTTOMRIGHT", -84-buffQfix, 0)
 end
 
 
