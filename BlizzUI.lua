@@ -182,7 +182,7 @@ end
 local function moveStanceBar()
     StanceBarFrame:ClearAllPoints()
     StanceBarFrame:SetParent(JadeUIButtonParent)
-    StanceBarFrame:SetPoint("BOTTOMLEFT", JadeUI.g13TopBar, "TOPLEFT", 133, - 120)
+    StanceBarFrame:SetPoint("BOTTOMLEFT", JadeUIBarTopArtPanel, "TOPLEFT", 133, - 120)
     --StanceBarFrame.SetPoint = function()end
 end
 
@@ -190,9 +190,9 @@ end
 local function movePetBar()
     PetActionBarFrame:ClearAllPoints()
     PetActionBarFrame:SetParent(JadeUIButtonParent)
+    PetActionBarFrame:SetPoint("BOTTOM", JadeUIBarTopArtPanel, "TOP", 33, -44)
     PetActionBarFrame:SetScale(0.7)
-    PetActionBarFrame:SetPoint("BOTTOMLEFT", JadeUI.g13TopBar, "TOPLEFT", 144, - 171)
-    --PetActionBarFrame.SetPoint = function()end
+    PetActionBarFrame.SetPoint = function()end
 end
 
 
