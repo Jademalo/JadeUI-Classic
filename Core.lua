@@ -85,6 +85,8 @@ JadeUIBar:SetScript("OnEvent", function(self, event, arg1, arg2)
     end
 
     if event == "PLAYER_LEVEL_UP" then
+        RequestTimePlayed()
+        Screenshot() --Take a screenshot on Level Up
         JadeUI.xpBar.showMaxCover()
     end
 

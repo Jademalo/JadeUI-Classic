@@ -20,6 +20,7 @@ local function savedVariablesInit()
         JadeUIDB.minimapScaleFactor = (JadeUIDB.minimapScaleFactor or 1.33)
         JadeUIDB.endstopType = (JadeUIDB.endstopType or 1)
         JadeUIDB.pixelScale = (JadeUIDB.pixelScale or false)
+        JadeUIDB.levelScreenshot = (JadeUIDB.levelScreenshot or true)
 
         JadeUIDB.blizzXPBar = (JadeUIDB.blizzXPBar or 0)
         JadeUIDB.mouseover = (JadeUIDB.mouseover or 0)
@@ -139,6 +140,17 @@ local function buildLeftColumn()
     minimapScaleCheckbox:HookScript("OnClick", function(_, btn, down)
         JadeUIDB.minimapScale = minimapScaleCheckbox:GetChecked()
         JadeUI.MinimapScaleFunc()
+    end)
+
+    --Checkbox for taking a screenshot on level up
+    local uiScaleCheckbox = createCheckbox(
+        "Screenshot on Level Up",
+        "Enables automatically taking a screenshot on levelling up",
+        JadeUIDB.levelScreenshot
+    )
+    uiScaleCheckbox:HookScript("OnClick", function(_, btn, down)
+        JadeUIDB.levelScreenshot = uiScaleCheckbox:GetChecked()
+        JadeUI.SetScale()
     end)
 
     --Checkbox for forcing a specific UI Scale
