@@ -7,14 +7,14 @@ name: Package and Release
 # other branches or even pullrequests.
 # this tag schema only fires on version numbers, though isn't as good as regex "/^v\d+\.\d+(\.\d+)?(-\S*)?$/"
 # workflow_run is used since a workflow can't be triggered by a tag made by another workflow without OAuth
-#on:
-#  push:
-#    tags:
-#      - v[0-9]+.[0-9]+*
-#  workflow_run:
-#    workflows: ["Bump Version"]
-#    types:
-#      - completed
+on:
+  push:
+    tags:
+      - v[0-9]+.[0-9]+*
+  workflow_run:
+    workflows: ["Bump Version"]
+    types:
+      - completed
 
 # a workflow is built up as jobs, and within these jobs are steps
 jobs:
