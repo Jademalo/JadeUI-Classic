@@ -158,39 +158,52 @@ end
 --------------------------------------------
 --Right Column Menu Entries
 --------------------------------------------  
-local function endstopDropDownHandler(self, arg1, arg2, checked) --Arguments have to be (self, arg1, arg2, checked), self being info from UIDropDownMenu_CreateInfo (self.arg1 and arg1 are the same)  - https://www.townlong-yak.com/framexml/latest/UIDropDownMenu.lua#276
-    JadeUI.setEndstop(self.value)
-    JadeUIDB.endstopType = self.value
-    UIDropDownMenu_SetSelectedValue(endstopDropDown,self.value) --This sets the label after selecting an option
-end
-
 local function endstopDropDownInitialise(frame, level, menulist) --The initialisation function for the dropdown
     local endstopTypes = { "None", "Gryphon", "Lion" }
     for i, type in next, endstopTypes do
         local info = UIDropDownMenu_CreateInfo()
         info.text = type
         info.value = i-1
-        info.func = endstopDropDownHandler
+        info.func = function(self, arg1, arg2, checked) --Args passed to this are (self (info in this case), arg1, arg2, checked)
+            JadeUI.setEndstop(self.value)
+            JadeUIDB.endstopType = self.value
+            UIDropDownMenu_SetSelectedValue(frame,self.value) --This sets the label after selecting an option
+        end
         UIDropDownMenu_AddButton(info)
     end
-    UIDropDownMenu_SetSelectedValue(endstopDropDown, JadeUIDB.endstopType) --This sets the label initially based on the SavedVariable
+    UIDropDownMenu_SetSelectedValue(frame, JadeUIDB.endstopType) --This sets the label initially based on the SavedVariable
 end
 
 local function buildRightColumn()
     --Create a dropdown to manage Endstops
+        --Title
     local endstopLabel = optionsPanel:CreateFontString(nil, 'ARTWORK', 'GameFontHighlightSmall')
     appendOptionRight(endstopLabel)
     endstopLabel:SetText('Select endstop artwork:')
 
+        --Dropdown Box
     local endstopDropDown = CreateFrame("Frame", "Endstop Menu", optionsPanel, "UIDropDownMenuTemplate")
-    addTooltip(endstopDropDown) --Add a tooltip to the dropdown
-
     endstopDropDown:SetPoint("TOPLEFT", endstopLabel, "BOTTOMLEFT", -15, -5)
     table.insert(JadeUI.OptionsListRight, endstopDropDown) --This frame has it's relative point set manually since it needs to be closer, and is added manually
     UIDropDownMenu_SetWidth(endstopDropDown, 100)
+    addTooltip(endstopDropDown) --Add a tooltip to the dropdown
     endstopDropDown.tooltipText = "Select Endstop Artwork"
     endstopDropDown.tooltipRequirement = "Select the artwork to be displayed for the endstops on the main bar"
-    UIDropDownMenu_Initialize(endstopDropDown, endstopDropDownInitialise)
+    UIDropDownMenu_Initialize(endstopDropDown, function(frame, level, menulist) --Args passed to this function are (frame, level, menulist), where frame is the first arg here. This function is run to init the box.
+        local endstopTypes = { "None", "Gryphon", "Lion" }
+            for i, type in next, endstopTypes do
+                local info = UIDropDownMenu_CreateInfo()
+                info.text = type
+                info.value = i-1
+                info.func = function(self, arg1, arg2, checked) --Args passed to this are (self (info in this case), arg1, arg2, checked). This function is run on click.
+                    JadeUI.setEndstop(self.value)
+                    JadeUIDB.endstopType = self.value
+                    UIDropDownMenu_SetSelectedValue(frame,self.value) --This sets the label after selecting an option
+                end
+                UIDropDownMenu_AddButton(info)
+            end
+        UIDropDownMenu_SetSelectedValue(frame, JadeUIDB.endstopType) --This sets the label initially based on the SavedVariable
+    end)
 
     --Create a scroll bar to adjust Minimap scale
     --TODO
