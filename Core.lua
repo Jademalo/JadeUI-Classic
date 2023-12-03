@@ -36,6 +36,8 @@ end
 JadeUIBar:RegisterEvent("ADDON_LOADED")
 JadeUIBar:RegisterEvent("PLAYER_ENTERING_WORLD")
 
+JadeUIBar:RegisterEvent("PLAYER_LEVEL_UP") --Register the level up event to re-trigger the max cover after maxing
+
 
 --------------------------------------------------------------------------------
 --Event Handler
@@ -71,9 +73,8 @@ JadeUIBar:SetScript("OnEvent", function(self, event, arg1, arg2)
             JadeUI.blizzBarMove() --Move the Blizzard Action Bars
             JadeUI.xpBar.BlizzXPBarMove()
             JadeUI.xpBar.BlizzRepBarMove()
-            JadeUIBar:RegisterEvent("UPDATE_FACTION") --Register the update faction event to run Rep Bar Move after
+            JadeUIBar:RegisterEvent("UPDATE_FACTION") --Register the update faction event to run Rep Bar Move after. For some reason if this isn't here, I get an error about JadeUIButtonParent
             JadeUI.xpBar.showMaxCover()
-            JadeUIBar:RegisterEvent("PLAYER_LEVEL_UP") --Register the level up event to re-trigger the max cover after maxing
             MainMenuBar:Hide() --Hide Blizzard Main Bar
         else
             JadeUI.bartenderFix() --Fix some issues with Bartender
@@ -85,9 +86,16 @@ JadeUIBar:SetScript("OnEvent", function(self, event, arg1, arg2)
     end
 
     if event == "PLAYER_LEVEL_UP" then
-        RequestTimePlayed()
-        Screenshot() --Take a screenshot on Level Up
         JadeUI.xpBar.showMaxCover()
+        if JadeUIDB.levelScreenshot then
+            RequestTimePlayed() --Show /played when levelling up
+            JadeUIBar:RegisterEvent("TIME_PLAYED_MSG") --Register the return of the message being sent to screenshot
+        end
+    end
+
+    if event == "TIME_PLAYED_MSG" then
+        C_Timer.After(0.5, function() Screenshot() end) --Take a screenshot on Level Up
+        JadeUIBar:UnregisterEvent("TIME_PLAYED_MSG") --Unregister the event so it doesn't fire on every /played
     end
 
 end)
