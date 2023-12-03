@@ -73,7 +73,7 @@ function JadeUI.MinimapScaleFunc()
         --if JadeUIDB.minimapScaleFactor ~= 1 then
             MinimapCluster:SetScale(JadeUIDB.minimapScaleFactor)
 
-            if not moveMinimap then
+            if not JadeUIDB.moveMinimap then
                 local buffOffset = (MinimapCluster:GetWidth() * JadeUIDB.minimapScaleFactor) + 8
                 moveBlizzardFrame(BuffFrame, "TOPRIGHT", "TOPRIGHT", - buffOffset, - 13)
             end
