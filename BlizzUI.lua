@@ -77,14 +77,13 @@ function JadeUI.MoveMinimapFunc()
     --Clock
     moveBlizzardFrame(TimeManagerClockButton, "CENTER", "CENTER", 0, 75)
     --Buff Bar
-    moveBlizzardFrame(BuffFrame, "TOPRIGHT", "TOPRIGHT", - 13, - 13)
+    moveBlizzardFrame(BuffFrame, "TOPRIGHT", "TOPRIGHT", - 13, - 13, UIParent)
     --Tooltip
     offsetBlizzardFrame(GameTooltip, -(MinimapCluster:GetWidth()*MinimapCluster:GetScale()), 0)
-    --hooksecurefunc(GameTooltip, "SetPoint", gtHook)
     --Quest Watch Frame
     local _,_,_,_,buffQfix = BuffFrame:GetPoint()
     QuestWatchFrame:SetParent(BuffFrame)
-    moveBlizzardFrame(QuestWatchFrame, "TOPRIGHT", "BOTTOMRIGHT", -84-buffQfix, 0)
+    moveBlizzardFrame(QuestWatchFrame, "TOPRIGHT", "BOTTOMRIGHT", -84-buffQfix, 0, BuffFrame)
     --Bags
     offsetBlizzardFrame(ContainerFrame1, -(MinimapCluster:GetWidth()*MinimapCluster:GetScale()), 0)
     --hooksecurefunc(ContainerFrame1, "SetPoint", bagHook)
