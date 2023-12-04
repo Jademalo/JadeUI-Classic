@@ -86,8 +86,6 @@ function JadeUI.MoveMinimapFunc()
     moveBlizzardFrame(QuestWatchFrame, "TOPRIGHT", "BOTTOMRIGHT", -84-buffQfix, 0, BuffFrame)
     --Bags
     offsetBlizzardFrame(ContainerFrame1, -(MinimapCluster:GetWidth()*MinimapCluster:GetScale())+VerticalMultiBarsContainer:GetWidth(), 0)
-    --hooksecurefunc(ContainerFrame1, "SetPoint", bagHook)
-
 end
 
 
@@ -198,7 +196,7 @@ local function moveActionBars()
 
 end
 
-function JadeUI.MovePetBar()
+local function movePetBar()
     PetActionBarFrame:SetParent(JadeUIButtonParent)
     moveBlizzardFrame(PetActionBarFrame, "BOTTOM", "TOP", 33, -44, JadeUIBarTopArtPanel)
     PetActionBarFrame:SetScale(0.7)
@@ -270,7 +268,7 @@ function JadeUI.blizzBarMove()
     if forms > 0 then
         moveBlizzardFrame(StanceBarFrame, "BOTTOMLEFT", "TOPLEFT", 133, -120, JadeUIBarTopArtPanel)
     end
-    JadeUI.MovePetBar()
+    movePetBar()
 
     --Other Variables
     if stanceBarHide then
