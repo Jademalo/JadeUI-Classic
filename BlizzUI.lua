@@ -8,11 +8,53 @@ local addonName, JadeUI = ...
 --Functions
 --------------------------------------------
 --Move an already set frame, then remove SetPoint so the UI can't set it back again
-local function moveBlizzardFrame(frame, point, relativePoint, offsetX, offsetY)
+--[[ local function moveBlizzardFrame(frame, point, relativePoint, offsetX, offsetY)
     frame:ClearAllPoints()
     frame:SetPoint(point, frame:GetParent(), relativePoint, offsetX, offsetY)
     frame.SetPoint = function()end
+end ]]
+
+local function moveBlizzardFrame(frame, point, relativePoint, offsetX, offsetY)
+    local hookSet = false
+
+    hooksecurefunc(frame, "SetPoint", function()
+
+        if hookSet then return end --Don't infinitely fire from itself
+
+        hookSet = true
+            frame:ClearAllPoints()
+            frame:SetPoint(point, frame:GetParent(), relativePoint, offsetX, offsetY) --Make sure to get the actual scaled width of the minimap
+        hookSet = false
+
+    end)
+    frame:SetPoint("CENTER") --Fire SetPoint to fire the hook
+
 end
+
+local function offsetBlizzardFrame(frame, offsetX, offsetY)
+    local hookSet = false
+
+    hooksecurefunc(frame, "SetPoint", function()
+
+        if hookSet then return end --Don't infinitely fire from itself
+
+        if frame == GameTooltip then --Hacky fix for item tooltips being offset
+            local _,gtPoint = GameTooltip:GetPoint()
+            if gtPoint ~= UIParent then return end
+        end
+    
+        local oldPos = {frame:GetPoint()} --Back up the current position of the frame
+        local offsetCalcX = oldPos[4]+offsetX
+        local offsetCalcY = oldPos[5]+offsetY
+
+        hookSet = true
+        frame:ClearAllPoints()
+        frame:SetPoint(oldPos[1], oldPos[2], oldPos[3], offsetCalcX, offsetCalcY) --Make sure to get the actual scaled width of the minimap
+        hookSet = false
+
+    end)
+end
+
 
 --Hook for moving the tooltip. Needs to be hooked to GameTooltip:SetPoint
 local gtHookSet = false
@@ -70,13 +112,15 @@ function JadeUI.MoveMinimapFunc()
     --Buff Bar
     moveBlizzardFrame(BuffFrame, "TOPRIGHT", "TOPRIGHT", - 13, - 13)
     --Tooltip
-    hooksecurefunc(GameTooltip, "SetPoint", gtHook)
+    offsetBlizzardFrame(GameTooltip, -(MinimapCluster:GetWidth()*MinimapCluster:GetScale()), 0)
+    --hooksecurefunc(GameTooltip, "SetPoint", gtHook)
     --Quest Watch Frame
     local _,_,_,_,buffQfix = BuffFrame:GetPoint()
     QuestWatchFrame:SetParent(BuffFrame)
     moveBlizzardFrame(QuestWatchFrame, "TOPRIGHT", "BOTTOMRIGHT", -84-buffQfix, 0)
     --Bags
-    hooksecurefunc(ContainerFrame1, "SetPoint", bagHook)
+    offsetBlizzardFrame(ContainerFrame1, -(MinimapCluster:GetWidth()*MinimapCluster:GetScale()), 0)
+    --hooksecurefunc(ContainerFrame1, "SetPoint", bagHook)
 
 end
 
@@ -234,8 +278,9 @@ function JadeUI.blizzUIMove()
     FramerateLabel:SetPoint("BOTTOM", FramerateLabel:GetParent(), "BOTTOM", - 190, 85) --Framerate Label
 
     if JadeUIDB.moveUnitFrames then JadeUI.moveUnitFramesFunc() end --Unit Frames
+    JadeUI.MinimapScaleFunc() --Minimap Scale. Needs to be abover Minimap since Minimap includes scale calcs.
     if JadeUIDB.moveMinimap then JadeUI.MoveMinimapFunc() end --Minimap
-    JadeUI.MinimapScaleFunc() --Minimap Scale
+
 
     if JadeUI.isVanilla then 
         moveBlizzardFrame(TutorialFrameParent,"BOTTOM", "BOTTOM", 0, 300) --Tutorial Frame
