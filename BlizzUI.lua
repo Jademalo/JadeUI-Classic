@@ -143,7 +143,6 @@ local function microMenuHook()
 end
 
 
-
 local function moveMicroMenu()
 
     hooksecurefunc("UpdateMicroButtons", microMenuHook)
@@ -200,26 +199,11 @@ local function moveActionBars()
 
 end
 
-
-
-
-
-local function moveStanceBar()
-    StanceBarFrame:ClearAllPoints()
-    StanceBarFrame:SetParent(JadeUIButtonParent)
-    StanceBarFrame:SetPoint("BOTTOMLEFT", JadeUIBarTopArtPanel, "TOPLEFT", 133, - 120)
-    --StanceBarFrame.SetPoint = function()end
-end
-
-
-local function movePetBar()
-    PetActionBarFrame:ClearAllPoints()
+function JadeUI.MovePetBar()
     PetActionBarFrame:SetParent(JadeUIButtonParent)
-    PetActionBarFrame:SetPoint("BOTTOM", JadeUIBarTopArtPanel, "TOP", 33, -44)
+    moveBlizzardFrame(PetActionBarFrame, "BOTTOM", "TOP", 33, -44, JadeUIBarTopArtPanel)
     PetActionBarFrame:SetScale(0.7)
-    PetActionBarFrame.SetPoint = function()end
 end
-
 
 local function hideButtons()
     --Main Action Bar
@@ -285,11 +269,9 @@ function JadeUI.blizzBarMove()
 
     local forms = GetNumShapeshiftForms()
     if forms > 0 then
-        moveStanceBar()
+        moveBlizzardFrame(StanceBarFrame, "BOTTOMLEFT", "TOPLEFT", 133, -120, JadeUIBarTopArtPanel)
     end
-    if UnitExists("pet") then
-        movePetBar()
-    end
+    JadeUI.MovePetBar()
 
     --Other Variables
     if stanceBarHide then
