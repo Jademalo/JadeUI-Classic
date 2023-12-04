@@ -27,6 +27,17 @@ local function gtHook(self, motion)
     gtHookSet = false
 end
 
+--Hook for moving the bags. Needs to be hooked to ContainerFrame1:SetPoint
+--local bagHookSet = false
+function bagHook(self, motion) 
+    if bagHookSet then return end --Don't infinitely fire from itself
+    bagHookSet = true
+
+    local point, relativeTo, relativePoint, offsetX, offsetY = ContainerFrame1:GetPoint()
+    ContainerFrame1:ClearAllPoints()
+    ContainerFrame1:SetPoint(point, relativeTo, relativePoint, offsetX-(MinimapCluster:GetWidth()*MinimapCluster:GetEffectiveScale()), offsetY) --Make sure to get the actual scaled width of the minimap
+    bagHookSet = false
+end
 
 --------------------------------------------
 --Functions to move basic Blizzard Frames
@@ -64,6 +75,9 @@ function JadeUI.MoveMinimapFunc()
     local _,_,_,_,buffQfix = BuffFrame:GetPoint()
     QuestWatchFrame:SetParent(BuffFrame)
     moveBlizzardFrame(QuestWatchFrame, "TOPRIGHT", "BOTTOMRIGHT", -84-buffQfix, 0)
+    --Bags
+    hooksecurefunc(ContainerFrame1, "SetPoint", bagHook)
+
 end
 
 

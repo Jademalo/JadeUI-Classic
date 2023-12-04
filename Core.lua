@@ -35,7 +35,6 @@ end
 --------------------------------------------------------------------------------
 JadeUIBar:RegisterEvent("ADDON_LOADED")
 JadeUIBar:RegisterEvent("PLAYER_ENTERING_WORLD")
-
 JadeUIBar:RegisterEvent("PLAYER_LEVEL_UP") --Register the level up event to re-trigger the max cover after maxing
 
 
