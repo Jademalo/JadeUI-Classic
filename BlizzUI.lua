@@ -7,35 +7,28 @@ local addonName, JadeUI = ...
 --------------------------------------------
 --Functions
 --------------------------------------------
---Move an already set frame, then remove SetPoint so the UI can't set it back again
---[[ local function moveBlizzardFrame(frame, point, relativePoint, offsetX, offsetY)
-    frame:ClearAllPoints()
-    frame:SetPoint(point, frame:GetParent(), relativePoint, offsetX, offsetY)
-    frame.SetPoint = function()end
-end ]]
-
-local function moveBlizzardFrame(frame, point, relativePoint, offsetX, offsetY)
+--Move a frame by hooking its SetPoint and 
+local function moveBlizzardFrame(frame, point, relativePoint, offsetX, offsetY, relativeTo)
     local hookSet = false
 
     hooksecurefunc(frame, "SetPoint", function()
-
         if hookSet then return end --Don't infinitely fire from itself
-
         hookSet = true
+            local _,oldAnchor = frame:GetPoint()
+            relativeTo = relativeTo or oldAnchor --relativeTo is either the existing point or an arg if set manually
+
             frame:ClearAllPoints()
-            frame:SetPoint(point, frame:GetParent(), relativePoint, offsetX, offsetY) --Make sure to get the actual scaled width of the minimap
+            frame:SetPoint(point, relativeTo, relativePoint, offsetX, offsetY) --Make sure to get the actual scaled width of the minimap
         hookSet = false
-
     end)
-    frame:SetPoint("CENTER") --Fire SetPoint to fire the hook
 
+    frame:SetPoint("CENTER") --Fire SetPoint to fire the hook
 end
 
 local function offsetBlizzardFrame(frame, offsetX, offsetY)
     local hookSet = false
 
     hooksecurefunc(frame, "SetPoint", function()
-
         if hookSet then return end --Don't infinitely fire from itself
 
         if frame == GameTooltip then --Hacky fix for item tooltips being offset
@@ -48,38 +41,12 @@ local function offsetBlizzardFrame(frame, offsetX, offsetY)
         local offsetCalcY = oldPos[5]+offsetY
 
         hookSet = true
-        frame:ClearAllPoints()
-        frame:SetPoint(oldPos[1], oldPos[2], oldPos[3], offsetCalcX, offsetCalcY) --Make sure to get the actual scaled width of the minimap
+            frame:ClearAllPoints()
+            frame:SetPoint(oldPos[1], oldPos[2], oldPos[3], offsetCalcX, offsetCalcY) --Make sure to get the actual scaled width of the minimap
         hookSet = false
-
     end)
 end
 
-
---Hook for moving the tooltip. Needs to be hooked to GameTooltip:SetPoint
-local gtHookSet = false
-local function gtHook(self, motion) 
-
-    if gtHookSet then return end --Don't infinitely fire from itself
-    gtHookSet = true
-
-    local point, relativeTo, relativePoint, offsetX, offsetY = GameTooltip:GetPoint()
-    GameTooltip:ClearAllPoints()
-    GameTooltip:SetPoint(point, relativeTo, relativePoint, offsetX-(MinimapCluster:GetWidth()*MinimapCluster:GetEffectiveScale()), offsetY) --Make sure to get the actual scaled width of the minimap
-    gtHookSet = false
-end
-
---Hook for moving the bags. Needs to be hooked to ContainerFrame1:SetPoint
---local bagHookSet = false
-function bagHook(self, motion) 
-    if bagHookSet then return end --Don't infinitely fire from itself
-    bagHookSet = true
-
-    local point, relativeTo, relativePoint, offsetX, offsetY = ContainerFrame1:GetPoint()
-    ContainerFrame1:ClearAllPoints()
-    ContainerFrame1:SetPoint(point, relativeTo, relativePoint, offsetX-(MinimapCluster:GetWidth()*MinimapCluster:GetEffectiveScale()), offsetY) --Make sure to get the actual scaled width of the minimap
-    bagHookSet = false
-end
 
 --------------------------------------------
 --Functions to move basic Blizzard Frames
