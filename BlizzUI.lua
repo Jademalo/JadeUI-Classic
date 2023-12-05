@@ -7,7 +7,7 @@ local addonName, JadeUI = ...
 --------------------------------------------
 --Functions
 --------------------------------------------
---Move a frame by hooking its SetPoint and 
+--Move a frame by hooking its SetPoint and overriding it's position every time it tries to move
 local function moveBlizzardFrame(frame, point, relativePoint, offsetX, offsetY, relativeTo)
     local hookSet = false
 
@@ -25,6 +25,7 @@ local function moveBlizzardFrame(frame, point, relativePoint, offsetX, offsetY, 
     frame:SetPoint("CENTER") --Fire SetPoint to fire the hook
 end
 
+--Offset a frame by hooking its SetPoint and adding the offset to its position
 local function offsetBlizzardFrame(frame, offsetX, offsetY)
     local hookSet = false
 
@@ -46,6 +47,12 @@ local function offsetBlizzardFrame(frame, offsetX, offsetY)
         hookSet = false
     end)
 end
+
+--Forcibly hide a frame by hooking Show and forcing it to hide whenever it tries
+local function hideBlizzardFrame(frame)
+    hooksecurefunc(frame,"Show", function() frame:Hide() end)
+end
+
 
 
 --------------------------------------------
@@ -205,15 +212,15 @@ end
 local function hideButtons()
     --Main Action Bar
     for i = 8, 12 do
-        _G["ActionButton" .. i]:Hide()
-        _G["MultiBarBottomLeftButton" .. i]:Hide()
+        hideBlizzardFrame(_G["ActionButton" .. i])
+        hideBlizzardFrame(_G["MultiBarBottomLeftButton" .. i])
     end
 
     --Bottom Right Action Bar
-    MultiBarBottomRightButton6:Hide()
-    MultiBarBottomRightButton7:Hide()
-    MultiBarBottomRightButton11:Hide()
-    MultiBarBottomRightButton12:Hide()
+    hideBlizzardFrame(MultiBarBottomRightButton6)
+    hideBlizzardFrame(MultiBarBottomRightButton7)
+    hideBlizzardFrame(MultiBarBottomRightButton11)
+    hideBlizzardFrame(MultiBarBottomRightButton12)
 end
 
 
