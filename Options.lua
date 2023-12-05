@@ -143,13 +143,13 @@ local function buildLeftColumn()
     end)
 
     --Checkbox for taking a screenshot on level up
-    local uiScaleCheckbox = createCheckbox(
+    local levelScreenshotCheckbox = createCheckbox(
         "Screenshot on Level Up",
         "Enables automatically taking a screenshot on levelling up",
         JadeUIDB.levelScreenshot
     )
-    uiScaleCheckbox:HookScript("OnClick", function(_, btn, down)
-        JadeUIDB.levelScreenshot = uiScaleCheckbox:GetChecked()
+    levelScreenshotCheckbox:HookScript("OnClick", function(_, btn, down)
+        JadeUIDB.levelScreenshot = levelScreenshotCheckbox:GetChecked()
         JadeUI.SetScale()
     end)
 
