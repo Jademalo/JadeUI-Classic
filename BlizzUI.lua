@@ -157,14 +157,14 @@ local function moveBagBar()
     --Bag Bar
     MainMenuBarBackpackButton:SetParent(JadeUIButtonParent)
     --MainMenuBarBackpackButton:SetPoint("BOTTOMRIGHT", JadeUI.g13MainBar, "BOTTOM", 293, 2) --Accurate to actual bag bar
-    MainMenuBarBackpackButton:SetPoint("BOTTOMRIGHT", JadeUI.g13MainBar, "BOTTOM", 292, 3) --Better Fitting
+    moveBlizzardFrame(MainMenuBarBackpackButton, "BOTTOMRIGHT", "BOTTOM", 292, 3, JadeUI.g13MainBar) --Better Fitting
 
     if not GetCVarBool("showKeyring") then
         SetCVar("showKeyring", 1)
     end
     KeyRingButton:SetParent(JadeUIButtonParent)
     --KeyRingButton:SetPoint("RIGHT", CharacterBag3Slot, "LEFT", -5, -1) --Accurate to actual bag bar
-    KeyRingButton:SetPoint("RIGHT", CharacterBag3Slot, "LEFT", -5, -1) --Better fitting
+    moveBlizzardFrame(KeyRingButton, "RIGHT", "LEFT", -5, -1, CharacterBag3Slot) --Better Fitting
 
     for i = 0, 3 do
         _G["CharacterBag" .. i .. "Slot"]:SetParent(JadeUIButtonParent)
@@ -203,8 +203,8 @@ end
 
 local function movePetBar()
     PetActionBarFrame:SetParent(JadeUIButtonParent)
-    moveBlizzardFrame(PetActionBarFrame, "BOTTOM", "TOP", 33, -44, JadeUIBarTopArtPanel)
     PetActionBarFrame:SetScale(0.7)
+    moveBlizzardFrame(PetActionBarFrame, "BOTTOM", "TOP", 33, -44, JadeUIBarTopArtPanel)
 end
 
 local function hideButtons()
