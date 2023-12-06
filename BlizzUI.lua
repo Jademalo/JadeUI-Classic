@@ -70,8 +70,6 @@ function JadeUI.moveUnitFramesFunc()
     end
 end
 
-
-
 function JadeUI.MoveMinimapFunc()
     --Minimap
     moveBlizzardFrame(MinimapCluster, "BOTTOMRIGHT", "BOTTOMRIGHT", 0, 0)
@@ -85,14 +83,14 @@ function JadeUI.MoveMinimapFunc()
     moveBlizzardFrame(TimeManagerClockButton, "CENTER", "CENTER", 0, 75)
     --Buff Bar
     moveBlizzardFrame(BuffFrame, "TOPRIGHT", "TOPRIGHT", - 13, - 13, UIParent)
-    --Tooltip
-    offsetBlizzardFrame(GameTooltip, -(MinimapCluster:GetWidth()*MinimapCluster:GetScale())+VerticalMultiBarsContainer:GetWidth(), 0)
     --Quest Watch Frame
     local _,_,_,_,buffQfix = BuffFrame:GetPoint()
     QuestWatchFrame:SetParent(BuffFrame)
     moveBlizzardFrame(QuestWatchFrame, "TOPRIGHT", "BOTTOMRIGHT", -84-buffQfix, 0, BuffFrame)
     --Bags
     offsetBlizzardFrame(ContainerFrame1, -(MinimapCluster:GetWidth()*MinimapCluster:GetScale())+VerticalMultiBarsContainer:GetWidth(), 0)
+    --Tooltip
+    offsetBlizzardFrame(GameTooltip, -(MinimapCluster:GetWidth()*MinimapCluster:GetScale())+VerticalMultiBarsContainer:GetWidth(), 0)
 end
 
 
@@ -230,10 +228,11 @@ end
 --Move various Blizzard frames
 function JadeUI.blizzUIMove()
     moveBlizzardFrame(CastingBarFrame,"BOTTOM", "BOTTOM", 0, 248) --Casting Bar
-    FramerateLabel:SetPoint("BOTTOM", FramerateLabel:GetParent(), "BOTTOM", - 190, 85) --Framerate Label
+    FramerateLabel:SetPoint("BOTTOM", FramerateLabel:GetParent(), "BOTTOM", - 190, 85) --Framerate Label. Can't use function because of error
+    moveBlizzardFrame(DurabilityFrame, "LEFT", "RIGHT", 0, 23, JadeUIBarTopArtPanel) --Durability Frame
 
-    if JadeUIDB.moveUnitFrames then JadeUI.moveUnitFramesFunc() end --Unit Frames
-    JadeUI.MinimapScaleFunc() --Minimap Scale. Needs to be abover Minimap since Minimap includes scale calcs.
+    if JadeUIDB.moveUnitFrames then JadeUI.moveUnitFramesFunc() end --Unit Frames/ff
+    JadeUI.MinimapScaleFunc() --Minimap Scale. Needs to be above Minimap since Minimap includes scale calcs.
     if JadeUIDB.moveMinimap then JadeUI.MoveMinimapFunc() end --Minimap
 
 
@@ -249,7 +248,7 @@ function JadeUI.preventActionBarMovement()
     UIPARENT_MANAGED_FRAME_POSITIONS["PossessBarFrame"] = nil
     UIPARENT_MANAGED_FRAME_POSITIONS["MultiCastActionBarFrame"] = nil
     UIPARENT_MANAGED_FRAME_POSITIONS["PETACTIONBAR_YPOS"] = nil
-    UIPARENT_MANAGED_FRAME_POSITIONS["MultiBarBottomLeft"] = nil
+    UIPARENT_MANAGED_FRAME_POSITIONS["MultiBarBottomLeft"] = nil --Definitely does something, not sure what
     UIPARENT_MANAGED_FRAME_POSITIONS["TutorialFrameParent"] = nil
     UIPARENT_MANAGED_FRAME_POSITIONS["FramerateLabel"] = nil
     UIPARENT_MANAGED_FRAME_POSITIONS["CastingBarFrame"] = nil
