@@ -16,13 +16,13 @@ local function moveBlizzardFrame(frame, point, relativePoint, offsetX, offsetY, 
         hookSet = true
             local _,oldAnchor = frame:GetPoint()
             relativeTo = relativeTo or oldAnchor --relativeTo is either the existing point or an arg if set manually
-
+            print(frame:GetName()," = ",oldAnchor:GetName())
             frame:ClearAllPoints()
             frame:SetPoint(point, relativeTo, relativePoint, offsetX, offsetY) --Make sure to get the actual scaled width of the minimap
         hookSet = false
     end)
 
-    frame:SetPoint("CENTER") --Fire SetPoint to fire the hook
+    frame:SetPoint(frame:GetPoint()) --Fire SetPoint to fire the hook with the original frame data to prevent the hook from having bad data
 end
 
 --Offset a frame by hooking its SetPoint and adding the offset to its position
@@ -54,6 +54,13 @@ local function hideBlizzardFrame(frame)
     frame:Hide()
 end
 
+--[[ --Hook UIParent_ManageFramePosition to allow for additional overrides
+local origUIParent_ManageFramePosition = UIParent_ManageFramePosition
+UIParent_ManageFramePosition = function(index, value, yOffsetFrames, xOffsetFrames, hasBottomLeft, hasBottomRight, hasPetBar)
+
+    origUIParent_ManageFramePosition(index, value, yOffsetFrames, xOffsetFrames, hasBottomLeft, hasBottomRight, hasPetBar)
+
+end ]]
 
 
 --------------------------------------------
@@ -188,29 +195,22 @@ end
 
 local function moveActionBars()
     --Main Action Bar
-    ActionButton1:ClearAllPoints()
     for i = 1, 12 do
         _G["ActionButton" .. i]:SetParent(JadeUIButtonParent)
         _G["ActionButton" .. i]:SetFrameLevel(JadeUIButtonParent:GetFrameLevel() + 1)
     end
-    ActionButton1:SetPoint("CENTER", JadeUIBar, "CENTER", -127, 2)
+    moveBlizzardFrame(ActionButton1, "CENTER", "CENTER", -127, 2, JadeUIBar)
 
     --Bottom Left Action Bar
-    local _, multiRel = MultiBarBottomLeft:GetPoint()
-    MultiBarBottomLeft:ClearAllPoints()
     MultiBarBottomLeft:SetParent(JadeUIButtonParent)
-    MultiBarBottomLeft:SetPoint("BOTTOMLEFT", multiRel, "TOPLEFT", 0, 7)
-    MultiBarBottomLeft:SetFrameLevel(JadeUIButtonParent:GetFrameLevel() + 1)
-    --MultiBarBottomLeft.SetPoint = function()end
+    moveBlizzardFrame(MultiBarBottomLeft, "BOTTOMLEFT", "TOPLEFT", 0, 7)
 
     --Bottom Right Action Bar
-    MultiBarBottomRight:ClearAllPoints()
     MultiBarBottomRight:SetParent(JadeUIButtonParent)
-    MultiBarBottomRight:SetPoint("TOPLEFT", multiRel, "BOTTOMLEFT", 42, - 5)
+    moveBlizzardFrame(MultiBarBottomRight, "TOPLEFT", "BOTTOMLEFT", 42, -47)
 
     --Bottom Right Action Bar Second Row
-    MultiBarBottomRightButton7:ClearAllPoints()
-    MultiBarBottomRightButton7:SetPoint("TOPLEFT", MultiBarBottomRightButton1, "BOTTOMLEFT", 0, - 7)
+    moveBlizzardFrame(MultiBarBottomRightButton7, "TOPLEFT", "BOTTOMLEFT", 0, -7, MultiBarBottomRightButton1)
 
 end
 
