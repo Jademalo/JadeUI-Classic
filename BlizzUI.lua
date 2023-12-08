@@ -16,7 +16,7 @@ local function moveBlizzardFrame(frame, point, relativePoint, offsetX, offsetY, 
         hookSet = true
             local _,oldAnchor = frame:GetPoint()
             relativeTo = relativeTo or oldAnchor --relativeTo is either the existing point or an arg if set manually
-            print(frame:GetName()," = ",oldAnchor:GetName())
+
             frame:ClearAllPoints()
             frame:SetPoint(point, relativeTo, relativePoint, offsetX, offsetY) --Make sure to get the actual scaled width of the minimap
         hookSet = false
@@ -32,9 +32,10 @@ local function offsetBlizzardFrame(frame, offsetX, offsetY)
     hooksecurefunc(frame, "SetPoint", function()
         if hookSet then return end --Don't infinitely fire from itself
 
-        if frame == GameTooltip then --Hacky fix for item tooltips being offset
-            local _,gtPoint = GameTooltip:GetPoint()
-            if gtPoint ~= UIParent then return end
+        --Hacky fix for item tooltips and secondary bags being offset
+        if (frame == GameTooltip) or (frame == ContainerFrame2) or (frame == ContainerFrame3) or (frame == ContainerFrame4) or (frame == ContainerFrame5) then
+            local _,anchor = frame:GetPoint()
+            if anchor ~= UIParent then return end
         end
     
         local oldPos = {frame:GetPoint()} --Back up the current position of the frame
@@ -96,7 +97,9 @@ function JadeUI.MoveMinimapFunc()
     QuestWatchFrame:SetParent(BuffFrame)
     moveBlizzardFrame(QuestWatchFrame, "TOPRIGHT", "BOTTOMRIGHT", -84-buffQfix, 0, BuffFrame)
     --Bags
-    offsetBlizzardFrame(ContainerFrame1, -(MinimapCluster:GetWidth()*MinimapCluster:GetScale())+VerticalMultiBarsContainer:GetWidth(), 0)
+    for i = 1, 5 do
+        offsetBlizzardFrame(_G["ContainerFrame" .. i], -(MinimapCluster:GetWidth()*MinimapCluster:GetScale())+VerticalMultiBarsContainer:GetWidth(), 0)
+    end
     --Tooltip
     offsetBlizzardFrame(GameTooltip, -(MinimapCluster:GetWidth()*MinimapCluster:GetScale())+VerticalMultiBarsContainer:GetWidth(), 0)
 
@@ -104,7 +107,7 @@ function JadeUI.MoveMinimapFunc()
     local oldGetBottom = MinimapCluster.GetBottom
     function MinimapCluster:GetBottom()
         print(oldGetBottom(self))
-        if oldGetBottom(self) < (UIParent:GetBottom() + MinimapCluster:GetHeight()) then
+        if oldGetBottom(self) < (UIParent:GetBottom() + (MinimapCluster:GetHeight()*MinimapCluster:GetScale())) then
             return BuffFrame:GetBottom()
         else
             return oldGetBottom(self)
