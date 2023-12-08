@@ -82,6 +82,19 @@ local function createCheckbox(name, description, savedVariable)
 end
 
 
+--------------------------------------------------------------------------------
+--Reload button
+--------------------------------------------------------------------------------
+local reloadButton = CreateFrame('button', nil, optionsPanel, 'UIPanelButtonTemplate')
+reloadButton:SetSize(120, 22)
+reloadButton:SetText("Reload UI")
+reloadButton:SetPoint('BOTTOM', 0, 20)
+reloadButton:Hide()
+reloadButton:SetScript('OnClick', function(self)
+    C_UI.Reload()
+end)
+
+
 --------------------------------------------
 --Left Column Menu Entries
 --------------------------------------------        
@@ -111,7 +124,7 @@ local function buildLeftColumn()
     unitFramesCheckbox:HookScript("OnClick", function(_, btn, down)
         JadeUIDB.moveUnitFrames = unitFramesCheckbox:GetChecked()
         if not unitFramesCheckbox:GetChecked() then
-            C_UI.Reload()
+            reloadButton:Show()
         else
             JadeUI.moveUnitFramesFunc()
         end
@@ -126,7 +139,7 @@ local function buildLeftColumn()
     minimapCheckbox:HookScript("OnClick", function(_, btn, down)
         JadeUIDB.moveMinimap = minimapCheckbox:GetChecked()
         if not minimapCheckbox:GetChecked() then
-            C_UI.Reload()
+            reloadButton:Show()
         else
             JadeUI.MoveMinimapFunc()
         end
@@ -162,7 +175,7 @@ local function buildLeftColumn()
     hideKeybindsCheckbox:HookScript("OnClick", function(_, btn, down)
         JadeUIDB.hideKeybinds = hideKeybindsCheckbox:GetChecked()
         if not hideKeybindsCheckbox:GetChecked() then
-            C_UI.Reload()
+            reloadButton:Show()
         else
             JadeUI.HideKeybinds()
         end
@@ -220,6 +233,9 @@ local function buildRightColumn()
     --TODO
 
 end
+
+
+
 
 
 --------------------------------------------------------------------------------
