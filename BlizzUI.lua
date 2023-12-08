@@ -106,7 +106,6 @@ function JadeUI.MoveMinimapFunc()
     --Fix error when map is below right action bars
     local oldGetBottom = MinimapCluster.GetBottom
     function MinimapCluster:GetBottom()
-        print(oldGetBottom(self))
         if oldGetBottom(self) < (UIParent:GetBottom() + (MinimapCluster:GetHeight()*MinimapCluster:GetScale())) then
             return BuffFrame:GetBottom()
         else
