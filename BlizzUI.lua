@@ -149,40 +149,29 @@ end
 --------------------------------------------
 --Functions to move Blizzard Action Bars
 --------------------------------------------
-
-local function microMenuHook()
-    local spacing = 2
-    CharacterMicroButton:SetParent(JadeUIButtonParent)
-    CharacterMicroButton:SetPoint("BOTTOMLEFT", JadeUI.g13MainBar, "BOTTOM", - 288, 2)
-    TalentMicroButton:SetParent(JadeUIButtonParent)
-    if JadeUIDB.showTalents == true or (UnitLevel("player") >= SHOW_SPEC_LEVEL) then
-        spacing = -2.5
-        TalentMicroButton:Show()
-        TalentMicroButton:SetPoint("BOTTOMLEFT", SpellbookMicroButton, "BOTTOMRIGHT", spacing, 0)
-        QuestLogMicroButton:SetParent(JadeUIButtonParent)
-        QuestLogMicroButton:SetPoint("BOTTOMLEFT", TalentMicroButton, "BOTTOMRIGHT", spacing, 0)
-    else
-        QuestLogMicroButton:SetParent(JadeUIButtonParent)
-        QuestLogMicroButton:SetPoint("BOTTOMLEFT", SpellbookMicroButton, "BOTTOMRIGHT", spacing, 0)
-    end
-    SpellbookMicroButton:SetParent(JadeUIButtonParent)
-    SpellbookMicroButton:SetPoint("BOTTOMLEFT", CharacterMicroButton, "BOTTOMRIGHT", spacing, 0)
-    SocialsMicroButton:SetParent(JadeUIButtonParent)
-    SocialsMicroButton:SetPoint("BOTTOMLEFT", QuestLogMicroButton, "BOTTOMRIGHT", spacing, 0)
-    WorldMapMicroButton:SetParent(JadeUIButtonParent)
-    WorldMapMicroButton:SetPoint("BOTTOMLEFT", SocialsMicroButton, "BOTTOMRIGHT", spacing, 0)
-    MainMenuMicroButton:SetParent(JadeUIButtonParent)
-    MainMenuMicroButton:SetPoint("BOTTOMLEFT", WorldMapMicroButton, "BOTTOMRIGHT", spacing, 0)
-    HelpMicroButton:SetParent(JadeUIButtonParent)
-    HelpMicroButton:SetPoint("BOTTOMLEFT", MainMenuMicroButton, "BOTTOMRIGHT", spacing, 0)
-end
-
-
 local function moveMicroMenu()
 
-    hooksecurefunc("UpdateMicroButtons", microMenuHook)
-    microMenuHook()
+    hooksecurefunc("UpdateMicroButtons", function()
+        local spacing = 2
+        UpdateMicroButtonsParent(JadeUIButtonParent) --(https://github.com/Gethe/wow-ui-source/blob/bc566bcfb0633aa29255dc1bb65b4bbed00967a4/Interface/FrameXML/MainMenuBarMicroButtons.lua#L60)
+        
+        CharacterMicroButton:SetPoint("BOTTOMLEFT", JadeUI.g13MainBar, "BOTTOM", - 288, 2)
+        if JadeUIDB.showTalents == true or (UnitLevel("player") >= SHOW_SPEC_LEVEL) then
+            spacing = -2.5
+            TalentMicroButton:Show()
+            TalentMicroButton:SetPoint("BOTTOMLEFT", SpellbookMicroButton, "BOTTOMRIGHT", spacing, 0)
+            QuestLogMicroButton:SetPoint("BOTTOMLEFT", TalentMicroButton, "BOTTOMRIGHT", spacing, 0)
+        else
+            QuestLogMicroButton:SetPoint("BOTTOMLEFT", SpellbookMicroButton, "BOTTOMRIGHT", spacing, 0)
+        end
+        SpellbookMicroButton:SetPoint("BOTTOMLEFT", CharacterMicroButton, "BOTTOMRIGHT", spacing, 0)
+        SocialsMicroButton:SetPoint("BOTTOMLEFT", QuestLogMicroButton, "BOTTOMRIGHT", spacing, 0)
+        WorldMapMicroButton:SetPoint("BOTTOMLEFT", SocialsMicroButton, "BOTTOMRIGHT", spacing, 0)
+        MainMenuMicroButton:SetPoint("BOTTOMLEFT", WorldMapMicroButton, "BOTTOMRIGHT", spacing, 0)
+        HelpMicroButton:SetPoint("BOTTOMLEFT", MainMenuMicroButton, "BOTTOMRIGHT", spacing, 0)
+    end)
 
+    UpdateMicroButtons()
 end
 
 
