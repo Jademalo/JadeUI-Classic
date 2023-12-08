@@ -8,17 +8,17 @@ local addonName, JadeUI = ...
 --Functions
 --------------------------------------------
 --Move a frame by hooking its SetPoint and overriding it's position every time it tries to move
-local function moveBlizzardFrame(frame, point, relativePoint, offsetX, offsetY, relativeTo)
+local function moveBlizzardFrame(frame, setPoint, setRelativePoint, setOffsetX, setOffsetY, setRelativeTo)
     local hookSet = false
 
     hooksecurefunc(frame, "SetPoint", function()
         if hookSet then return end --Don't infinitely fire from itself
         hookSet = true
             local _,oldAnchor = frame:GetPoint()
-            relativeTo = relativeTo or oldAnchor --relativeTo is either the existing point or an arg if set manually
+            setRelativeTo = setRelativeTo or oldAnchor --relativeTo is either the existing point or an arg if set manually
 
             frame:ClearAllPoints()
-            frame:SetPoint(point, relativeTo, relativePoint, offsetX, offsetY) --Make sure to get the actual scaled width of the minimap
+            frame:SetPoint(setPoint, setRelativeTo, setRelativePoint, setOffsetX, setOffsetY) --Make sure to get the actual scaled width of the minimap
         hookSet = false
     end)
 
@@ -64,6 +64,9 @@ UIParent_ManageFramePosition = function(index, value, yOffsetFrames, xOffsetFram
 end ]]
 
 
+
+
+
 --------------------------------------------
 --Functions to move basic Blizzard Frames
 --------------------------------------------
@@ -79,6 +82,28 @@ function JadeUI.moveUnitFramesFunc()
     end
 end
 
+--Fixes for the vertical multi bars to have them properly react to the minimap's position
+local function verticalMultiBarFix()
+    --Fix error when map at the bottom by anchoring the top of right actionbars to BuffFrame instead (https://github.com/Gethe/wow-ui-source/blob/bc566bcfb0633aa29255dc1bb65b4bbed00967a4/Interface/FrameXML/MultiActionBars.lua#L60)
+    local oldMinimapGetBottom = MinimapCluster.GetBottom
+    function MinimapCluster:GetBottom()
+        if oldMinimapGetBottom(self) < (UIParent:GetBottom() + (MinimapCluster:GetHeight()*MinimapCluster:GetScale())) then --If minimap get bottom is below the height of the minimap cluster off the bottom of UIParent
+            return BuffFrame:GetBottom() --Return the bottom of the Buff Bar
+        else
+            return oldMinimapGetBottom(self)*self:GetScale() --GetBottom doesn't seem to interact correctly with scale, so for every case anyway we need to multiply it by scale since we're using that.
+        end
+    end
+
+    --Adjust the right action bars to bottom anchor to the minimap size when above it (https://github.com/Gethe/wow-ui-source/blob/bc566bcfb0633aa29255dc1bb65b4bbed00967a4/Interface/FrameXML/MultiActionBars.lua#L65)
+    function MainMenuBarArtFrame:GetTop()
+        if oldMinimapGetBottom(MinimapCluster) < (UIParent:GetBottom() + (MinimapCluster:GetHeight()*MinimapCluster:GetScale())) then
+            return MinimapCluster:GetTop()*MinimapCluster:GetScale()
+        else
+            return JadeUIBarTopArtPanel:GetTop()
+        end
+    end
+end
+
 function JadeUI.MoveMinimapFunc()
     --Minimap
     moveBlizzardFrame(MinimapCluster, "BOTTOMRIGHT", "BOTTOMRIGHT", 0, 0)
@@ -90,45 +115,31 @@ function JadeUI.MoveMinimapFunc()
     moveBlizzardFrame(MinimapBorderTop, "BOTTOMRIGHT", "BOTTOMRIGHT", 0, 0)
     --Clock
     moveBlizzardFrame(TimeManagerClockButton, "CENTER", "CENTER", 0, 75)
+
     --Buff Bar
-    moveBlizzardFrame(BuffFrame, "TOPRIGHT", "TOPRIGHT", - 13, - 13, UIParent)
+    moveBlizzardFrame(BuffFrame, "TOPRIGHT", "TOPRIGHT", -13, -13, UIParent)
     --Quest Watch Frame
     local _,_,_,_,buffQfix = BuffFrame:GetPoint()
     QuestWatchFrame:SetParent(BuffFrame)
     moveBlizzardFrame(QuestWatchFrame, "TOPRIGHT", "BOTTOMRIGHT", -84-buffQfix, 0, BuffFrame)
+
     --Bags
-    for i = 1, 5 do
-        offsetBlizzardFrame(_G["ContainerFrame" .. i], -(MinimapCluster:GetWidth()*MinimapCluster:GetScale())+VerticalMultiBarsContainer:GetWidth(), 0)
-    end
+    for i = 1, 5 do offsetBlizzardFrame(_G["ContainerFrame" .. i], -(MinimapCluster:GetWidth()*MinimapCluster:GetScale())+VerticalMultiBarsContainer:GetWidth(), 0) end
     --Tooltip
     offsetBlizzardFrame(GameTooltip, -(MinimapCluster:GetWidth()*MinimapCluster:GetScale())+VerticalMultiBarsContainer:GetWidth(), 0)
 
-    --Fix error when map is below right action bars
-    local oldGetBottom = MinimapCluster.GetBottom
-    function MinimapCluster:GetBottom()
-        if oldGetBottom(self) < (UIParent:GetBottom() + (MinimapCluster:GetHeight()*MinimapCluster:GetScale())) then
-            return BuffFrame:GetBottom()
-        else
-            return oldGetBottom(self)
-        end
-    end
-
+    ActionBarController_UpdateAll() --This makes sure that the right hand bar gets repositioned after the minimap is moved around (https://github.com/Gethe/wow-ui-source/blob/bc566bcfb0633aa29255dc1bb65b4bbed00967a4/Interface/FrameXML/ActionBarController.lua#L93)
 end
 
 function JadeUI.MinimapScaleFunc()
     --TODO: Rewrite this to make it a slider rather than a fixed amount
     if JadeUIDB.minimapScale then
-        --if JadeUIDB.minimapScaleFactor ~= 1 then
-            MinimapCluster:SetScale(JadeUIDB.minimapScaleFactor)
-
-            if not JadeUIDB.moveMinimap then
-                local buffOffset = (MinimapCluster:GetWidth() * JadeUIDB.minimapScaleFactor) + 8
-                moveBlizzardFrame(BuffFrame, "TOPRIGHT", "TOPRIGHT", - buffOffset, - 13)
-            end
-        --end
+        MinimapCluster:SetScale(JadeUIDB.minimapScaleFactor)
     else
         MinimapCluster:SetScale(1)
     end
+
+    ActionBarController_UpdateAll() --This makes sure that the right hand bar gets repositioned after the minimap is moved around (https://github.com/Gethe/wow-ui-source/blob/bc566bcfb0633aa29255dc1bb65b4bbed00967a4/Interface/FrameXML/ActionBarController.lua#L93)
 end
 
 
@@ -246,37 +257,26 @@ function JadeUI.blizzUIMove()
     moveBlizzardFrame(FramerateLabel, "BOTTOM", "BOTTOM", -190, 85) --Framerate
     moveBlizzardFrame(DurabilityFrame, "LEFT", "RIGHT", 0, 23, JadeUIBarTopArtPanel) --Durability Frame
 
+    verticalMultiBarFix()
     if JadeUIDB.moveUnitFrames then JadeUI.moveUnitFramesFunc() end --Unit Frames/ff
     JadeUI.MinimapScaleFunc() --Minimap Scale. Needs to be above Minimap since Minimap includes scale calcs.
     if JadeUIDB.moveMinimap then JadeUI.MoveMinimapFunc() end --Minimap
-
 
     if JadeUI.isVanilla then 
         moveBlizzardFrame(TutorialFrameParent,"BOTTOM", "BOTTOM", 0, 300) --Tutorial Frame
     end
 end
 
---Prevent Blizzard bars from moving
-function JadeUI.preventActionBarMovement()
-    UIPARENT_MANAGED_FRAME_POSITIONS["StanceBarFrame"] = nil
-    UIPARENT_MANAGED_FRAME_POSITIONS["PossessBarFrame"] = nil
-    UIPARENT_MANAGED_FRAME_POSITIONS["MultiCastActionBarFrame"] = nil
-    UIPARENT_MANAGED_FRAME_POSITIONS["PETACTIONBAR_YPOS"] = nil
-    UIPARENT_MANAGED_FRAME_POSITIONS["MultiBarBottomLeft"] = nil --Definitely does something, not sure what
-    UIPARENT_MANAGED_FRAME_POSITIONS["TutorialFrameParent"] = nil
-    UIPARENT_MANAGED_FRAME_POSITIONS["FramerateLabel"] = nil
-    UIPARENT_MANAGED_FRAME_POSITIONS["CastingBarFrame"] = nil
-    UIPARENT_MANAGED_FRAME_POSITIONS["ExtraActionBarFrame"] = nil
-end
-
 --Move Blizzard Bars
 function JadeUI.blizzBarMove()
+
     --Move Bars
     moveMicroMenu()
     moveBagBar()
     moveActionBars()
     hideButtons()
     hideBlizzardFrame(MainMenuBar)
+    MainMenuBar.IsShown = function() return true end --Pretend that MainMenuBar is shown so blizz code is happy (https://github.com/Gethe/wow-ui-source/blob/bc566bcfb0633aa29255dc1bb65b4bbed00967a4/Interface/FrameXML/ActionBarController.lua#L163)
 
     local forms = GetNumShapeshiftForms()
     if forms > 0 then

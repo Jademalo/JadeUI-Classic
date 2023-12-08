@@ -66,7 +66,6 @@ JadeUIBar:SetScript("OnEvent", function(self, event, arg1, arg2)
 
         --Move Blizzard Bars if not using Bartender
         if not C_AddOns.IsAddOnLoaded("Bartender4") then
-            JadeUI.preventActionBarMovement() --Disable Blizzard dynamic UI positioning
             JadeUIButtonParent = CreateFrame("Frame", "JadeUI Button Parent", JadeUIBar)
             JadeUIButtonParent:SetFrameLevel(6) --Children are given +1 to their parent
             JadeUI.blizzBarMove() --Move the Blizzard Action Bars
