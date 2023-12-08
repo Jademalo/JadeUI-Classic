@@ -90,16 +90,16 @@ local function verticalMultiBarFix()
         if oldMinimapGetBottom(self) < (UIParent:GetBottom() + (MinimapCluster:GetHeight()*MinimapCluster:GetScale())) then --If minimap get bottom is below the height of the minimap cluster off the bottom of UIParent
             return BuffFrame:GetBottom() --Return the bottom of the Buff Bar
         else
-            return oldMinimapGetBottom(self)*self:GetScale() --GetBottom doesn't seem to interact correctly with scale, so for every case anyway we need to multiply it by scale since we're using that.
+            return oldMinimapGetBottom(self)*self:GetScale() --GetBottom gives a position value relative to the scale domain of the minimap, rather than UIParent. We need to fix that.
         end
     end
 
     --Adjust the right action bars to bottom anchor to the minimap size when above it (https://github.com/Gethe/wow-ui-source/blob/bc566bcfb0633aa29255dc1bb65b4bbed00967a4/Interface/FrameXML/MultiActionBars.lua#L65)
     function MainMenuBarArtFrame:GetTop()
         if oldMinimapGetBottom(MinimapCluster) < (UIParent:GetBottom() + (MinimapCluster:GetHeight()*MinimapCluster:GetScale())) then
-            return MinimapCluster:GetTop()*MinimapCluster:GetScale()
+            return MinimapCluster:GetTop()*MinimapCluster:GetScale() --GetTop gives a position value relative to the scale domain of the minimap, rather than UIParent. We need to fix that since the minimap scale might not be 0.
         else
-            return JadeUIBarTopArtPanel:GetTop()
+            return JadeUIBarTopArtPanel:GetTop()*JadeUIBarTopArtPanel:GetScale() --GetTop gives a position value relative to the scale domain of the frame, rather than UIParent. We need to fix that since the frame scale might not be 0. 
         end
     end
 end
