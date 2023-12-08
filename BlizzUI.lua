@@ -51,6 +51,7 @@ end
 --Forcibly hide a frame by hooking Show and forcing it to hide whenever it tries
 local function hideBlizzardFrame(frame)
     hooksecurefunc(frame,"Show", function() frame:Hide() end)
+    frame:Hide()
 end
 
 
@@ -91,8 +92,19 @@ function JadeUI.MoveMinimapFunc()
     offsetBlizzardFrame(ContainerFrame1, -(MinimapCluster:GetWidth()*MinimapCluster:GetScale())+VerticalMultiBarsContainer:GetWidth(), 0)
     --Tooltip
     offsetBlizzardFrame(GameTooltip, -(MinimapCluster:GetWidth()*MinimapCluster:GetScale())+VerticalMultiBarsContainer:GetWidth(), 0)
-end
 
+    --Fix error when map is below right action bars
+    local oldGetBottom = MinimapCluster.GetBottom
+    function MinimapCluster:GetBottom()
+        print(oldGetBottom(self))
+        if oldGetBottom(self) < (UIParent:GetBottom() + MinimapCluster:GetHeight()) then
+            return BuffFrame:GetBottom()
+        else
+            return oldGetBottom(self)
+        end
+    end
+
+end
 
 function JadeUI.MinimapScaleFunc()
     --TODO: Rewrite this to make it a slider rather than a fixed amount
@@ -109,6 +121,7 @@ function JadeUI.MinimapScaleFunc()
         MinimapCluster:SetScale(1)
     end
 end
+
 
 
 
@@ -243,7 +256,6 @@ end
 
 --Prevent Blizzard bars from moving
 function JadeUI.preventActionBarMovement()
-    UIPARENT_MANAGED_FRAME_POSITIONS["MainMenuBar"] = nil
     UIPARENT_MANAGED_FRAME_POSITIONS["StanceBarFrame"] = nil
     UIPARENT_MANAGED_FRAME_POSITIONS["PossessBarFrame"] = nil
     UIPARENT_MANAGED_FRAME_POSITIONS["MultiCastActionBarFrame"] = nil
@@ -253,13 +265,6 @@ function JadeUI.preventActionBarMovement()
     UIPARENT_MANAGED_FRAME_POSITIONS["FramerateLabel"] = nil
     UIPARENT_MANAGED_FRAME_POSITIONS["CastingBarFrame"] = nil
     UIPARENT_MANAGED_FRAME_POSITIONS["ExtraActionBarFrame"] = nil
-
-    MainMenuBar:EnableMouse(false)
-    MainMenuBar:UnregisterEvent("DISPLAY_SIZE_CHANGED")
-    MainMenuBar:UnregisterEvent("UI_SCALE_CHANGED")
-
-    local animations = {MainMenuBar.slideOut:GetAnimations()}
-    animations[1]:SetOffset(0, 0)
 end
 
 --Move Blizzard Bars
@@ -269,6 +274,7 @@ function JadeUI.blizzBarMove()
     moveBagBar()
     moveActionBars()
     hideButtons()
+    hideBlizzardFrame(MainMenuBar)
 
     local forms = GetNumShapeshiftForms()
     if forms > 0 then
