@@ -236,6 +236,28 @@ local function hideButtons()
     hideBlizzardFrame(MultiBarBottomRightButton12)
 end
 
+function JadeUI.HideKeybinds()
+    local bars = { 
+        "Action",
+        "MultiBarBottomLeft",
+        "MultiBarBottomRight",
+        "MultiBarRight",
+        "MultiBarLeft",
+        "MultiBar5",
+        "MultiBar6",
+        "MultiBar7"
+    }
+    for _, barName in ipairs(bars) do
+        for buttonNumber = 1, 12 do
+            local button = barName .. "Button" .. buttonNumber
+            if _G[button] then
+                _G[button .. "HotKey"]:Hide()
+                _G[button .. "HotKey"].Show = function() end
+            end
+        end
+    end
+end
+
 
 --------------------------------------------
 --Core functions to apply changes
@@ -264,6 +286,7 @@ function JadeUI.blizzBarMove()
     moveBagBar()
     moveActionBars()
     hideButtons()
+    if JadeUIDB.hideKeybinds then JadeUI.HideKeybinds() end
     hideBlizzardFrame(MainMenuBar)
     MainMenuBar.IsShown = function() return true end --Pretend that MainMenuBar is shown so blizz code is happy (https://github.com/Gethe/wow-ui-source/blob/bc566bcfb0633aa29255dc1bb65b4bbed00967a4/Interface/FrameXML/ActionBarController.lua#L163)
 

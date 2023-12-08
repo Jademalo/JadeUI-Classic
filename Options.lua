@@ -21,6 +21,7 @@ local function savedVariablesInit()
         JadeUIDB.endstopType = (JadeUIDB.endstopType or 1)
         JadeUIDB.pixelScale = (JadeUIDB.pixelScale or false)
         JadeUIDB.levelScreenshot = (JadeUIDB.levelScreenshot or true)
+        JadeUIDB.hideKeybinds = (JadeUIDB.hideKeybinds or false)
 
         JadeUIDB.blizzXPBar = (JadeUIDB.blizzXPBar or 0)
         JadeUIDB.mouseover = (JadeUIDB.mouseover or 0)
@@ -117,14 +118,14 @@ local function buildLeftColumn()
     end)
 
     --Checkbox for moving the Minimap
-    local minimapcheckbox = createCheckbox(
+    local minimapCheckbox = createCheckbox(
         "Move Minimap",
         "Move the Minimap down to the bottom right corner of the screen\nReload required to disable",
         JadeUIDB.moveMinimap
     )
-    minimapcheckbox:HookScript("OnClick", function(_, btn, down)
-        JadeUIDB.moveMinimap = minimapcheckbox:GetChecked()
-        if not minimapcheckbox:GetChecked() then
+    minimapCheckbox:HookScript("OnClick", function(_, btn, down)
+        JadeUIDB.moveMinimap = minimapCheckbox:GetChecked()
+        if not minimapCheckbox:GetChecked() then
             C_UI.Reload()
         else
             JadeUI.MoveMinimapFunc()
@@ -145,12 +146,26 @@ local function buildLeftColumn()
     --Checkbox for taking a screenshot on level up
     local levelScreenshotCheckbox = createCheckbox(
         "Screenshot on Level Up",
-        "Enables automatically taking a screenshot on levelling up",
+        "Automatically take a screenshot on levelling up",
         JadeUIDB.levelScreenshot
     )
     levelScreenshotCheckbox:HookScript("OnClick", function(_, btn, down)
         JadeUIDB.levelScreenshot = levelScreenshotCheckbox:GetChecked()
-        JadeUI.SetScale()
+    end)
+
+    --Checkbox for taking a screenshot on level up
+    local hideKeybindsCheckbox = createCheckbox(
+        "Hide Keybinds",
+        "Hides keybinds on action bars\nReload required to disable",
+        JadeUIDB.hideKeybinds
+    )
+    hideKeybindsCheckbox:HookScript("OnClick", function(_, btn, down)
+        JadeUIDB.hideKeybinds = hideKeybindsCheckbox:GetChecked()
+        if not hideKeybindsCheckbox:GetChecked() then
+            C_UI.Reload()
+        else
+            JadeUI.HideKeybinds()
+        end
     end)
 
     --Checkbox for forcing a specific UI Scale
