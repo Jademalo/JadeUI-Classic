@@ -17,6 +17,9 @@ local function hoverLevelForeground()
     ExhaustionTick:SetFrameLevel(6)
     MultiBarBottomRight:SetFrameLevel(3)
     JadeUIBarTopArtPanel:SetFrameLevel(2)
+    MultiBarBottomRightButton8:SetParent(MainMenuExpBar)
+    MultiBarBottomRightButton9:SetParent(MainMenuExpBar)
+    MultiBarBottomRightButton10:SetParent(MainMenuExpBar)
 end
 
 local function hoverRepForeground()
@@ -29,6 +32,9 @@ local function hoverLevelBackground()
     ExhaustionTick:SetFrameLevel(2)
     MultiBarBottomRight:SetFrameLevel(JadeUIButtonParent:GetFrameLevel())
     JadeUIBarTopArtPanel:SetFrameLevel(3)
+    MultiBarBottomRightButton8:SetParent(MultiBarBottomRight)
+    MultiBarBottomRightButton9:SetParent(MultiBarBottomRight)
+    MultiBarBottomRightButton10:SetParent(MultiBarBottomRight)
 end
 
 local function hoverRepBackground()
