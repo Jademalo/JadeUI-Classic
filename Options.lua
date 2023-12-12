@@ -12,22 +12,33 @@ optionsPanel:RegisterEvent("ADDON_LOADED")
 
 --Initialise SavedVariables
 local function savedVariablesInit()
-    JadeUIDB = JadeUIDB or {} --Create a table for saved variables
-        JadeUIDB.showTalents = (JadeUIDB.showTalents or false) --0 is truthy, so only false or nil will result in the default being read.
-        JadeUIDB.moveUnitFrames = (JadeUIDB.moveUnitFrames or false)
-        JadeUIDB.moveMinimap = (JadeUIDB.moveMinimap or false)
-        JadeUIDB.minimapScale = (JadeUIDB.minimapScale or false)
-        JadeUIDB.minimapScaleFactor = (JadeUIDB.minimapScaleFactor or 1.33)
-        JadeUIDB.endstopType = (JadeUIDB.endstopType or 1)
-        JadeUIDB.pixelScale = (JadeUIDB.pixelScale or false)
-        JadeUIDB.levelScreenshot = (JadeUIDB.levelScreenshot or true)
-        JadeUIDB.hideKeybinds = (JadeUIDB.hideKeybinds or false)
+    JadeUIDB = JadeUIDB or {} --Create a table for saved variables if one isn't loaded
 
-        JadeUIDB.blizzXPBar = (JadeUIDB.blizzXPBar or 0)
-        JadeUIDB.mouseover = (JadeUIDB.mouseover or 0)
-        JadeUIDB.stanceBarHide = (JadeUIDB.stanceBarHide or 0)
-        JadeUIDB.keyCover = (JadeUIDB.keyCover or 0)
+    local defaults = {
+        showTalents = false, --0 is truthy, so only false or nil will result in the default being read.
+        moveUnitFrames = true,
+        moveMinimap = true,
+        minimapScale = false,
+        minimapScaleFactor = 1.33,
+        endstopType = 1,
+        pixelScale = false,
+        levelScreenshot = true,
+        hideKeybinds = true,
+
+        blizzXPBar = 0,
+        mouseover = 0,
+        stanceBarHide = 0,
+        keyCover = 0
+    }
+
+    for key, value in pairs(defaults) do
+        if JadeUIDB[key] == nil then
+            JadeUIDB[key] = value
+        end
+    end
+
 end
+
 
 --------------------------------------------
 --Functions
