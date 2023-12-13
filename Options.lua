@@ -3,7 +3,8 @@
 --------------------------------------------
 local addonName, JadeUI = ...
 
-local itemSpacing = -5 --The space between each entry in the list
+local itemSpacingLeft = -5 --The space between each entry in the list
+local itemSpacingRight = -5 --The space between each entry in the list
 local optionsPanel = CreateFrame("Frame") --The main options panel frame
 optionsPanel.name = "JadeUI Classic" --CreateFrame call (CreateFrame("Frame", "Name")) puts "Name" in the global scope, so _G["Name"] will retrieve the panel. The panel.name is a field on the panel itself.
 
@@ -18,7 +19,6 @@ local function savedVariablesInit()
         showTalents = false, --0 is truthy, so only false or nil will result in the default being read.
         moveUnitFrames = true,
         moveMinimap = true,
-        minimapScale = false,
         minimapScaleFactor = 1.33,
         endstopType = 1,
         pixelScale = false,
@@ -61,22 +61,24 @@ end
 
 --This makes a dynamic options list on the left-hand side
 JadeUI.OptionsListLeft = {}
-local function appendOptionLeft(frame)
+local function appendOptionLeft(frame, spacing)
+    spacing = spacing or itemSpacingLeft
     if next(JadeUI.OptionsListLeft)==nil then --If there are no existing options in the list
         frame:SetPoint("TOPLEFT", optionsPanel, "TOPLEFT", 20, -30) --Set it to the top left of the options panel
     else
-        frame:SetPoint("TOPLEFT", JadeUI.OptionsListLeft[#JadeUI.OptionsListLeft], "BOTTOMLEFT", 0, itemSpacing) --Append it below the previous entry in the options list
+        frame:SetPoint("TOPLEFT", JadeUI.OptionsListLeft[#JadeUI.OptionsListLeft], "BOTTOMLEFT", 0, spacing) --Append it below the previous entry in the options list
     end
     table.insert(JadeUI.OptionsListLeft, frame) --Add this frame to the options list
 end
 
 --This makes a dynamic options list on the right-hand side
 JadeUI.OptionsListRight = {}
-local function appendOptionRight(frame)
+local function appendOptionRight(frame, spacing)
+    spacing = spacing or itemSpacingRight
     if next(JadeUI.OptionsListRight)==nil then --If there are no existing options in the list
         frame:SetPoint("TOPLEFT", optionsPanel, "TOP", 0, -30) --Set it to the centre of the options panel
     else
-        frame:SetPoint("TOPLEFT", JadeUI.OptionsListRight[#JadeUI.OptionsListRight], "BOTTOMLEFT", 0, itemSpacing) --Append it below the previous entry in the options list
+        frame:SetPoint("TOPLEFT", JadeUI.OptionsListRight[#JadeUI.OptionsListRight], "BOTTOMLEFT", 0, spacing) --Append it below the previous entry in the options list
     end
     table.insert(JadeUI.OptionsListRight, frame) --Add this frame to the options list
 end
@@ -90,6 +92,11 @@ local function createCheckbox(name, description, savedVariable)
     checkboxFrame.tooltipRequirement = description or ""
     checkboxFrame:SetChecked(savedVariable)
     return checkboxFrame
+end
+
+--Round to decimals - https://warcraft.wiki.gg/wiki/Round
+local function round(number, decimals)
+    return (("%%.%df"):format(decimals)):format(number)
 end
 
 
@@ -154,17 +161,6 @@ local function buildLeftColumn()
         else
             JadeUI.MoveMinimapFunc()
         end
-    end)
-
-    --Checkbox for increasing the size of the Minimap
-    local minimapScaleCheckbox = createCheckbox(
-        "Minimap Size",
-        "Increase the size of the Minimap",
-        JadeUIDB.minimapScale
-    )
-    minimapScaleCheckbox:HookScript("OnClick", function(_, btn, down)
-        JadeUIDB.minimapScale = minimapScaleCheckbox:GetChecked()
-        JadeUI.MinimapScaleFunc()
     end)
 
     --Checkbox for taking a screenshot on level up
@@ -240,8 +236,40 @@ local function buildRightColumn()
         UIDropDownMenu_SetSelectedValue(frame, JadeUIDB.endstopType) --This sets the label initially based on the SavedVariable
     end)
 
-    --Create a scroll bar to adjust Minimap scale
-    --TODO
+    --Create a slider to adjust Minimap Scale
+    local scaleSlider = CreateFrame("Slider", "Minimap Scale Slider", optionsPanel, "OptionsSliderTemplate")
+    appendOptionRight(scaleSlider, -15)
+
+    local minRange = 1
+    local maxRange = 1.5
+    scaleSlider:SetMinMaxValues(minRange, maxRange)
+    _G[scaleSlider:GetName() .. 'Low']:SetText(minRange)
+    _G[scaleSlider:GetName() .. 'High']:SetText(maxRange)
+    _G[scaleSlider:GetName() .. 'Text']:SetText("Minimap Scale")
+
+    --addTooltip(endstopDropDown) --Add a tooltip to the slider
+    scaleSlider.tooltipText = "Minimap Scale"
+    scaleSlider.tooltipRequirement = "Select the scale for the Minimap"
+    scaleSlider:SetOrientation("HORIZONTAL")
+
+    local stepSize = 0.05
+    scaleSlider:SetValueStep(stepSize)
+    scaleSlider:SetObeyStepOnDrag(true)
+    scaleSlider:SetValue(JadeUIDB.minimapScaleFactor)
+
+    local scaleSliderValue = optionsPanel:CreateFontString(nil, 'ARTWORK', 'GameFontHighlightSmall')
+    scaleSliderValue:SetPoint("TOP", scaleSlider, "BOTTOM", 0, 3)
+    scaleSliderValue:SetText(round(JadeUIDB.minimapScaleFactor, 2))
+
+    scaleSlider:HookScript('OnValueChanged', function(self, value, userInput)
+        if userInput then
+            JadeUIDB.minimapScaleFactor = round(value, 2)
+            scaleSliderValue:SetText(JadeUIDB.minimapScaleFactor)
+            JadeUI.MinimapScaleFunc()
+        end
+    end)
+
+
 
 end
 

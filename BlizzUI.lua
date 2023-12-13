@@ -132,13 +132,7 @@ function JadeUI.MoveMinimapFunc()
 end
 
 function JadeUI.MinimapScaleFunc()
-    --TODO: Rewrite this to make it a slider rather than a fixed amount
-    if JadeUIDB.minimapScale then
-        MinimapCluster:SetScale(JadeUIDB.minimapScaleFactor)
-    else
-        MinimapCluster:SetScale(1)
-    end
-
+    MinimapCluster:SetScale(JadeUIDB.minimapScaleFactor)
     ActionBarController_UpdateAll() --This makes sure that the right hand bar gets repositioned after the minimap is moved around (https://github.com/Gethe/wow-ui-source/blob/bc566bcfb0633aa29255dc1bb65b4bbed00967a4/Interface/FrameXML/ActionBarController.lua#L93)
 end
 
