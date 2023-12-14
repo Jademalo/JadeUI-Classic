@@ -26,7 +26,7 @@ local function moveBlizzardFrame(frame, setPoint, setRelativePoint, setOffsetX, 
 end
 
 --Offset a frame by hooking its SetPoint and adding the offset to its position
-local function offsetBlizzardFrame(frame, offsetX, offsetY)
+local function offsetBlizzardFrame(frame, setOffsetX, setOffsetY, setRelativeTo)
     local hookSet = false
 
     hooksecurefunc(frame, "SetPoint", function()
@@ -37,14 +37,15 @@ local function offsetBlizzardFrame(frame, offsetX, offsetY)
             local _,anchor = frame:GetPoint()
             if anchor ~= UIParent then return end
         end
-    
+
         local oldPos = {frame:GetPoint()} --Back up the current position of the frame
-        local offsetCalcX = oldPos[4]+offsetX
-        local offsetCalcY = oldPos[5]+offsetY
+        local offsetCalcX = oldPos[4]+setOffsetX
+        local offsetCalcY = oldPos[5]+setOffsetY
+        setRelativeTo = setRelativeTo or oldPos[2] --If no new parent is defined, use the old one
 
         hookSet = true
             frame:ClearAllPoints()
-            frame:SetPoint(oldPos[1], oldPos[2], oldPos[3], offsetCalcX, offsetCalcY) --Make sure to get the actual scaled width of the minimap
+            frame:SetPoint(oldPos[1], setRelativeTo, oldPos[3], offsetCalcX, offsetCalcY) --Make sure to get the actual scaled width of the minimap
         hookSet = false
     end)
 end
@@ -119,9 +120,7 @@ function JadeUI.MoveMinimapFunc()
     --Buff Bar
     moveBlizzardFrame(BuffFrame, "TOPRIGHT", "TOPRIGHT", -13, -13, UIParent)
     --Quest Watch Frame
-    local _,_,_,_,buffQfix = BuffFrame:GetPoint()
-    QuestWatchFrame:SetParent(BuffFrame)
-    moveBlizzardFrame(QuestWatchFrame, "TOPRIGHT", "BOTTOMRIGHT", -84-buffQfix, 0, BuffFrame)
+    offsetBlizzardFrame(QuestWatchFrame, 0, 0, BuffFrame)
 
     --Bags
     for i = 1, 5 do offsetBlizzardFrame(_G["ContainerFrame" .. i], -(MinimapCluster:GetWidth()*MinimapCluster:GetScale())+VerticalMultiBarsContainer:GetWidth(), 0) end
