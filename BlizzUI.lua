@@ -10,24 +10,18 @@ local addonName, JadeUI = ...
 --Move a frame by hooking its SetPoint and overriding it's position every time it tries to move
 local function moveBlizzardFrame(frame, setPoint, setRelativePoint, setOffsetX, setOffsetY, setRelativeTo, savedVar)
     local hookSet = false
-    local defaultPos = {frame:GetPoint()} --Get the default position of the frame before the hook started to mess with things
+    frame.defaultPos = {frame:GetPoint()} --Get the default position of the frame before the hook started to mess with things
 
     hooksecurefunc(frame, "SetPoint", function()
         if hookSet then return end --Don't infinitely fire from itself
 
         if savedVar then
-            if not JadeUIDB[savedVar] then --If the variable is false then set it back to the default pos
-                hookSet = true
-                frame:ClearAllPoints()
-                frame:SetPoint(SafeUnpack(defaultPos))
-                hookSet = false
-                return
-            end
+            if not JadeUIDB[savedVar] then return end
         end
 
         hookSet = true
             --local _,oldAnchor = frame:GetPoint()
-            setRelativeTo = setRelativeTo or defaultPos[2] --relativeTo is either the existing point or an arg if set manually
+            setRelativeTo = setRelativeTo or frame.defaultPos[2] --relativeTo is either the existing point or an arg if set manually
 
             frame:ClearAllPoints()
             frame:SetPoint(setPoint, setRelativeTo, setRelativePoint, setOffsetX, setOffsetY) --Make sure to get the actual scaled width of the minimap
