@@ -8,14 +8,26 @@ local addonName, JadeUI = ...
 --Functions
 --------------------------------------------
 --Move a frame by hooking its SetPoint and overriding it's position every time it tries to move
-local function moveBlizzardFrame(frame, setPoint, setRelativePoint, setOffsetX, setOffsetY, setRelativeTo)
+local function moveBlizzardFrame(frame, setPoint, setRelativePoint, setOffsetX, setOffsetY, setRelativeTo, savedVar)
     local hookSet = false
+    local defaultPos = {frame:GetPoint()} --Get the default position of the frame before the hook started to mess with things
 
     hooksecurefunc(frame, "SetPoint", function()
         if hookSet then return end --Don't infinitely fire from itself
+
+        if savedVar then
+            if not JadeUIDB[savedVar] then --If the variable is false then set it back to the default pos
+                hookSet = true
+                frame:ClearAllPoints()
+                frame:SetPoint(SafeUnpack(defaultPos))
+                hookSet = false
+                return
+            end
+        end
+
         hookSet = true
-            local _,oldAnchor = frame:GetPoint()
-            setRelativeTo = setRelativeTo or oldAnchor --relativeTo is either the existing point or an arg if set manually
+            --local _,oldAnchor = frame:GetPoint()
+            setRelativeTo = setRelativeTo or defaultPos[2] --relativeTo is either the existing point or an arg if set manually
 
             frame:ClearAllPoints()
             frame:SetPoint(setPoint, setRelativeTo, setRelativePoint, setOffsetX, setOffsetY) --Make sure to get the actual scaled width of the minimap
@@ -26,11 +38,14 @@ local function moveBlizzardFrame(frame, setPoint, setRelativePoint, setOffsetX, 
 end
 
 --Offset a frame by hooking its SetPoint and adding the offset to its position
-local function offsetBlizzardFrame(frame, setOffsetX, setOffsetY, setRelativeTo)
+local function offsetBlizzardFrame(frame, setOffsetX, setOffsetY, setRelativeTo, savedVar)
     local hookSet = false
 
     hooksecurefunc(frame, "SetPoint", function()
         if hookSet then return end --Don't infinitely fire from itself
+        if savedVar then
+            if not JadeUIDB[savedVar] then return end
+        end
 
         --Hacky fix for item tooltips and secondary bags being offset
         if (frame == GameTooltip) or (frame == ContainerFrame2) or (frame == ContainerFrame3) or (frame == ContainerFrame4) or (frame == ContainerFrame5) then
@@ -73,13 +88,13 @@ end ]]
 --------------------------------------------
 function JadeUI.moveUnitFramesFunc()
     --Player Frame
-    moveBlizzardFrame(PlayerFrame, "BOTTOMRIGHT", "BOTTOM", - 163, 200)
+    moveBlizzardFrame(PlayerFrame, "BOTTOMRIGHT", "BOTTOM", - 163, 200, nil, "moveUnitFrames")
     --Target Frame
-    moveBlizzardFrame(TargetFrame, "BOTTOMLEFT", "BOTTOM", 162, 200)
+    moveBlizzardFrame(TargetFrame, "BOTTOMLEFT", "BOTTOM", 162, 200, nil, "moveUnitFrames")
 
     if not JadeUI.isVanilla then
         --Focus Frame
-        moveBlizzardFrame(FocusFrame, "BOTTOMLEFT", "BOTTOM", - 163, 250)
+        moveBlizzardFrame(FocusFrame, "BOTTOMLEFT", "BOTTOM", - 163, 250, nil, "moveUnitFrames")
     end
 end
 
@@ -107,20 +122,20 @@ end
 
 function JadeUI.MoveMinimapFunc()
     --Minimap
-    moveBlizzardFrame(MinimapCluster, "BOTTOMRIGHT", "BOTTOMRIGHT", 0, 0)
+    moveBlizzardFrame(MinimapCluster, "BOTTOMRIGHT", "BOTTOMRIGHT", 0, 0, nil, "moveMinimap")
     --Zone Text
-    moveBlizzardFrame(MinimapZoneTextButton, "CENTER", "CENTER", 0, -77)
+    moveBlizzardFrame(MinimapZoneTextButton, "CENTER", "CENTER", 0, -77, nil, "moveMinimap")
     --Minimap Toggle Button
-    moveBlizzardFrame(MinimapToggleButton, "CENTER", "BOTTOMRIGHT", -15, 19)
+    moveBlizzardFrame(MinimapToggleButton, "CENTER", "BOTTOMRIGHT", -15, 19, nil, "moveMinimap")
     --Minimap Top Border
-    moveBlizzardFrame(MinimapBorderTop, "BOTTOMRIGHT", "BOTTOMRIGHT", 0, 0)
+    moveBlizzardFrame(MinimapBorderTop, "BOTTOMRIGHT", "BOTTOMRIGHT", 0, 0, nil, "moveMinimap")
     --Clock
-    moveBlizzardFrame(TimeManagerClockButton, "CENTER", "CENTER", 0, 75)
+    moveBlizzardFrame(TimeManagerClockButton, "CENTER", "CENTER", 0, 75, nil, "moveMinimap")
 
     --Buff Bar
-    moveBlizzardFrame(BuffFrame, "TOPRIGHT", "TOPRIGHT", -13, -13, UIParent)
+    moveBlizzardFrame(BuffFrame, "TOPRIGHT", "TOPRIGHT", -13, -13, UIParent, "moveMinimap")
     --Quest Watch Frame
-    offsetBlizzardFrame(QuestWatchFrame, 0, 0, BuffFrame)
+    offsetBlizzardFrame(QuestWatchFrame, 0, 0, BuffFrame, "moveMinimap")
 
     --Bags
     for i = 1, 5 do offsetBlizzardFrame(_G["ContainerFrame" .. i], -(MinimapCluster:GetWidth()*MinimapCluster:GetScale())+VerticalMultiBarsContainer:GetWidth(), 0) end
@@ -147,7 +162,7 @@ local function moveMicroMenu()
     hooksecurefunc("UpdateMicroButtons", function()
         local spacing = 2
         UpdateMicroButtonsParent(JadeUIButtonParent) --(https://github.com/Gethe/wow-ui-source/blob/bc566bcfb0633aa29255dc1bb65b4bbed00967a4/Interface/FrameXML/MainMenuBarMicroButtons.lua#L60)
-        
+
         CharacterMicroButton:SetPoint("BOTTOMLEFT", JadeUI.g13MainBar, "BOTTOM", - 288, 2)
         if JadeUIDB.showTalents == true or (UnitLevel("player") >= SHOW_SPEC_LEVEL) then
             spacing = -2.5
@@ -262,9 +277,11 @@ function JadeUI.blizzUIMove()
     moveBlizzardFrame(DurabilityFrame, "LEFT", "RIGHT", 0, 23, JadeUIBarTopArtPanel) --Durability Frame
 
     verticalMultiBarFix()
-    if JadeUIDB.moveUnitFrames then JadeUI.moveUnitFramesFunc() end --Unit Frames/ff
+    --if JadeUIDB.moveUnitFrames then JadeUI.moveUnitFramesFunc() end --Unit Frames/ff
+    JadeUI.moveUnitFramesFunc()
     JadeUI.MinimapScaleFunc() --Minimap Scale. Needs to be above Minimap since Minimap includes scale calcs.
-    if JadeUIDB.moveMinimap then JadeUI.MoveMinimapFunc() end --Minimap
+    --if JadeUIDB.moveMinimap then JadeUI.MoveMinimapFunc() end --Minimap
+    JadeUI.MoveMinimapFunc()
 
     if JadeUI.isVanilla then 
         moveBlizzardFrame(TutorialFrameParent,"BOTTOM", "BOTTOM", 0, 300) --Tutorial Frame

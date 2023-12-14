@@ -136,31 +136,34 @@ local function buildLeftColumn()
     --Checkbox for moving the unitframes
     local unitFramesCheckbox = createCheckbox(
         "Move Unitframes",
-        "Move the player unitframes down to the bottom centre of the screen\nReload required to disable",
+        "Move the player unitframes down to the bottom centre of the screen",
         JadeUIDB.moveUnitFrames
     )
     unitFramesCheckbox:HookScript("OnClick", function(_, btn, down)
         JadeUIDB.moveUnitFrames = unitFramesCheckbox:GetChecked()
-        if not unitFramesCheckbox:GetChecked() then
-            reloadButton:Show()
-        else
-            JadeUI.moveUnitFramesFunc()
-        end
+        print("Clicked")
+        PlayerFrame:SetPoint(PlayerFrame:GetPoint())
+        TargetFrame:SetPoint(TargetFrame:GetPoint())
+        if not JadeUI.isVanilla then FocusFrame:SetPoint(FocusFrame:GetPoint()) end
+        ActionBarController_UpdateAll()
     end)
 
     --Checkbox for moving the Minimap
     local minimapCheckbox = createCheckbox(
         "Move Minimap",
-        "Move the Minimap down to the bottom right corner of the screen\nReload required to disable",
+        "Move the Minimap down to the bottom right corner of the screen",
         JadeUIDB.moveMinimap
     )
     minimapCheckbox:HookScript("OnClick", function(_, btn, down)
         JadeUIDB.moveMinimap = minimapCheckbox:GetChecked()
-        if not minimapCheckbox:GetChecked() then
-            reloadButton:Show()
-        else
-            JadeUI.MoveMinimapFunc()
-        end
+        MinimapCluster:SetPoint(MinimapCluster:GetPoint())
+        MinimapZoneTextButton:SetPoint(MinimapZoneTextButton:GetPoint())
+        MinimapToggleButton:SetPoint(MinimapToggleButton:GetPoint())
+        MinimapBorderTop:SetPoint(MinimapBorderTop:GetPoint())
+        TimeManagerClockButton:SetPoint(TimeManagerClockButton:GetPoint())
+        BuffFrame:SetPoint(BuffFrame:GetPoint())
+        --QuestWatchFrame:SetPoint(QuestWatchFrame:GetPoint())
+        ActionBarController_UpdateAll()
     end)
 
     --Checkbox for taking a screenshot on level up
