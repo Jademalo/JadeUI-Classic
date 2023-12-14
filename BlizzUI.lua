@@ -2,7 +2,7 @@
 --Variables
 --------------------------------------------
 local addonName, JadeUI = ...
-
+local hookTable = {}
 
 --------------------------------------------
 --Functions
@@ -10,6 +10,7 @@ local addonName, JadeUI = ...
 --Move a frame by hooking its SetPoint and overriding it's position every time it tries to move
 local function moveBlizzardFrame(frame, setPoint, setRelativePoint, setOffsetX, setOffsetY, setRelativeTo, savedVar)
     local hookSet = false
+    table.insert(hookTable, frame) --Add any frame with a hook to the table of hooked frames (This adds the pointer to the table, not a copy)
     frame.defaultPos = {frame:GetPoint()} --Get the default position of the frame before the hook started to mess with things
 
     hooksecurefunc(frame, "SetPoint", function()
@@ -73,7 +74,13 @@ UIParent_ManageFramePosition = function(index, value, yOffsetFrames, xOffsetFram
 
 end ]]
 
-
+--Trigger the hook for every frame by running SetPoint with their default position
+function JadeUI.TriggerFrameHooks()
+    for _, v in pairs(hookTable) do
+        v:ClearAllPoints()
+        v:SetPoint(SafeUnpack(v.defaultPos))
+    end
+end
 
 
 
