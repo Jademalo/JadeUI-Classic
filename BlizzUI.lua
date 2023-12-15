@@ -42,20 +42,30 @@ local function offsetBlizzardFrame(frame, setOffsetX, setOffsetY, setRelativeTo,
             if not JadeUIDB[savedVar] then return end
         end
 
-        --Hacky fix for item tooltips and secondary bags being offset
-        if (frame == GameTooltip) or (frame == ContainerFrame2) or (frame == ContainerFrame3) or (frame == ContainerFrame4) or (frame == ContainerFrame5) then
-            local _,anchor = frame:GetPoint()
-            if anchor ~= UIParent then return end
-        end
-
+        local offsetXCalc
+        local offsetYCalc
         local oldPos = {frame:GetPoint()} --Back up the current position of the frame
-        local offsetCalcX = oldPos[4]+setOffsetX
-        local offsetCalcY = oldPos[5]+setOffsetY
-        setRelativeTo = setRelativeTo or oldPos[2] --If no new parent is defined, use the old one
+        if (oldPos[2] ~= UIParent) and (oldPos[2] ~= MinimapCluster) then return end --Hacky fix for item tooltips and secondary bags being offset, with quest frame fix
+
+        if type(setOffsetX) == "function" then --Calculate functions for the offsets if we're being passed one
+            offsetXCalc = setOffsetX()
+        else
+            offsetXCalc = setOffsetX
+        end
+        offsetXCalc = oldPos[4]+offsetXCalc
+
+        if type(setOffsetY) == "function" then
+            offsetYCalc = setOffsetY()
+        else
+            offsetYCalc = setOffsetY
+        end
+        offsetYCalc = oldPos[5]+offsetYCalc
+
+        local setRelativeToOut = setRelativeTo or oldPos[2] --If no new parent is defined, use the old one. Use a new variable so as not to pollute setRelativeTo and have subsequent runs of the hook get stuck on the first relative used
 
         hookSet = true
             frame:ClearAllPoints()
-            frame:SetPoint(oldPos[1], setRelativeTo, oldPos[3], offsetCalcX, offsetCalcY) --Make sure to get the actual scaled width of the minimap
+            frame:SetPoint(oldPos[1], setRelativeToOut, oldPos[3], offsetXCalc, offsetYCalc) --Make sure to get the actual scaled width of the minimap
         hookSet = false
     end)
 end
@@ -82,6 +92,10 @@ function JadeUI.TriggerFrameHooks()
     end
 end
 
+--Calculate the width of the map to offset the tooltip. Pass as argument without () so the function itself is being passed and not the result 
+local function tooltipOffset()
+    return -(MinimapCluster:GetWidth()*MinimapCluster:GetScale())+VerticalMultiBarsContainer:GetWidth()
+end
 
 
 --------------------------------------------
@@ -139,9 +153,9 @@ function JadeUI.MoveMinimapFunc()
     offsetBlizzardFrame(QuestWatchFrame, 0, 0, BuffFrame, "moveMinimap")
 
     --Bags
-    for i = 1, 5 do offsetBlizzardFrame(_G["ContainerFrame" .. i], -(MinimapCluster:GetWidth()*MinimapCluster:GetScale())+VerticalMultiBarsContainer:GetWidth(), 0) end
+    for i = 1, 5 do offsetBlizzardFrame(_G["ContainerFrame" .. i], tooltipOffset, 0) end
     --Tooltip
-    offsetBlizzardFrame(GameTooltip, -(MinimapCluster:GetWidth()*MinimapCluster:GetScale())+VerticalMultiBarsContainer:GetWidth(), 0)
+    offsetBlizzardFrame(GameTooltip, tooltipOffset, 0)
 
     ActionBarController_UpdateAll() --This makes sure that the right hand bar gets repositioned after the minimap is moved around (https://github.com/Gethe/wow-ui-source/blob/bc566bcfb0633aa29255dc1bb65b4bbed00967a4/Interface/FrameXML/ActionBarController.lua#L93)
 end
