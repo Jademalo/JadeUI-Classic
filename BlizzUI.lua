@@ -69,7 +69,7 @@ local function offsetBlizzardFrame(frame, setOffsetX, setOffsetY, setRelativeTo,
         end
 
         local basePos = {frame:GetPoint()} --Back up the current position of the frame
-        if (basePos[2] ~= UIParent) and (basePos[2] ~= MinimapCluster) then return end --Hacky fix for item tooltips and secondary bags being offset, with quest frame fix
+        if (basePos[2] ~= UIParent) and (not setRelativeTo) then return end --Hacky fix for item tooltips and secondary bags being offset, while letting quest frame still move. Needs improvement.
 
         local offsetXCalc = basePos[4]+calcFunction(setOffsetX)
         local offsetYCalc = basePos[5]+calcFunction(setOffsetY)
