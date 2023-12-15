@@ -7,6 +7,32 @@ local hookTable = {}
 --------------------------------------------
 --Functions
 --------------------------------------------
+--If the passed variable is a function calculate it, else return the variable.
+local function calcFunction(var)
+    if type(var) == "function" then --Calculate functions for the offsets if we're being passed one
+        return var()
+    else
+        return var
+    end
+end
+
+--Trigger the hook for every frame by running SetPoint with their default position
+function JadeUI.TriggerFrameHooks()
+    for _, v in pairs(hookTable) do
+        v:ClearAllPoints()
+        v:SetPoint(SafeUnpack(v.defaultPos))
+    end
+end
+
+--Calculate the width of the map to offset the tooltip and bags. Pass as argument without () so the function itself is being passed and not the result 
+local function minimapWidthOffset()
+    return -(MinimapCluster:GetWidth()*MinimapCluster:GetScale())+VerticalMultiBarsContainer:GetWidth()
+end
+
+
+--------------------------------------------
+--Hooks
+--------------------------------------------
 --Move a frame by hooking its SetPoint and overriding it's position every time it tries to move
 local function moveBlizzardFrame(frame, setPoint, setRelativePoint, setOffsetX, setOffsetY, setRelativeTo, savedVar)
     local hookSet = false
@@ -42,30 +68,16 @@ local function offsetBlizzardFrame(frame, setOffsetX, setOffsetY, setRelativeTo,
             if not JadeUIDB[savedVar] then return end
         end
 
-        local offsetXCalc
-        local offsetYCalc
-        local oldPos = {frame:GetPoint()} --Back up the current position of the frame
-        if (oldPos[2] ~= UIParent) and (oldPos[2] ~= MinimapCluster) then return end --Hacky fix for item tooltips and secondary bags being offset, with quest frame fix
+        local basePos = {frame:GetPoint()} --Back up the current position of the frame
+        if (basePos[2] ~= UIParent) and (basePos[2] ~= MinimapCluster) then return end --Hacky fix for item tooltips and secondary bags being offset, with quest frame fix
 
-        if type(setOffsetX) == "function" then --Calculate functions for the offsets if we're being passed one
-            offsetXCalc = setOffsetX()
-        else
-            offsetXCalc = setOffsetX
-        end
-        offsetXCalc = oldPos[4]+offsetXCalc
-
-        if type(setOffsetY) == "function" then
-            offsetYCalc = setOffsetY()
-        else
-            offsetYCalc = setOffsetY
-        end
-        offsetYCalc = oldPos[5]+offsetYCalc
-
-        local setRelativeToOut = setRelativeTo or oldPos[2] --If no new parent is defined, use the old one. Use a new variable so as not to pollute setRelativeTo and have subsequent runs of the hook get stuck on the first relative used
+        local offsetXCalc = basePos[4]+calcFunction(setOffsetX)
+        local offsetYCalc = basePos[5]+calcFunction(setOffsetY)
+        local setRelativeToOut = setRelativeTo or basePos[2] --If no new parent is defined, use the old one. Use a new variable so as not to pollute setRelativeTo and have subsequent runs of the hook get stuck on the first relative used
 
         hookSet = true
             frame:ClearAllPoints()
-            frame:SetPoint(oldPos[1], setRelativeToOut, oldPos[3], offsetXCalc, offsetYCalc) --Make sure to get the actual scaled width of the minimap
+            frame:SetPoint(basePos[1], setRelativeToOut, basePos[3], offsetXCalc, offsetYCalc) --Make sure to get the actual scaled width of the minimap
         hookSet = false
     end)
 end
@@ -83,19 +95,6 @@ UIParent_ManageFramePosition = function(index, value, yOffsetFrames, xOffsetFram
     origUIParent_ManageFramePosition(index, value, yOffsetFrames, xOffsetFrames, hasBottomLeft, hasBottomRight, hasPetBar)
 
 end ]]
-
---Trigger the hook for every frame by running SetPoint with their default position
-function JadeUI.TriggerFrameHooks()
-    for _, v in pairs(hookTable) do
-        v:ClearAllPoints()
-        v:SetPoint(SafeUnpack(v.defaultPos))
-    end
-end
-
---Calculate the width of the map to offset the tooltip. Pass as argument without () so the function itself is being passed and not the result 
-local function tooltipOffset()
-    return -(MinimapCluster:GetWidth()*MinimapCluster:GetScale())+VerticalMultiBarsContainer:GetWidth()
-end
 
 
 --------------------------------------------
@@ -153,9 +152,9 @@ function JadeUI.MoveMinimapFunc()
     offsetBlizzardFrame(QuestWatchFrame, 0, 0, BuffFrame, "moveMinimap")
 
     --Bags
-    for i = 1, 5 do offsetBlizzardFrame(_G["ContainerFrame" .. i], tooltipOffset, 0) end
+    for i = 1, 5 do offsetBlizzardFrame(_G["ContainerFrame" .. i], minimapWidthOffset, 0) end
     --Tooltip
-    offsetBlizzardFrame(GameTooltip, tooltipOffset, 0)
+    offsetBlizzardFrame(GameTooltip, minimapWidthOffset, 0)
 
     ActionBarController_UpdateAll() --This makes sure that the right hand bar gets repositioned after the minimap is moved around (https://github.com/Gethe/wow-ui-source/blob/bc566bcfb0633aa29255dc1bb65b4bbed00967a4/Interface/FrameXML/ActionBarController.lua#L93)
 end
