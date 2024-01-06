@@ -60,7 +60,7 @@ end
 
 --Create new column
 local function createColumn(relativePoint, offsetX)
-    local columnOrigin = CreateFrame("Frame")
+    local columnOrigin = CreateFrame("Frame", nil, optionsPanel)
     columnOrigin:SetPoint("TOPLEFT", optionsPanel, relativePoint, offsetX, -30)
     columnOrigin:SetSize(1, 1) --This needs to be here or the frame has no position and nothing is visible
 
