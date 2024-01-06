@@ -101,27 +101,30 @@ end
 
 
 --------------------------------------------------------------------------------
---Reload button
+--Main Panel
 --------------------------------------------------------------------------------
-local reloadButton = CreateFrame('button', nil, optionsPanel, 'UIPanelButtonTemplate')
-reloadButton:SetSize(120, 22)
-reloadButton:SetText("Reload UI")
-reloadButton:SetPoint('BOTTOM', 0, 20)
-reloadButton:Hide()
-reloadButton:SetScript('OnClick', function(self)
-    C_UI.Reload()
-end)
+local function buildOptionsMain()
+    --Title
+    local title = optionsPanel:CreateFontString("ARTWORK", nil, "GameFontNormalLarge")
+    title:SetPoint("TOP")
+    title:SetText("JadeUI Classic")
+
+    --Reload Button
+    local reloadButton = CreateFrame("button", "JadeUIOptionsReloadButton", optionsPanel, "UIPanelButtonTemplate")
+    reloadButton:SetSize(120, 22)
+    reloadButton:SetText("Reload UI")
+    reloadButton:SetPoint('BOTTOM', 0, 20)
+    reloadButton:Hide()
+    reloadButton:SetScript('OnClick', function(self)
+        C_UI.Reload()
+    end)
+end
 
 
 --------------------------------------------
 --Left Column Menu Entries
 --------------------------------------------        
 local function buildLeftColumn()
-    --Title
-    local title = optionsPanel:CreateFontString("ARTWORK", nil, "GameFontNormalLarge")
-    title:SetPoint("TOP")
-    title:SetText("JadeUI Classic")
-
     --Checkbox for showing the talent button
     local talentCheckbox = createCheckbox(
         "Show Talent Button",
@@ -176,7 +179,7 @@ local function buildLeftColumn()
     hideKeybindsCheckbox:HookScript("OnClick", function(_, btn, down)
         JadeUIDB.hideKeybinds = hideKeybindsCheckbox:GetChecked()
         if not hideKeybindsCheckbox:GetChecked() then
-            reloadButton:Show()
+            JadeUIOptionsReloadButton:Show()
         else
             JadeUI.HideKeybinds()
         end
@@ -279,6 +282,7 @@ optionsPanel:SetScript("OnEvent", function(self, event, arg1, arg2)
     if event == "ADDON_LOADED" and arg1 == addonName then
 
         savedVariablesInit()
+        buildOptionsMain()
         buildLeftColumn()
         buildRightColumn()
 
