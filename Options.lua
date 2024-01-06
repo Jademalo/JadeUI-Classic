@@ -200,15 +200,16 @@ local function buildOptions()
         local optionsListRight = createColumn("TOP", 0)
 
         --Create a dropdown to manage Endstops
+        --Dropdown Box
+        local endstopDropDown = CreateFrame("Frame", "JadeUIOptionsEndstopMenu", optionsPanel, "UIDropDownMenuTemplate")
+
         --Title
-        local endstopLabel = optionsPanel:CreateFontString("JadeUIOptionsEndstopLabel", "ARTWORK", "GameFontHighlightSmall")
+        local endstopLabel = endstopDropDown:CreateFontString("JadeUIOptionsEndstopLabel", "ARTWORK", "GameFontHighlightSmall") --This is here rather than above the dropdown box frame creation specifically so it can be a region of endstopDropDown
         appendOption(endstopLabel, optionsListRight)
         endstopLabel:SetText("Endstop artwork:")
 
-        --Dropdown Box
-        local endstopDropDown = CreateFrame("Frame", "JadeUIOptionsEndstopMenu", optionsPanel, "UIDropDownMenuTemplate")
         endstopDropDown:SetPoint("TOPLEFT", endstopLabel, "BOTTOMLEFT", -17, -5)
-        table.insert(optionsListRight, endstopDropDown) --This frame has it's relative point set manually since it needs to be closer, and is added manually
+        table.insert(optionsListRight, endstopDropDown) --This frame has it's relative point set manually since it needs to be offset to the left, and is added manually
         UIDropDownMenu_SetWidth(endstopDropDown, 100)
         addTooltip(endstopDropDown) --Add a tooltip to the dropdown
         endstopDropDown.tooltipText = "Select Endstop Artwork"
@@ -231,7 +232,7 @@ local function buildOptions()
 
         --Create a slider to adjust Minimap Scale
         local scaleSlider = CreateFrame("Slider", "JadeUIOptionsMinimapScaleSlider", optionsPanel, "OptionsSliderTemplate")
-        
+
         local minRange = 1
         local maxRange = 1.5
         scaleSlider:SetMinMaxValues(minRange, maxRange)
@@ -239,7 +240,7 @@ local function buildOptions()
         _G[scaleSlider:GetName() .. "High"]:SetText(maxRange)
         _G[scaleSlider:GetName() .. "Text"]:SetText("Minimap Scale")
 
-        scaleSlider:SetPoint("TOPLEFT", endstopDropDown, "BOTTOMLEFT", 17, -_G[scaleSlider:GetName() .. "Text"]:GetHeight()+itemSpacing)
+        scaleSlider:SetPoint("TOPLEFT", endstopDropDown, "BOTTOMLEFT", 17, -_G[scaleSlider:GetName() .. "Text"]:GetHeight()+itemSpacing) --This specifically sets the position relative to the height of the slider text
         table.insert(optionsListRight, scaleSlider) --This frame has it's relative point set manually since the dropdown box had to be offset to the left, and is added manually
 
         --addTooltip(endstopDropDown) --Add a tooltip to the slider
@@ -252,7 +253,8 @@ local function buildOptions()
         scaleSlider:SetObeyStepOnDrag(true)
         scaleSlider:SetValue(JadeUIDB.minimapScaleFactor)
 
-        local scaleSliderValue = optionsPanel:CreateFontString("JadeUIOptionsMinimapScaleSliderValue", "ARTWORK", "GameFontHighlightSmall")
+        --Add a value label underneath that shows the current value of the slider
+        local scaleSliderValue = scaleSlider:CreateFontString("JadeUIOptionsMinimapScaleSliderValue", "ARTWORK", "GameFontHighlightSmall")
         scaleSliderValue:SetPoint("TOP", scaleSlider, "BOTTOM", 0, 3)
         scaleSliderValue:SetText(round(JadeUIDB.minimapScaleFactor, 2))
 
