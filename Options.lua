@@ -58,10 +58,11 @@ local function addTooltip(frame)
     frame:SetScript("OnLeave", function(self) GameTooltip:Hide() end)
 end
 
+--Create new column
 local function createColumn(relativePoint, offsetX)
     local columnOrigin = CreateFrame("Frame")
     columnOrigin:SetPoint("TOPLEFT", optionsPanel, relativePoint, offsetX, -30)
-    columnOrigin:SetSize(1, 1)
+    columnOrigin:SetSize(1, 1) --This needs to be here or the frame has no position and nothing is visible
 
     local column = {}
     table.insert(column, columnOrigin)
@@ -69,14 +70,10 @@ local function createColumn(relativePoint, offsetX)
     return column
 end
 
---This appends a frame to the specified column table
+--Append a frame to the specified column table
 local function appendOption(frame, column, spacing)
     spacing = spacing or itemSpacing --Use the already defined variable if not manually overridden
-    if next(column)==nil then --If there are no existing options in the list
-        frame:SetPoint("TOPLEFT", optionsPanel, "TOPLEFT", 20, -30) --Set it to the top left of the options panel
-    else
-        frame:SetPoint("TOPLEFT", column[#column], "BOTTOMLEFT", 0, spacing) --Append it below the previous entry in the options list
-    end
+    frame:SetPoint("TOPLEFT", column[#column], "BOTTOMLEFT", 0, spacing) --Append it below the previous entry in the options list
     table.insert(column, frame) --Add this frame to the options list
 end
 
@@ -100,185 +97,172 @@ end
 --------------------------------------------------------------------------------
 --Main Panel
 --------------------------------------------------------------------------------
-local function buildOptionsMain()
-    --Title
-    local title = optionsPanel:CreateFontString("ARTWORK", nil, "GameFontNormalLarge")
-    title:SetPoint("TOP")
-    title:SetText("JadeUI Classic")
-
-    --Reload Button
-    local reloadButton = CreateFrame("button", "JadeUIOptionsReloadButton", optionsPanel, "UIPanelButtonTemplate")
-    reloadButton:SetSize(120, 22)
-    reloadButton:SetText("Reload UI")
-    reloadButton:SetPoint('BOTTOM', 0, 20)
-    reloadButton:Hide()
-    reloadButton:SetScript('OnClick', function(self)
-        C_UI.Reload()
-    end)
-end
-
-
---------------------------------------------
---Left Column Menu Entries
---------------------------------------------        
-local function buildLeftColumn()
-    local optionsListLeft = createColumn("TOPLEFT", 20)
-
-    --Checkbox for showing the talent button
-    local talentCheckbox = createCheckbox(
-        "Show Talent Button",
-        "This option will display the talent button in the Menu Bar regardless of player level",
-        optionsListLeft,
-        JadeUIDB.showTalents
-    )
-    talentCheckbox:HookScript("OnClick", function(_, btn, down)
-        JadeUIDB.showTalents = talentCheckbox:GetChecked()
-        UpdateMicroButtons()
-    end)
-
-    --Checkbox for moving the unitframes
-    local unitFramesCheckbox = createCheckbox(
-        "Move Unitframes",
-        "Move the player unitframes down to the bottom centre of the screen",
-        optionsListLeft,
-        JadeUIDB.moveUnitFrames
-    )
-    unitFramesCheckbox:HookScript("OnClick", function(_, btn, down)
-        JadeUIDB.moveUnitFrames = unitFramesCheckbox:GetChecked()
-        JadeUI.TriggerFrameHooks()
-        ActionBarController_UpdateAll()
-    end)
-
-    --Checkbox for moving the Minimap
-    local minimapCheckbox = createCheckbox(
-        "Move Minimap",
-        "Move the Minimap down to the bottom right corner of the screen",
-        optionsListLeft,
-        JadeUIDB.moveMinimap
-    )
-    minimapCheckbox:HookScript("OnClick", function(_, btn, down)
-        JadeUIDB.moveMinimap = minimapCheckbox:GetChecked()
-        JadeUI.TriggerFrameHooks()
-        ActionBarController_UpdateAll()
-    end)
-
-    --Checkbox for taking a screenshot on level up
-    local levelScreenshotCheckbox = createCheckbox(
-        "Screenshot on Level Up",
-        "Automatically take a screenshot on levelling up",
-        optionsListLeft,
-        JadeUIDB.levelScreenshot
-    )
-    levelScreenshotCheckbox:HookScript("OnClick", function(_, btn, down)
-        JadeUIDB.levelScreenshot = levelScreenshotCheckbox:GetChecked()
-    end)
-
-    --Checkbox for taking a screenshot on level up
-    local hideKeybindsCheckbox = createCheckbox(
-        "Hide Keybinds",
-        "Hides keybinds on action bars\nReload required to disable",
-        optionsListLeft,
-        JadeUIDB.hideKeybinds
-    )
-    hideKeybindsCheckbox:HookScript("OnClick", function(_, btn, down)
-        JadeUIDB.hideKeybinds = hideKeybindsCheckbox:GetChecked()
-        if not hideKeybindsCheckbox:GetChecked() then
-            JadeUIOptionsReloadButton:Show()
-        else
-            JadeUI.HideKeybinds()
-        end
-    end)
-
-    --Checkbox for forcing a specific UI Scale
-    local uiScaleCheckbox = createCheckbox(
-        "1:1 UI Scale",
-        "Set the UI scaling so that elements display at a 1:1 pixel ratio",
-        optionsListLeft,
-        JadeUIDB.pixelScale
-    )
-    uiScaleCheckbox:HookScript("OnClick", function(_, btn, down)
-        JadeUIDB.pixelScale = uiScaleCheckbox:GetChecked()
-        JadeUI.SetScale()
-    end)
-
-end
-
-
---------------------------------------------
---Right Column Menu Entries
---------------------------------------------  
-local function buildRightColumn()
-    local optionsListRight = createColumn("TOP", 0)
-
-    --Create a dropdown to manage Endstops
+local function buildOptions()
+    --Core Menu Entries
         --Title
-    local endstopLabel = optionsPanel:CreateFontString(nil, 'ARTWORK', 'GameFontHighlightSmall')
-    appendOption(endstopLabel, optionsListRight)
-    endstopLabel:SetText('Select endstop artwork:')
+        local title = optionsPanel:CreateFontString("ARTWORK", nil, "GameFontNormalLarge")
+        title:SetPoint("TOP")
+        title:SetText("JadeUI Classic")
+
+        --Reload Button
+        local reloadButton = CreateFrame("button", "JadeUIOptionsReloadButton", optionsPanel, "UIPanelButtonTemplate")
+        reloadButton:SetSize(120, 22)
+        reloadButton:SetText("Reload UI")
+        reloadButton:SetPoint('BOTTOM', 0, 20)
+        reloadButton:Hide()
+        reloadButton:SetScript('OnClick', function(self)
+            C_UI.Reload()
+        end)
+
+
+    --Left Column Menu Entries
+        local optionsListLeft = createColumn("TOPLEFT", 20)
+
+        --Checkbox for showing the talent button
+        local talentCheckbox = createCheckbox(
+            "Show Talent Button",
+            "This option will display the talent button in the Menu Bar regardless of player level",
+            optionsListLeft,
+            JadeUIDB.showTalents
+        )
+        talentCheckbox:HookScript("OnClick", function(_, btn, down)
+            JadeUIDB.showTalents = talentCheckbox:GetChecked()
+            UpdateMicroButtons()
+        end)
+
+        --Checkbox for moving the unitframes
+        local unitFramesCheckbox = createCheckbox(
+            "Move Unitframes",
+            "Move the player unitframes down to the bottom centre of the screen",
+            optionsListLeft,
+            JadeUIDB.moveUnitFrames
+        )
+        unitFramesCheckbox:HookScript("OnClick", function(_, btn, down)
+            JadeUIDB.moveUnitFrames = unitFramesCheckbox:GetChecked()
+            JadeUI.TriggerFrameHooks()
+            ActionBarController_UpdateAll()
+        end)
+
+        --Checkbox for moving the Minimap
+        local minimapCheckbox = createCheckbox(
+            "Move Minimap",
+            "Move the Minimap down to the bottom right corner of the screen",
+            optionsListLeft,
+            JadeUIDB.moveMinimap
+        )
+        minimapCheckbox:HookScript("OnClick", function(_, btn, down)
+            JadeUIDB.moveMinimap = minimapCheckbox:GetChecked()
+            JadeUI.TriggerFrameHooks()
+            ActionBarController_UpdateAll()
+        end)
+
+        --Checkbox for taking a screenshot on level up
+        local levelScreenshotCheckbox = createCheckbox(
+            "Screenshot on Level Up",
+            "Automatically take a screenshot on levelling up",
+            optionsListLeft,
+            JadeUIDB.levelScreenshot
+        )
+        levelScreenshotCheckbox:HookScript("OnClick", function(_, btn, down)
+            JadeUIDB.levelScreenshot = levelScreenshotCheckbox:GetChecked()
+        end)
+
+        --Checkbox for taking a screenshot on level up
+        local hideKeybindsCheckbox = createCheckbox(
+            "Hide Keybinds",
+            "Hides keybinds on action bars\nReload required to disable",
+            optionsListLeft,
+            JadeUIDB.hideKeybinds
+        )
+        hideKeybindsCheckbox:HookScript("OnClick", function(_, btn, down)
+            JadeUIDB.hideKeybinds = hideKeybindsCheckbox:GetChecked()
+            if not hideKeybindsCheckbox:GetChecked() then
+                reloadButton:Show()
+            else
+                JadeUI.HideKeybinds()
+            end
+        end)
+
+        --Checkbox for forcing a specific UI Scale
+        local uiScaleCheckbox = createCheckbox(
+            "1:1 UI Scale",
+            "Set the UI scaling so that elements display at a 1:1 pixel ratio",
+            optionsListLeft,
+            JadeUIDB.pixelScale
+        )
+        uiScaleCheckbox:HookScript("OnClick", function(_, btn, down)
+            JadeUIDB.pixelScale = uiScaleCheckbox:GetChecked()
+            JadeUI.SetScale()
+        end)
+
+
+    --Right Column Menu Entries
+        local optionsListRight = createColumn("TOP", 0)
+
+        --Create a dropdown to manage Endstops
+        --Title
+        local endstopLabel = optionsPanel:CreateFontString(nil, 'ARTWORK', 'GameFontHighlightSmall')
+        appendOption(endstopLabel, optionsListRight)
+        endstopLabel:SetText('Select endstop artwork:')
 
         --Dropdown Box
-    local endstopDropDown = CreateFrame("Frame", "Endstop Menu", optionsPanel, "UIDropDownMenuTemplate")
-    endstopDropDown:SetPoint("TOPLEFT", endstopLabel, "BOTTOMLEFT", -15, -5)
-    table.insert(optionsListRight, endstopDropDown) --This frame has it's relative point set manually since it needs to be closer, and is added manually
-    UIDropDownMenu_SetWidth(endstopDropDown, 100)
-    addTooltip(endstopDropDown) --Add a tooltip to the dropdown
-    endstopDropDown.tooltipText = "Select Endstop Artwork"
-    endstopDropDown.tooltipRequirement = "Select the artwork to be displayed for the endstops on the main bar"
-    UIDropDownMenu_Initialize(endstopDropDown, function(frame, level, menulist) --Args passed to this function are (frame, level, menulist), where frame is the first arg here. This function is run to init the box.
-        local endstopTypes = { "None", "Gryphon", "Lion" }
-            for i, type in next, endstopTypes do
-                local info = UIDropDownMenu_CreateInfo()
-                info.text = type
-                info.value = i-1
-                info.func = function(self, arg1, arg2, checked) --Args passed to this are (self (info in this case), arg1, arg2, checked). This function is run on click.
-                    JadeUI.setEndstop(self.value)
-                    JadeUIDB.endstopType = self.value
-                    UIDropDownMenu_SetSelectedValue(frame,self.value) --This sets the label after selecting an option
+        local endstopDropDown = CreateFrame("Frame", "Endstop Menu", optionsPanel, "UIDropDownMenuTemplate")
+        endstopDropDown:SetPoint("TOPLEFT", endstopLabel, "BOTTOMLEFT", -15, -5)
+        table.insert(optionsListRight, endstopDropDown) --This frame has it's relative point set manually since it needs to be closer, and is added manually
+        UIDropDownMenu_SetWidth(endstopDropDown, 100)
+        addTooltip(endstopDropDown) --Add a tooltip to the dropdown
+        endstopDropDown.tooltipText = "Select Endstop Artwork"
+        endstopDropDown.tooltipRequirement = "Select the artwork to be displayed for the endstops on the main bar"
+        UIDropDownMenu_Initialize(endstopDropDown, function(frame, level, menulist) --Args passed to this function are (frame, level, menulist), where frame is the first arg here. This function is run to init the box.
+            local endstopTypes = { "None", "Gryphon", "Lion" }
+                for i, type in next, endstopTypes do
+                    local info = UIDropDownMenu_CreateInfo()
+                    info.text = type
+                    info.value = i-1
+                    info.func = function(self, arg1, arg2, checked) --Args passed to this are (self (info in this case), arg1, arg2, checked). This function is run on click.
+                        JadeUI.setEndstop(self.value)
+                        JadeUIDB.endstopType = self.value
+                        UIDropDownMenu_SetSelectedValue(frame,self.value) --This sets the label after selecting an option
+                    end
+                    UIDropDownMenu_AddButton(info)
                 end
-                UIDropDownMenu_AddButton(info)
+            UIDropDownMenu_SetSelectedValue(frame, JadeUIDB.endstopType) --This sets the label initially based on the SavedVariable
+        end)
+
+        --Create a slider to adjust Minimap Scale
+        local scaleSlider = CreateFrame("Slider", "Minimap Scale Slider", optionsPanel, "OptionsSliderTemplate")
+        appendOption(scaleSlider, optionsListRight, -15)
+
+        local minRange = 1
+        local maxRange = 1.5
+        scaleSlider:SetMinMaxValues(minRange, maxRange)
+        _G[scaleSlider:GetName() .. 'Low']:SetText(minRange)
+        _G[scaleSlider:GetName() .. 'High']:SetText(maxRange)
+        _G[scaleSlider:GetName() .. 'Text']:SetText("Minimap Scale")
+
+        --addTooltip(endstopDropDown) --Add a tooltip to the slider
+        scaleSlider.tooltipText = "Minimap Scale"
+        scaleSlider.tooltipRequirement = "Select the scale for the Minimap"
+        scaleSlider:SetOrientation("HORIZONTAL")
+
+        local stepSize = 0.05
+        scaleSlider:SetValueStep(stepSize)
+        scaleSlider:SetObeyStepOnDrag(true)
+        scaleSlider:SetValue(JadeUIDB.minimapScaleFactor)
+
+        local scaleSliderValue = optionsPanel:CreateFontString(nil, 'ARTWORK', 'GameFontHighlightSmall')
+        scaleSliderValue:SetPoint("TOP", scaleSlider, "BOTTOM", 0, 3)
+        scaleSliderValue:SetText(round(JadeUIDB.minimapScaleFactor, 2))
+
+        scaleSlider:HookScript('OnValueChanged', function(self, value, userInput)
+            if userInput then
+                JadeUIDB.minimapScaleFactor = round(value, 2)
+                scaleSliderValue:SetText(JadeUIDB.minimapScaleFactor)
+                JadeUI.MinimapScaleFunc()
             end
-        UIDropDownMenu_SetSelectedValue(frame, JadeUIDB.endstopType) --This sets the label initially based on the SavedVariable
-    end)
-
-    --Create a slider to adjust Minimap Scale
-    local scaleSlider = CreateFrame("Slider", "Minimap Scale Slider", optionsPanel, "OptionsSliderTemplate")
-    appendOption(scaleSlider, optionsListRight, -15)
-
-    local minRange = 1
-    local maxRange = 1.5
-    scaleSlider:SetMinMaxValues(minRange, maxRange)
-    _G[scaleSlider:GetName() .. 'Low']:SetText(minRange)
-    _G[scaleSlider:GetName() .. 'High']:SetText(maxRange)
-    _G[scaleSlider:GetName() .. 'Text']:SetText("Minimap Scale")
-
-    --addTooltip(endstopDropDown) --Add a tooltip to the slider
-    scaleSlider.tooltipText = "Minimap Scale"
-    scaleSlider.tooltipRequirement = "Select the scale for the Minimap"
-    scaleSlider:SetOrientation("HORIZONTAL")
-
-    local stepSize = 0.05
-    scaleSlider:SetValueStep(stepSize)
-    scaleSlider:SetObeyStepOnDrag(true)
-    scaleSlider:SetValue(JadeUIDB.minimapScaleFactor)
-
-    local scaleSliderValue = optionsPanel:CreateFontString(nil, 'ARTWORK', 'GameFontHighlightSmall')
-    scaleSliderValue:SetPoint("TOP", scaleSlider, "BOTTOM", 0, 3)
-    scaleSliderValue:SetText(round(JadeUIDB.minimapScaleFactor, 2))
-
-    scaleSlider:HookScript('OnValueChanged', function(self, value, userInput)
-        if userInput then
-            JadeUIDB.minimapScaleFactor = round(value, 2)
-            scaleSliderValue:SetText(JadeUIDB.minimapScaleFactor)
-            JadeUI.MinimapScaleFunc()
-        end
-    end)
-
-
+        end)
 
 end
-
-
-
 
 
 --------------------------------------------------------------------------------
@@ -289,9 +273,7 @@ optionsPanel:SetScript("OnEvent", function(self, event, arg1, arg2)
     if event == "ADDON_LOADED" and arg1 == addonName then
 
         savedVariablesInit()
-        buildOptionsMain()
-        buildLeftColumn()
-        buildRightColumn()
+        buildOptions()
 
         --Register the Options Panel in the AddOn Menu
         InterfaceOptions_AddCategory(optionsPanel)
