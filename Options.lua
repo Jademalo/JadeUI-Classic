@@ -3,8 +3,7 @@
 --------------------------------------------
 local addonName, JadeUI = ...
 
-local itemSpacingLeft = -5 --The space between each entry in the list
-local itemSpacingRight = -5 --The space between each entry in the list
+local itemSpacing = -5 --The space between each entry in the list
 local optionsPanel = CreateFrame("Frame") --The main options panel frame
 optionsPanel.name = "JadeUI Classic" --CreateFrame call (CreateFrame("Frame", "Name")) puts "Name" in the global scope, so _G["Name"] will retrieve the panel. The panel.name is a field on the panel itself.
 
@@ -59,34 +58,32 @@ local function addTooltip(frame)
     frame:SetScript("OnLeave", function(self) GameTooltip:Hide() end)
 end
 
---This makes a dynamic options list on the left-hand side
-JadeUI.OptionsListLeft = {}
-local function appendOptionLeft(frame, spacing)
-    spacing = spacing or itemSpacingLeft
-    if next(JadeUI.OptionsListLeft)==nil then --If there are no existing options in the list
-        frame:SetPoint("TOPLEFT", optionsPanel, "TOPLEFT", 20, -30) --Set it to the top left of the options panel
-    else
-        frame:SetPoint("TOPLEFT", JadeUI.OptionsListLeft[#JadeUI.OptionsListLeft], "BOTTOMLEFT", 0, spacing) --Append it below the previous entry in the options list
-    end
-    table.insert(JadeUI.OptionsListLeft, frame) --Add this frame to the options list
+local function createColumn(relativePoint, offsetX)
+    local columnOrigin = CreateFrame("Frame")
+    columnOrigin:SetPoint("TOPLEFT", optionsPanel, relativePoint, offsetX, -30)
+    columnOrigin:SetSize(1, 1)
+
+    local column = {}
+    table.insert(column, columnOrigin)
+
+    return column
 end
 
---This makes a dynamic options list on the right-hand side
-JadeUI.OptionsListRight = {}
-local function appendOptionRight(frame, spacing)
-    spacing = spacing or itemSpacingRight
-    if next(JadeUI.OptionsListRight)==nil then --If there are no existing options in the list
-        frame:SetPoint("TOPLEFT", optionsPanel, "TOP", 0, -30) --Set it to the centre of the options panel
+--This appends a frame to the specified column table
+local function appendOption(frame, column, spacing)
+    spacing = spacing or itemSpacing --Use the already defined variable if not manually overridden
+    if next(column)==nil then --If there are no existing options in the list
+        frame:SetPoint("TOPLEFT", optionsPanel, "TOPLEFT", 20, -30) --Set it to the top left of the options panel
     else
-        frame:SetPoint("TOPLEFT", JadeUI.OptionsListRight[#JadeUI.OptionsListRight], "BOTTOMLEFT", 0, spacing) --Append it below the previous entry in the options list
+        frame:SetPoint("TOPLEFT", column[#column], "BOTTOMLEFT", 0, spacing) --Append it below the previous entry in the options list
     end
-    table.insert(JadeUI.OptionsListRight, frame) --Add this frame to the options list
+    table.insert(column, frame) --Add this frame to the options list
 end
 
 --Checkbox Factory
-local function createCheckbox(name, description, savedVariable)
-    local checkboxFrame = CreateFrame("CheckButton", nil, optionsPanel, "InterfaceOptionsCheckButtonTemplate")
-    appendOptionLeft(checkboxFrame)
+local function createCheckbox(name, description, column, savedVariable)
+    local checkboxFrame = CreateFrame("CheckButton", "JadeUIOptionsCheckbox"..#column, optionsPanel, "InterfaceOptionsCheckButtonTemplate")
+    appendOption(checkboxFrame, column)
     checkboxFrame.Text:SetText(name or "")
     checkboxFrame.tooltipText = name or ""
     checkboxFrame.tooltipRequirement = description or ""
@@ -125,10 +122,13 @@ end
 --Left Column Menu Entries
 --------------------------------------------        
 local function buildLeftColumn()
+    local optionsListLeft = createColumn("TOPLEFT", 20)
+
     --Checkbox for showing the talent button
     local talentCheckbox = createCheckbox(
         "Show Talent Button",
         "This option will display the talent button in the Menu Bar regardless of player level",
+        optionsListLeft,
         JadeUIDB.showTalents
     )
     talentCheckbox:HookScript("OnClick", function(_, btn, down)
@@ -140,6 +140,7 @@ local function buildLeftColumn()
     local unitFramesCheckbox = createCheckbox(
         "Move Unitframes",
         "Move the player unitframes down to the bottom centre of the screen",
+        optionsListLeft,
         JadeUIDB.moveUnitFrames
     )
     unitFramesCheckbox:HookScript("OnClick", function(_, btn, down)
@@ -152,6 +153,7 @@ local function buildLeftColumn()
     local minimapCheckbox = createCheckbox(
         "Move Minimap",
         "Move the Minimap down to the bottom right corner of the screen",
+        optionsListLeft,
         JadeUIDB.moveMinimap
     )
     minimapCheckbox:HookScript("OnClick", function(_, btn, down)
@@ -164,6 +166,7 @@ local function buildLeftColumn()
     local levelScreenshotCheckbox = createCheckbox(
         "Screenshot on Level Up",
         "Automatically take a screenshot on levelling up",
+        optionsListLeft,
         JadeUIDB.levelScreenshot
     )
     levelScreenshotCheckbox:HookScript("OnClick", function(_, btn, down)
@@ -174,6 +177,7 @@ local function buildLeftColumn()
     local hideKeybindsCheckbox = createCheckbox(
         "Hide Keybinds",
         "Hides keybinds on action bars\nReload required to disable",
+        optionsListLeft,
         JadeUIDB.hideKeybinds
     )
     hideKeybindsCheckbox:HookScript("OnClick", function(_, btn, down)
@@ -189,6 +193,7 @@ local function buildLeftColumn()
     local uiScaleCheckbox = createCheckbox(
         "1:1 UI Scale",
         "Set the UI scaling so that elements display at a 1:1 pixel ratio",
+        optionsListLeft,
         JadeUIDB.pixelScale
     )
     uiScaleCheckbox:HookScript("OnClick", function(_, btn, down)
@@ -203,16 +208,18 @@ end
 --Right Column Menu Entries
 --------------------------------------------  
 local function buildRightColumn()
+    local optionsListRight = createColumn("TOP", 0)
+
     --Create a dropdown to manage Endstops
         --Title
     local endstopLabel = optionsPanel:CreateFontString(nil, 'ARTWORK', 'GameFontHighlightSmall')
-    appendOptionRight(endstopLabel)
+    appendOption(endstopLabel, optionsListRight)
     endstopLabel:SetText('Select endstop artwork:')
 
         --Dropdown Box
     local endstopDropDown = CreateFrame("Frame", "Endstop Menu", optionsPanel, "UIDropDownMenuTemplate")
     endstopDropDown:SetPoint("TOPLEFT", endstopLabel, "BOTTOMLEFT", -15, -5)
-    table.insert(JadeUI.OptionsListRight, endstopDropDown) --This frame has it's relative point set manually since it needs to be closer, and is added manually
+    table.insert(optionsListRight, endstopDropDown) --This frame has it's relative point set manually since it needs to be closer, and is added manually
     UIDropDownMenu_SetWidth(endstopDropDown, 100)
     addTooltip(endstopDropDown) --Add a tooltip to the dropdown
     endstopDropDown.tooltipText = "Select Endstop Artwork"
@@ -235,7 +242,7 @@ local function buildRightColumn()
 
     --Create a slider to adjust Minimap Scale
     local scaleSlider = CreateFrame("Slider", "Minimap Scale Slider", optionsPanel, "OptionsSliderTemplate")
-    appendOptionRight(scaleSlider, -15)
+    appendOption(scaleSlider, optionsListRight, -15)
 
     local minRange = 1
     local maxRange = 1.5
