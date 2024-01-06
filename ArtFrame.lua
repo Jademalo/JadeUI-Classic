@@ -104,20 +104,20 @@ end
 --Sets the endstop texture based on a variable passed to it
 function JadeUI.setEndstop(type)
    if type == 0 then
-      JadeUI.rightEndstop:Hide()
-      JadeUI.leftEndstop:Hide()
-
-   elseif type == 1 then
       JadeUI.rightEndstop:SetTexture(textures.endstopGryphonTexture)
       JadeUI.leftEndstop:SetTexture(textures.endstopGryphonTexture)
       JadeUI.rightEndstop:Show()
       JadeUI.leftEndstop:Show()
 
-   elseif type == 2 then
+   elseif type == 1 then
       JadeUI.rightEndstop:SetTexture(textures.endstopLionTexture)
       JadeUI.leftEndstop:SetTexture(textures.endstopLionTexture)
       JadeUI.rightEndstop:Show()
       JadeUI.leftEndstop:Show()
+
+   elseif type == 2 then
+      JadeUI.rightEndstop:Hide()
+      JadeUI.leftEndstop:Hide()
 
    end
 end

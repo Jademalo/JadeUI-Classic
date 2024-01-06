@@ -19,7 +19,7 @@ local function savedVariablesInit()
         moveUnitFrames = true,
         moveMinimap = true,
         minimapScaleFactor = 1.33,
-        endstopType = 1,
+        endstopType = 0,
         pixelScale = false,
         levelScreenshot = true,
         hideKeybinds = true,
@@ -215,7 +215,7 @@ local function buildOptions()
         endstopDropDown.tooltipText = "Select Endstop Artwork"
         endstopDropDown.tooltipRequirement = "Select the artwork to be displayed for the endstops on the main bar"
         UIDropDownMenu_Initialize(endstopDropDown, function(frame, level, menulist) --Args passed to this function are (frame, level, menulist), where frame is the first arg here. This function is run to init the box.
-            local endstopTypes = { "None", "Gryphon", "Lion" }
+            local endstopTypes = { "Gryphon", "Lion", "None" }
                 for i, type in next, endstopTypes do
                     local info = UIDropDownMenu_CreateInfo()
                     info.text = type
