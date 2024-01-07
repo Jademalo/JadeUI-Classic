@@ -241,7 +241,7 @@ end
 local function movePetBar()
     PetActionBarFrame:SetParent(JadeUIButtonParent)
     PetActionBarFrame:SetScale(0.7)
-    moveBlizzardFrame(PetActionBarFrame, "BOTTOM", "TOP", 33, -44, JadeUIBarTopArtPanel)
+    moveBlizzardFrame(PetActionBarFrame, "BOTTOM", "TOP", 34, 0, JadeUIBarTopArtPanel)
 end
 
 local function hideButtons()

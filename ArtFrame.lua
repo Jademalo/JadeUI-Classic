@@ -51,7 +51,7 @@ function JadeUI.createArtFrame()
 
    JadeUIBarArtPanel = CreateFrame("Frame","Jade UI Art Panel", JadeUIBar)
    JadeUIBarArtPanel:SetPoint("BOTTOM", JadeUIBar, "BOTTOM", 0, 0)
-   JadeUIBarArtPanel:SetSize(850, 100)
+   JadeUIBarArtPanel:SetSize(598, 43)
    JadeUIBarArtPanel:SetFrameLevel(5)
 
    JadeUI.g13MainBar = JadeUIBarArtPanel:CreateTexture("JadeUI Main Bar Texture")
@@ -60,20 +60,20 @@ function JadeUI.createArtFrame()
    JadeUI.g13MainBar:SetDrawLayer("BACKGROUND", -6)
 
    JadeUI.leftEndstop = JadeUIBarArtPanel:CreateTexture("JadeUI Left Endstop")
-   JadeUI.leftEndstop:SetPoint("BOTTOMRIGHT", JadeUIBarArtPanel, "BOTTOM", -267, 0)
-   JadeUI.leftEndstop:SetTexture(textures.endstopDwarfTexture)
+   JadeUI.leftEndstop:SetPoint("BOTTOMRIGHT", JadeUIBarArtPanel, "BOTTOMLEFT", 32, 0)
+   --JadeUI.leftEndstop:SetTexture(textures.endstopDwarfTexture)
    JadeUI.leftEndstop:SetDrawLayer("ARTWORK")
 
    JadeUI.rightEndstop = JadeUIBarArtPanel:CreateTexture("JadeUI Right Endstop")
-   JadeUI.rightEndstop:SetPoint("BOTTOMLEFT", JadeUIBarArtPanel, "BOTTOM", 267, 0)
-   JadeUI.rightEndstop:SetTexture(textures.endstopDwarfTexture)
+   JadeUI.rightEndstop:SetPoint("BOTTOMLEFT", JadeUIBarArtPanel, "BOTTOMRIGHT", -32, 0)
+   --JadeUI.rightEndstop:SetTexture(textures.endstopDwarfTexture)
    JadeUI.rightEndstop:SetTexCoord(1, 0, 0, 1) --Mirror Texture
    JadeUI.rightEndstop:SetDrawLayer("ARTWORK")
 
 
    JadeUI.petBar = JadeUIBarArtPanel:CreateTexture("JadeUI Pet Bar Texture")
    JadeUI.petBar:SetParent(PetActionBarFrame)
-   JadeUI.petBar:SetPoint("LEFT", PetActionBarFrame, "LEFT", 0, 8.5)
+   JadeUI.petBar:SetPoint("BOTTOM", PetActionBarFrame, "BOTTOM", 3, -1)
    JadeUI.petBar:SetTexture(textures.petBarTexture)
 
 
@@ -81,12 +81,12 @@ function JadeUI.createArtFrame()
 
 
    JadeUIBarTopArtPanel = CreateFrame("Frame","Jade UI Top Art Panel", JadeUIBarArtPanel)
-   JadeUIBarTopArtPanel:SetPoint("BOTTOM", JadeUIBarArtPanel, "BOTTOM", 0, 0)
-   JadeUIBarTopArtPanel:SetSize(450, 210)
+   JadeUIBarTopArtPanel:SetPoint("BOTTOM", JadeUIBarArtPanel, "TOP", -2, 0) --This offset is specifically to line up the frame with the art
+   JadeUIBarTopArtPanel:SetSize(309, 136)
    JadeUIBarTopArtPanel:SetFrameLevel(3)
 
    JadeUI.g13TopBar = JadeUIBarTopArtPanel:CreateTexture("JadeUI Top Bar Texture")
-   JadeUI.g13TopBar:SetPoint("BOTTOM", JadeUIBarTopArtPanel, "BOTTOM", 0, 43)
+   JadeUI.g13TopBar:SetPoint("BOTTOM", JadeUIBarTopArtPanel, "BOTTOM", 2, 0) --This offset is specifically to line up the frame with the art
    JadeUI.g13TopBar:SetTexture(textures.g13TopBarTexture)
    JadeUI.g13TopBar:SetDrawLayer("BACKGROUND", 0)
 
