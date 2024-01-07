@@ -18,9 +18,9 @@ end
 
 --Trigger the hook for every frame by running SetPoint with their default position
 function JadeUI.TriggerFrameHooks()
-    for _, v in pairs(hookTable) do
-        v:ClearAllPoints()
-        v:SetPoint(SafeUnpack(v.defaultPos))
+    for _, frame in pairs(hookTable) do
+        frame:ClearAllPoints()
+        frame:SetPoint(SafeUnpack(frame.defaultPos))
     end
 end
 
@@ -221,7 +221,7 @@ local function moveActionBars()
     --Main Action Bar
     for i = 1, 12 do
         _G["ActionButton" .. i]:SetParent(JadeUIButtonParent)
-        _G["ActionButton" .. i]:SetFrameLevel(JadeUIButtonParent:GetFrameLevel() + 1)
+        --_G["ActionButton" .. i]:SetFrameLevel(JadeUIButtonParent:GetFrameLevel() + 1) --This is redundant because setting something's parent gives it +1 on the strata of that object
     end
     moveBlizzardFrame(ActionButton1, "CENTER", "CENTER", -127, 2, JadeUIBar)
 
@@ -258,8 +258,9 @@ local function hideButtons()
     hideBlizzardFrame(MultiBarBottomRightButton12)
 end
 
+--Adapted from https://github.com/erikbrgn/AutoHideBinds/blob/main/AutoHideBinds.lua with permission
 function JadeUI.HideKeybinds()
-    local bars = { 
+    local bars = {
         "Action",
         "MultiBarBottomLeft",
         "MultiBarBottomRight",
