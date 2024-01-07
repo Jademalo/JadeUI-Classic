@@ -102,9 +102,9 @@ end ]]
 --------------------------------------------
 function JadeUI.moveUnitFramesFunc()
     --Player Frame
-    moveBlizzardFrame(PlayerFrame, "BOTTOMRIGHT", "BOTTOM", - 163, 200, nil, "moveUnitFrames")
+    moveBlizzardFrame(PlayerFrame, "BOTTOMLEFT", "TOPLEFT", 0, 0, JadeUIMainFrame, "moveUnitFrames")
     --Target Frame
-    moveBlizzardFrame(TargetFrame, "BOTTOMLEFT", "BOTTOM", 162, 200, nil, "moveUnitFrames")
+    moveBlizzardFrame(TargetFrame, "BOTTOMRIGHT", "TOPRIGHT", 0, 0, JadeUIMainFrame, "moveUnitFrames")
 
     if not JadeUI.isVanilla then
         --Focus Frame
@@ -177,7 +177,7 @@ local function moveMicroMenu()
         local spacing = 2
         UpdateMicroButtonsParent(JadeUIButtonParent) --(https://github.com/Gethe/wow-ui-source/blob/bc566bcfb0633aa29255dc1bb65b4bbed00967a4/Interface/FrameXML/MainMenuBarMicroButtons.lua#L60)
 
-        CharacterMicroButton:SetPoint("BOTTOMLEFT", JadeUI.g13MainBar, "BOTTOM", - 288, 2)
+        CharacterMicroButton:SetPoint("BOTTOMLEFT", JadeUIBarArtPanel, "BOTTOMLEFT", 11, 2)
         if JadeUIDB.showTalents == true or (UnitLevel("player") >= SHOW_SPEC_LEVEL) then
             spacing = -2.5
             TalentMicroButton:Show()
@@ -200,15 +200,13 @@ end
 local function moveBagBar()
     --Bag Bar
     MainMenuBarBackpackButton:SetParent(JadeUIButtonParent)
-    --MainMenuBarBackpackButton:SetPoint("BOTTOMRIGHT", JadeUI.g13MainBar, "BOTTOM", 293, 2) --Accurate to actual bag bar
-    moveBlizzardFrame(MainMenuBarBackpackButton, "BOTTOMRIGHT", "BOTTOM", 292, 3, JadeUI.g13MainBar) --Better Fitting
+    moveBlizzardFrame(MainMenuBarBackpackButton, "BOTTOMRIGHT", "BOTTOMRIGHT", -7, 3, JadeUIBarArtPanel)
 
     if not GetCVarBool("showKeyring") then
         SetCVar("showKeyring", 1)
     end
     KeyRingButton:SetParent(JadeUIButtonParent)
-    --KeyRingButton:SetPoint("RIGHT", CharacterBag3Slot, "LEFT", -5, -1) --Accurate to actual bag bar
-    moveBlizzardFrame(KeyRingButton, "RIGHT", "LEFT", -5, -1, CharacterBag3Slot) --Better Fitting
+    moveBlizzardFrame(KeyRingButton, "RIGHT", "LEFT", -5, -1, CharacterBag3Slot)
 
     for i = 0, 3 do
         _G["CharacterBag" .. i .. "Slot"]:SetParent(JadeUIButtonParent)
@@ -241,7 +239,7 @@ end
 local function movePetBar()
     PetActionBarFrame:SetParent(JadeUIButtonParent)
     PetActionBarFrame:SetScale(0.7)
-    moveBlizzardFrame(PetActionBarFrame, "BOTTOM", "TOP", 34, 0, JadeUIBarTopArtPanel)
+    moveBlizzardFrame(PetActionBarFrame, "BOTTOM", "TOP", 34, -1, JadeUIBarTopArtPanel)
 end
 
 local function hideButtons()

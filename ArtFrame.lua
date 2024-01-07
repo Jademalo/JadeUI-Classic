@@ -4,7 +4,7 @@
 local addonName, JadeUI = ...
 
 --------------------------------------------
---Artwork
+--Artwork Textures
 --------------------------------------------
 --@debug@
 JadeUI.textures = {
@@ -39,44 +39,41 @@ local textures = JadeUI.textures
 --------------------------------------------
 function JadeUI.createArtFrame()
 
-   JadeUIBarArtPanel = CreateFrame("Frame","Jade UI Art Panel", JadeUIBar)
+   JadeUIBarArtPanel = CreateFrame("Frame","JadeUIBarArtFrame", JadeUIBar)
    JadeUIBarArtPanel:SetPoint("BOTTOM", JadeUIBar, "BOTTOM", 0, 0)
    JadeUIBarArtPanel:SetSize(598, 43)
 
-   JadeUI.g13MainBar = JadeUIBarArtPanel:CreateTexture("JadeUI Main Bar Texture")
-   JadeUI.g13MainBar:SetPoint("BOTTOM", JadeUIBarArtPanel, "BOTTOM")
-   JadeUI.g13MainBar:SetTexture(textures.g13MainBarTexture)
-   JadeUI.g13MainBar:SetDrawLayer("BACKGROUND", -6)
+   local g13MainBar = JadeUIBarArtPanel:CreateTexture("JadeUIBarTexture")
+   g13MainBar:SetPoint("BOTTOM", JadeUIBarArtPanel, "BOTTOM")
+   g13MainBar:SetTexture(textures.g13MainBarTexture)
+   g13MainBar:SetDrawLayer("BACKGROUND", -6)
 
-   JadeUI.leftEndstop = JadeUIBarArtPanel:CreateTexture("JadeUI Left Endstop")
-   JadeUI.leftEndstop:SetPoint("BOTTOMRIGHT", JadeUIBarArtPanel, "BOTTOMLEFT", 32, 0)
-   --JadeUI.leftEndstop:SetTexture(textures.endstopDwarfTexture)
-   JadeUI.leftEndstop:SetDrawLayer("ARTWORK")
+   local leftEndstop = JadeUIBarArtPanel:CreateTexture("JadeUIBarLeftEndCap")
+   leftEndstop:SetPoint("BOTTOMRIGHT", JadeUIBarArtPanel, "BOTTOMLEFT", 32, 0)
+   leftEndstop:SetTexture(textures.endstopDwarfTexture)
+   leftEndstop:SetDrawLayer("ARTWORK")
 
-   JadeUI.rightEndstop = JadeUIBarArtPanel:CreateTexture("JadeUI Right Endstop")
-   JadeUI.rightEndstop:SetPoint("BOTTOMLEFT", JadeUIBarArtPanel, "BOTTOMRIGHT", -32, 0)
-   --JadeUI.rightEndstop:SetTexture(textures.endstopDwarfTexture)
-   JadeUI.rightEndstop:SetTexCoord(1, 0, 0, 1) --Mirror Texture
-   JadeUI.rightEndstop:SetDrawLayer("ARTWORK")
-
-
-   JadeUI.petBar = JadeUIBarArtPanel:CreateTexture("JadeUI Pet Bar Texture")
-   JadeUI.petBar:SetParent(PetActionBarFrame)
-   JadeUI.petBar:SetPoint("BOTTOM", PetActionBarFrame, "BOTTOM", 3, -1)
-   JadeUI.petBar:SetTexture(textures.petBarTexture)
+   local rightEndstop = JadeUIBarArtPanel:CreateTexture("JadeUIBarRightEndCap")
+   rightEndstop:SetPoint("BOTTOMLEFT", JadeUIBarArtPanel, "BOTTOMRIGHT", -32, 0)
+   rightEndstop:SetTexture(textures.endstopDwarfTexture)
+   rightEndstop:SetTexCoord(1, 0, 0, 1) --Mirror Texture
+   rightEndstop:SetDrawLayer("ARTWORK")
 
 
-
-
-
-   JadeUIBarTopArtPanel = CreateFrame("Frame","Jade UI Top Art Panel", JadeUIBarArtPanel)
+   JadeUIBarTopArtPanel = CreateFrame("Frame","JadeUIBarTopArtFrame", JadeUIBarArtPanel)
    JadeUIBarTopArtPanel:SetPoint("BOTTOM", JadeUIBarArtPanel, "TOP", -2, 0) --This offset is specifically to line up the frame with the art
    JadeUIBarTopArtPanel:SetSize(309, 136)
 
-   JadeUI.g13TopBar = JadeUIBarTopArtPanel:CreateTexture("JadeUI Top Bar Texture")
-   JadeUI.g13TopBar:SetPoint("BOTTOM", JadeUIBarTopArtPanel, "BOTTOM", 2, 0) --This offset is specifically to line up the frame with the art
-   JadeUI.g13TopBar:SetTexture(textures.g13TopBarTexture)
-   JadeUI.g13TopBar:SetDrawLayer("BACKGROUND", 0)
+   local g13TopBar = JadeUIBarTopArtPanel:CreateTexture("JadeUIBarTopTexture")
+   g13TopBar:SetPoint("BOTTOM", JadeUIBarTopArtPanel, "BOTTOM", 2, 0) --This offset is specifically to line up the frame with the art
+   g13TopBar:SetTexture(textures.g13TopBarTexture)
+   g13TopBar:SetDrawLayer("BACKGROUND", 0)
+
+
+   local petBar = JadeUIBarArtPanel:CreateTexture("JadeUIPetBarTexture")
+   petBar:SetParent(PetActionBarFrame)
+   petBar:SetPoint("BOTTOM", PetActionBarFrame, "BOTTOM", 3, -1)
+   petBar:SetTexture(textures.petBarTexture)
 end
 
 
@@ -110,20 +107,20 @@ end
 --Sets the endstop texture based on a variable passed to it
 function JadeUI.setEndstop(type)
    if type == 0 then
-      JadeUI.rightEndstop:SetTexture(textures.endstopGryphonTexture)
-      JadeUI.leftEndstop:SetTexture(textures.endstopGryphonTexture)
-      JadeUI.rightEndstop:Show()
-      JadeUI.leftEndstop:Show()
+      JadeUIBarRightEndCap:SetTexture(textures.endstopGryphonTexture)
+      JadeUIBarLeftEndCap:SetTexture(textures.endstopGryphonTexture)
+      JadeUIBarRightEndCap:Show()
+      JadeUIBarLeftEndCap:Show()
 
    elseif type == 1 then
-      JadeUI.rightEndstop:SetTexture(textures.endstopLionTexture)
-      JadeUI.leftEndstop:SetTexture(textures.endstopLionTexture)
-      JadeUI.rightEndstop:Show()
-      JadeUI.leftEndstop:Show()
+      JadeUIBarRightEndCap:SetTexture(textures.endstopLionTexture)
+      JadeUIBarLeftEndCap:SetTexture(textures.endstopLionTexture)
+      JadeUIBarRightEndCap:Show()
+      JadeUIBarLeftEndCap:Show()
 
    elseif type == 2 then
-      JadeUI.rightEndstop:Hide()
-      JadeUI.leftEndstop:Hide()
+      JadeUIBarRightEndCap:Hide()
+      JadeUIBarLeftEndCap:Hide()
 
    end
 end
