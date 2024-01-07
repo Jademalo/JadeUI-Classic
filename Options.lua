@@ -4,7 +4,7 @@
 local addonName, JadeUI = ...
 
 local itemSpacing = -5 --The space between each entry in the list
-local optionsPanel = CreateFrame("Frame") --The main options panel frame
+local optionsPanel = CreateFrame("Frame", "JadeUIOptionsPanel") --The main options panel frame
 optionsPanel.name = "JadeUI Classic" --CreateFrame call (CreateFrame("Frame", "Name")) puts "Name" in the global scope, so _G["Name"] will retrieve the panel. The panel.name is a field on the panel itself.
 
 --Register ADDON_LOADED to run the main code when the addon is loaded
