@@ -29,9 +29,9 @@ local xpBar = JadeUI.xpBar
 local function hoverLevelForeground()
     ExhaustionTick:SetFrameLevel(10)
     --Fix for the bottom 3 buttons needing to be on top of the art
-    MultiBarBottomRightButton8:SetParent(JadeUIBarArtPanel)
-    MultiBarBottomRightButton9:SetParent(JadeUIBarArtPanel)
-    MultiBarBottomRightButton10:SetParent(JadeUIBarArtPanel)
+    MultiBarBottomRightButton8:SetParent(JadeUIBarArtFrame)
+    MultiBarBottomRightButton9:SetParent(JadeUIBarArtFrame)
+    MultiBarBottomRightButton10:SetParent(JadeUIBarArtFrame)
     MainMenuExpBar:SetFrameLevel(7)
     MultiBarBottomRight:SetFrameLevel(4)
     JadeUIBarTopArtFrame:SetFrameLevel(3)
@@ -86,11 +86,10 @@ end
 --Functions to replace default textures
 --------------------------------------------
 local function createMaxLevelCover()
-    local g13MaxCover = JadeUIBar:CreateTexture("JadeUI Max Level Cover")
-    g13MaxCover:SetPoint("BOTTOM", JadeUIBar, "BOTTOM", 0, 43)
-    g13MaxCover:SetTexture(textures.g13MaxCoverTexture)
-    g13MaxCover:SetDrawLayer("BACKGROUND", -1)
-    xpBar.g13MaxCover = g13MaxCover
+    JadeUIMaxLevelCover = JadeUIBar:CreateTexture("JadeUIMaxLevelCover")
+    JadeUIMaxLevelCover:SetPoint("BOTTOM", JadeUIBar, "BOTTOM", 0, 43)
+    JadeUIMaxLevelCover:SetTexture(textures.g13MaxCoverTexture)
+    JadeUIMaxLevelCover:SetDrawLayer("BACKGROUND", -1)
 end
 
 
@@ -99,12 +98,11 @@ local function replaceBlizzXPBarTexture()
     MainMenuXPBarTexture1:Hide()
     MainMenuXPBarTexture2:Hide()
     MainMenuXPBarTexture3:Hide()
-    local g13XPBar = JadeUIBar:CreateTexture("JadeUIXPBarCover")
-    g13XPBar:SetPoint("CENTER", MainMenuExpBar, "CENTER", 0, 5)
-    g13XPBar:SetTexture(textures.g13XPBarTexture)
-    g13XPBar:SetDrawLayer("BORDER", 7)
-    g13XPBar:SetParent(MainMenuXPBarTexture0:GetParent())
-    xpBar.g13XPBar = g13XPBar
+    JadeUIXPBarCover = JadeUIBar:CreateTexture("JadeUIXPBarCover")
+    JadeUIXPBarCover:SetPoint("CENTER", MainMenuExpBar, "CENTER", 0, 5)
+    JadeUIXPBarCover:SetTexture(textures.g13XPBarTexture)
+    JadeUIXPBarCover:SetDrawLayer("BORDER", 7)
+    JadeUIXPBarCover:SetParent(MainMenuXPBarTexture0:GetParent())
 end
 
 local function ReplaceBlizzRepBarTexture()
@@ -112,12 +110,11 @@ local function ReplaceBlizzRepBarTexture()
     ReputationWatchBar.StatusBar.WatchBarTexture1:Hide()
     ReputationWatchBar.StatusBar.WatchBarTexture2:Hide()
     ReputationWatchBar.StatusBar.WatchBarTexture3:Hide()
-    local g13RepBar = JadeUIBar:CreateTexture("JadeUIRepBarCover")
-    g13RepBar:SetPoint("CENTER", ReputationWatchBar.StatusBar, "CENTER", 0, 5)
-    g13RepBar:SetTexture(textures.g13RepBarTexture)
-    g13RepBar:SetDrawLayer("BORDER", 7)
-    g13RepBar:SetParent(ReputationWatchBar.StatusBar.WatchBarTexture0:GetParent())
-    xpBar.g13RepBar = g13RepBar
+    JadeUIRepBarCover = JadeUIBar:CreateTexture("JadeUIRepBarCover")
+    JadeUIRepBarCover:SetPoint("CENTER", ReputationWatchBar.StatusBar, "CENTER", 0, 5)
+    JadeUIRepBarCover:SetTexture(textures.g13RepBarTexture)
+    JadeUIRepBarCover:SetDrawLayer("BORDER", 7)
+    JadeUIRepBarCover:SetParent(ReputationWatchBar.StatusBar.WatchBarTexture0:GetParent())
 end
 
 
@@ -138,8 +135,8 @@ end
 --Show/Hide the Max level cover depending on your level or tracked faction status
 function xpBar.showMaxCover()
     if UnitLevel("player") < GetMaxPlayerLevel() or GetWatchedFactionInfo() then
-        xpBar.g13MaxCover:Hide()
+        JadeUIMaxLevelCover:Hide()
     else
-        xpBar.g13MaxCover:Show()
+        JadeUIMaxLevelCover:Show()
     end
  end

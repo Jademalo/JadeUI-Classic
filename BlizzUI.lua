@@ -177,7 +177,7 @@ local function moveMicroMenu()
         local spacing = 2
         UpdateMicroButtonsParent(JadeUIButtonParent) --(https://github.com/Gethe/wow-ui-source/blob/bc566bcfb0633aa29255dc1bb65b4bbed00967a4/Interface/FrameXML/MainMenuBarMicroButtons.lua#L60)
 
-        CharacterMicroButton:SetPoint("BOTTOMLEFT", JadeUIBarArtPanel, "BOTTOMLEFT", 11, 2)
+        CharacterMicroButton:SetPoint("BOTTOMLEFT", JadeUIBarArtFrame, "BOTTOMLEFT", 11, 2)
         if JadeUIDB.showTalents == true or (UnitLevel("player") >= SHOW_SPEC_LEVEL) then
             spacing = -2.5
             TalentMicroButton:Show()
@@ -200,7 +200,7 @@ end
 local function moveBagBar()
     --Bag Bar
     MainMenuBarBackpackButton:SetParent(JadeUIButtonParent)
-    moveBlizzardFrame(MainMenuBarBackpackButton, "BOTTOMRIGHT", "BOTTOMRIGHT", -7, 3, JadeUIBarArtPanel)
+    moveBlizzardFrame(MainMenuBarBackpackButton, "BOTTOMRIGHT", "BOTTOMRIGHT", -7, 3, JadeUIBarArtFrame)
 
     if not GetCVarBool("showKeyring") then
         SetCVar("showKeyring", 1)
