@@ -22,12 +22,7 @@ local function savedVariablesInit()
         endstopType = 0,
         pixelScale = false,
         levelScreenshot = true,
-        hideKeybinds = true,
-
-        blizzXPBar = 0,
-        mouseover = 0,
-        stanceBarHide = 0,
-        keyCover = 0
+        hideKeybinds = true
     }
 
     for key, value in pairs(defaults) do
