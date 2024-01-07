@@ -7,42 +7,52 @@ JadeUI.xpBar = {}
 local xpBar = JadeUI.xpBar
 
 
-
 --------------------------------------------
---Functions
+--Functions to handle strata changes on mouseover
 --------------------------------------------
-
+--[[ MEDIUM
+    Level 13    - MultiBarBottomLeftButtons
+    Level 12    - ActionButtons + MultiBarBottomLeft
+    Level 11    - JadeUIButtonParent
+    Level 10    - ExhaustionTick
+    Level 9     - MultiBarBottomRightButton8/9/10
+    Level 8     - JadeUIBarArtPanel                                         - Must be on top of the Exp bar
+    Level 7     - MainMenuExpBar                                            - Must be on top of the Rep bar
+    Level 6     - ReputationWatchBar (Active)
+    Level 5     - MultiBarBottomRightButtons
+    Level 4     - MultiBarBottomRight
+    Level 3     - JadeUIBarTopArtPanel
+    Level 2     - ReputationWatchBar (Inactive)
+    Level 1     - JadeUIBar (Invisible parent)
+    Level 0     - UIParent
+ ]]
 local function hoverLevelForeground()
-    MainMenuExpBar:SetFrameLevel(4)
-    ExhaustionTick:SetFrameLevel(6)
-    MultiBarBottomRight:SetFrameLevel(3)
-    JadeUIBarTopArtPanel:SetFrameLevel(2)
-    MultiBarBottomRightButton8:SetParent(MainMenuExpBar)
-    MultiBarBottomRightButton9:SetParent(MainMenuExpBar)
-    MultiBarBottomRightButton10:SetParent(MainMenuExpBar)
+    ExhaustionTick:SetFrameLevel(10)
+    --Fix for the bottom 3 buttons needing to be on top of the art
+    MultiBarBottomRightButton8:SetParent(JadeUIBarArtPanel)
+    MultiBarBottomRightButton9:SetParent(JadeUIBarArtPanel)
+    MultiBarBottomRightButton10:SetParent(JadeUIBarArtPanel)
+    MainMenuExpBar:SetFrameLevel(7)
+    MultiBarBottomRight:SetFrameLevel(4)
+    JadeUIBarTopArtPanel:SetFrameLevel(3)
 end
 
 local function hoverRepForeground()
-    ReputationWatchBar:SetFrameLevel(4)
+    ReputationWatchBar:SetFrameLevel(6)
     hoverLevelForeground()
 end
 
 local function hoverLevelBackground()
-    MainMenuExpBar:SetFrameLevel(1)
-    ExhaustionTick:SetFrameLevel(2)
-    MultiBarBottomRight:SetFrameLevel(JadeUIButtonParent:GetFrameLevel())
-    JadeUIBarTopArtPanel:SetFrameLevel(3)
+    JadeUI.SetDefaultStrata()
     MultiBarBottomRightButton8:SetParent(MultiBarBottomRight)
     MultiBarBottomRightButton9:SetParent(MultiBarBottomRight)
     MultiBarBottomRightButton10:SetParent(MultiBarBottomRight)
 end
 
-local function hoverRepBackground()
-    ReputationWatchBar:SetFrameLevel(1)
-    hoverLevelBackground()
-end
 
-
+--------------------------------------------
+--Functions to move Blizzard Bars
+--------------------------------------------
 local function moveBlizzXPBar()
     --Exp Bar
     MainMenuExpBar:ClearAllPoints()
@@ -57,18 +67,6 @@ local function moveBlizzXPBar()
 
     ExhaustionTick:HookScript("OnEnter", function(self, motion) hoverLevelForeground() end)
     ExhaustionTick:HookScript("OnLeave", function(self, motion) hoverLevelBackground() end)
-
---[[     local xpBarMouseover = CreateFrame("Frame", "XP Bar Mouseover", MainMenuExpBar)
-    xpBarMouseover:SetPoint("CENTER")
-    local width, height = xpBarMouseover:GetParent():GetSize()
-    xpBarMouseover:SetSize(width, height)
-    xpBarMouseover:SetScript("OnEnter", function(self, motion)
-        hoverLevelIncrease()
-    end)
-    xpBarMouseover:SetScript("OnLeave", function(self, motion)
-        hoverLevelDecrease()
-    end) ]]
-
 end
 
 local function moveBlizzRepBar()
@@ -78,15 +76,15 @@ local function moveBlizzRepBar()
     ReputationWatchBar:SetPoint("BOTTOM", JadeUIBar, "BOTTOM", 0, 47)
     ReputationWatchBar:SetWidth(588)
     ReputationWatchBar.StatusBar:SetWidth(588)
-    hoverRepBackground()
 
     ReputationWatchBar:HookScript("OnEnter", function(self, motion) hoverRepForeground() end)
-    ReputationWatchBar:HookScript("OnLeave", function(self, motion) hoverRepBackground() end)
-
-
+    ReputationWatchBar:HookScript("OnLeave", function(self, motion) hoverLevelBackground() end)
 end
 
 
+--------------------------------------------
+--Functions to replace default textures
+--------------------------------------------
 local function createMaxLevelCover()
     local g13MaxCover = JadeUIBar:CreateTexture("JadeUI Max Level Cover")
     g13MaxCover:SetPoint("BOTTOM", JadeUIBar, "BOTTOM", 0, 43)
@@ -123,10 +121,9 @@ local function ReplaceBlizzRepBarTexture()
 end
 
 
-
-
-
-
+--------------------------------------------
+--Core functions to apply changes
+--------------------------------------------
 function xpBar.BlizzXPBarMove()
     moveBlizzXPBar()
     replaceBlizzXPBarTexture()

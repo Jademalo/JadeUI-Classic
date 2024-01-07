@@ -37,22 +37,11 @@ local textures = JadeUI.textures
 --------------------------------------------
 --Functions
 --------------------------------------------
-local function addPanel(name, point, relativePoint, offsetX, offsetY, texture, layer, sublevel)
-   panel = JadeUIBar:CreateTexture(name)
-   panel:SetPoint(point, JadeUIBarArtFrame, relativePoint, offsetX, offsetY)
-   return panel
-end
-
-
-
-
-
 function JadeUI.createArtFrame()
 
    JadeUIBarArtPanel = CreateFrame("Frame","Jade UI Art Panel", JadeUIBar)
    JadeUIBarArtPanel:SetPoint("BOTTOM", JadeUIBar, "BOTTOM", 0, 0)
    JadeUIBarArtPanel:SetSize(598, 43)
-   JadeUIBarArtPanel:SetFrameLevel(5)
 
    JadeUI.g13MainBar = JadeUIBarArtPanel:CreateTexture("JadeUI Main Bar Texture")
    JadeUI.g13MainBar:SetPoint("BOTTOM", JadeUIBarArtPanel, "BOTTOM")
@@ -83,23 +72,40 @@ function JadeUI.createArtFrame()
    JadeUIBarTopArtPanel = CreateFrame("Frame","Jade UI Top Art Panel", JadeUIBarArtPanel)
    JadeUIBarTopArtPanel:SetPoint("BOTTOM", JadeUIBarArtPanel, "TOP", -2, 0) --This offset is specifically to line up the frame with the art
    JadeUIBarTopArtPanel:SetSize(309, 136)
-   JadeUIBarTopArtPanel:SetFrameLevel(3)
 
    JadeUI.g13TopBar = JadeUIBarTopArtPanel:CreateTexture("JadeUI Top Bar Texture")
    JadeUI.g13TopBar:SetPoint("BOTTOM", JadeUIBarTopArtPanel, "BOTTOM", 2, 0) --This offset is specifically to line up the frame with the art
    JadeUI.g13TopBar:SetTexture(textures.g13TopBarTexture)
    JadeUI.g13TopBar:SetDrawLayer("BACKGROUND", 0)
-
-
-
-
-
-
-
-
-
 end
 
+
+--[[ MEDIUM
+    Level 13    - MultiBarBottomLeftButtons + MultiBarBottomRightButtons
+    Level 12    - ActionButtons + MultiBarBottomRight + MultiBarBottomLeft
+    Level 11    - JadeUIButtonParent
+    Level 10    - MultiBarBottomRightButton8/9/10
+    Level 9     - JadeUIBarArtPanel + JadeUIBarTopArtPanel                  - Must be on top of the Exp bar
+    Level 8     - 
+    Level 7     - 
+    Level 6     - 
+    Level 5     - 
+    Level 4     - ExhaustionTick
+    Level 3     - MainMenuExpBar                                            - Must be on top of the Rep bar
+    Level 2     - ReputationWatchBar
+    Level 1     - JadeUIBar (Invisible parent)
+    Level 0     - UIParent
+ ]]
+--Set the frame strata to standard values for correct layering
+function JadeUI.SetDefaultStrata()
+   MultiBarBottomRight:SetFrameLevel(JadeUIButtonParent:GetFrameLevel()+1) --Children are given +1 to their parent by default
+   JadeUIButtonParent:SetFrameLevel(11)
+   JadeUIBarTopArtPanel:SetFrameLevel(9)
+   JadeUIBarArtPanel:SetFrameLevel(9)
+   ExhaustionTick:SetFrameLevel(4)
+   MainMenuExpBar:SetFrameLevel(3)
+   ReputationWatchBar:SetFrameLevel(2)
+end
 
 --Sets the endstop texture based on a variable passed to it
 function JadeUI.setEndstop(type)

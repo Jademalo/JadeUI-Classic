@@ -8,7 +8,7 @@ JadeUI.isVanilla = (LE_EXPANSION_LEVEL_CURRENT == LE_EXPANSION_CLASSIC)
 JadeUI.isTBC = (LE_EXPANSION_LEVEL_CURRENT == LE_EXPANSION_BURNING_CRUSADE)
 JadeUI.isWrath = (LE_EXPANSION_LEVEL_CURRENT == LE_EXPANSION_NORTHREND)
 
-JadeUIBar = CreateFrame("Frame", "JadeUI Main Frame", UIParent)
+JadeUIBar = CreateFrame("Frame", "JadeUIMainFrame", UIParent)
 
 --------------------------------------------------------------------------------
 --Core Functions
@@ -49,17 +49,14 @@ JadeUIBar:SetScript("OnEvent", function(self, event, arg1, arg2)
 
     if event == "PLAYER_ENTERING_WORLD" then
         JadeUIBar:SetFrameStrata("MEDIUM")
-        JadeUIBar:SetFrameLevel(1)
-        JadeUIBar:SetSize(745, 210)
+        JadeUIBar:SetSize(790, 209)
         JadeUIBar:SetPoint("BOTTOM", UIParent, "BOTTOM")
         JadeUI.createArtFrame() --Create the main art frame for the bars
         JadeUI.setEndstop(JadeUIDB.endstopType) --Set the endstop type based on the saved variable
 
-
         if JadeUIDB.pixelScale then
             JadeUI.SetScale()
         end
-
 
         --Move various Blizzard frames
         JadeUI.blizzUIMove()
@@ -67,7 +64,6 @@ JadeUIBar:SetScript("OnEvent", function(self, event, arg1, arg2)
         --Move Blizzard Bars if not using Bartender
         if not C_AddOns.IsAddOnLoaded("Bartender4") then
             JadeUIButtonParent = CreateFrame("Frame", "JadeUI Button Parent", JadeUIBar)
-            JadeUIButtonParent:SetFrameLevel(6) --Children are given +1 to their parent
             JadeUI.blizzBarMove() --Move the Blizzard Action Bars
             JadeUI.xpBar.BlizzXPBarMove()
             JadeUI.xpBar.BlizzRepBarMove()
@@ -76,6 +72,8 @@ JadeUIBar:SetScript("OnEvent", function(self, event, arg1, arg2)
         else
             JadeUI.bartenderFix() --Fix some issues with Bartender
         end
+
+        JadeUI.SetDefaultStrata()
     end
 
     if event == "UPDATE_FACTION" then
@@ -96,18 +94,3 @@ JadeUIBar:SetScript("OnEvent", function(self, event, arg1, arg2)
     end
 
 end)
-
-
-
---[[ Frame levels
-Medium
-0 - UIParent
-2 - XP Bar
-4 - Top Button Texture
-5 - Main Art Bar + Top Button Texture
-6 - Buttons
-
-
-When bar is hovered over, 
-
-]]
