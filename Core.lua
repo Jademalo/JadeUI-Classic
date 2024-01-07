@@ -65,10 +65,10 @@ JadeUIBar:SetScript("OnEvent", function(self, event, arg1, arg2)
         if not C_AddOns.IsAddOnLoaded("Bartender4") then
             JadeUIButtonParent = CreateFrame("Frame", "JadeUIButtonParent", JadeUIBar)
             JadeUI.blizzBarMove() --Move the Blizzard Action Bars
-            JadeUI.xpBar.BlizzXPBarMove()
-            JadeUI.xpBar.BlizzRepBarMove()
+            JadeUI.expBar.BlizzExpBarMove()
+            JadeUI.expBar.BlizzRepBarMove()
             JadeUIBar:RegisterEvent("UPDATE_FACTION") --Register the update faction event to run Rep Bar Move after. For some reason if this isn't here, I get an error about JadeUIButtonParent
-            JadeUI.xpBar.showMaxCover()
+            JadeUI.expBar.showMaxCover()
         else
             JadeUI.bartenderFix() --Fix some issues with Bartender
         end
@@ -77,11 +77,11 @@ JadeUIBar:SetScript("OnEvent", function(self, event, arg1, arg2)
     end
 
     if event == "UPDATE_FACTION" then
-        JadeUI.xpBar.BlizzRepBarMove()
+        JadeUI.expBar.BlizzRepBarMove()
     end
 
     if event == "PLAYER_LEVEL_UP" then
-        JadeUI.xpBar.showMaxCover()
+        JadeUI.expBar.showMaxCover()
         if JadeUIDB.levelScreenshot then
             RequestTimePlayed() --Show /played when levelling up
             JadeUIBar:RegisterEvent("TIME_PLAYED_MSG") --Register the return of the message being sent to screenshot

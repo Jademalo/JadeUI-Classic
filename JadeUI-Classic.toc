@@ -20,5 +20,5 @@
 Core.lua
 BlizzUI.lua
 ArtFrame.lua
-XPBar.lua
+ExpBar.lua
 Options.lua
