@@ -60,12 +60,12 @@ function JadeUI.createArtFrame()
    rightEndstop:SetDrawLayer("ARTWORK")
 
 
-   JadeUIBarTopArtPanel = CreateFrame("Frame","JadeUIBarTopArtFrame", JadeUIBarArtPanel)
-   JadeUIBarTopArtPanel:SetPoint("BOTTOM", JadeUIBarArtPanel, "TOP", -2, 0) --This offset is specifically to line up the frame with the art
-   JadeUIBarTopArtPanel:SetSize(309, 136)
+   JadeUIBarTopArtFrame = CreateFrame("Frame","JadeUIBarTopArtFrame", JadeUIBarArtPanel)
+   JadeUIBarTopArtFrame:SetPoint("BOTTOM", JadeUIBarArtPanel, "TOP", -2, 0) --This offset is specifically to line up the frame with the art
+   JadeUIBarTopArtFrame:SetSize(309, 136)
 
-   local g13TopBar = JadeUIBarTopArtPanel:CreateTexture("JadeUIBarTopTexture")
-   g13TopBar:SetPoint("BOTTOM", JadeUIBarTopArtPanel, "BOTTOM", 2, 0) --This offset is specifically to line up the frame with the art
+   local g13TopBar = JadeUIBarTopArtFrame:CreateTexture("JadeUIBarTopTexture")
+   g13TopBar:SetPoint("BOTTOM", JadeUIBarTopArtFrame, "BOTTOM", 2, 0) --This offset is specifically to line up the frame with the art
    g13TopBar:SetTexture(textures.g13TopBarTexture)
    g13TopBar:SetDrawLayer("BACKGROUND", 0)
 
@@ -82,7 +82,7 @@ end
     Level 12    - ActionButtons + MultiBarBottomRight + MultiBarBottomLeft
     Level 11    - JadeUIButtonParent
     Level 10    - MultiBarBottomRightButton8/9/10
-    Level 9     - JadeUIBarArtPanel + JadeUIBarTopArtPanel                  - Must be on top of the Exp bar
+    Level 9     - JadeUIBarArtPanel + JadeUIBarTopArtFrame                  - Must be on top of the Exp bar
     Level 8     - 
     Level 7     - 
     Level 6     - 
@@ -97,7 +97,7 @@ end
 function JadeUI.SetDefaultStrata()
    MultiBarBottomRight:SetFrameLevel(JadeUIButtonParent:GetFrameLevel()+1) --Children are given +1 to their parent by default
    JadeUIButtonParent:SetFrameLevel(11)
-   JadeUIBarTopArtPanel:SetFrameLevel(9)
+   JadeUIBarTopArtFrame:SetFrameLevel(9)
    JadeUIBarArtPanel:SetFrameLevel(9)
    ExhaustionTick:SetFrameLevel(4)
    MainMenuExpBar:SetFrameLevel(3)

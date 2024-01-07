@@ -129,7 +129,7 @@ local function verticalMultiBarFix()
         if oldMinimapGetBottom(MinimapCluster) < (UIParent:GetBottom() + (MinimapCluster:GetHeight()*MinimapCluster:GetScale())) then
             return MinimapCluster:GetTop()*MinimapCluster:GetScale() --GetTop gives a position value relative to the scale domain of the minimap, rather than UIParent. We need to fix that since the minimap scale might not be 0.
         else
-            return JadeUIBarTopArtPanel:GetTop()*JadeUIBarTopArtPanel:GetScale() --GetTop gives a position value relative to the scale domain of the frame, rather than UIParent. We need to fix that since the frame scale might not be 0. 
+            return JadeUIBarTopArtFrame:GetTop()*JadeUIBarTopArtFrame:GetScale() --GetTop gives a position value relative to the scale domain of the frame, rather than UIParent. We need to fix that since the frame scale might not be 0. 
         end
     end
 end
@@ -239,7 +239,7 @@ end
 local function movePetBar()
     PetActionBarFrame:SetParent(JadeUIButtonParent)
     PetActionBarFrame:SetScale(0.7)
-    moveBlizzardFrame(PetActionBarFrame, "BOTTOM", "TOP", 34, -1, JadeUIBarTopArtPanel)
+    moveBlizzardFrame(PetActionBarFrame, "BOTTOM", "TOP", 34, -1, JadeUIBarTopArtFrame)
 end
 
 local function hideButtons()
@@ -287,7 +287,7 @@ end
 function JadeUI.blizzUIMove()
     moveBlizzardFrame(CastingBarFrame,"BOTTOM", "BOTTOM", 0, 248) --Casting Bar
     moveBlizzardFrame(FramerateLabel, "BOTTOM", "BOTTOM", -190, 85) --Framerate
-    moveBlizzardFrame(DurabilityFrame, "LEFT", "RIGHT", 0, 23, JadeUIBarTopArtPanel) --Durability Frame
+    moveBlizzardFrame(DurabilityFrame, "LEFT", "RIGHT", 0, 23, JadeUIBarTopArtFrame) --Durability Frame
 
     verticalMultiBarFix()
     --if JadeUIDB.moveUnitFrames then JadeUI.moveUnitFramesFunc() end --Unit Frames/ff
@@ -315,7 +315,7 @@ function JadeUI.blizzBarMove()
 
     local forms = GetNumShapeshiftForms()
     if forms > 0 then
-        moveBlizzardFrame(StanceBarFrame, "BOTTOMLEFT", "TOPLEFT", 133, -120, JadeUIBarTopArtPanel)
+        moveBlizzardFrame(StanceBarFrame, "BOTTOMLEFT", "TOPLEFT", 133, -120, JadeUIBarTopArtFrame)
     end
     movePetBar()
 

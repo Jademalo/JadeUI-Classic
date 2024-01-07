@@ -21,7 +21,7 @@ local xpBar = JadeUI.xpBar
     Level 6     - ReputationWatchBar (Active)
     Level 5     - MultiBarBottomRightButtons
     Level 4     - MultiBarBottomRight
-    Level 3     - JadeUIBarTopArtPanel
+    Level 3     - JadeUIBarTopArtFrame
     Level 2     - ReputationWatchBar (Inactive)
     Level 1     - JadeUIBar (Invisible parent)
     Level 0     - UIParent
@@ -34,7 +34,7 @@ local function hoverLevelForeground()
     MultiBarBottomRightButton10:SetParent(JadeUIBarArtPanel)
     MainMenuExpBar:SetFrameLevel(7)
     MultiBarBottomRight:SetFrameLevel(4)
-    JadeUIBarTopArtPanel:SetFrameLevel(3)
+    JadeUIBarTopArtFrame:SetFrameLevel(3)
 end
 
 local function hoverRepForeground()
