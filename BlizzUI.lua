@@ -221,7 +221,7 @@ local function moveActionBars()
         _G["ActionButton" .. i]:SetParent(JadeUIButtonParent)
         --_G["ActionButton" .. i]:SetFrameLevel(JadeUIButtonParent:GetFrameLevel() + 1) --This is redundant because setting something's parent gives it +1 on the strata of that object
     end
-    moveBlizzardFrame(ActionButton1, "CENTER", "CENTER", -127, 2, JadeUIBar)
+    moveBlizzardFrame(ActionButton1, "CENTER", "CENTER", -125, -4.5, JadeUIBarTopArtFrame)
 
     --Bottom Left Action Bar
     MultiBarBottomLeft:SetParent(JadeUIButtonParent)
