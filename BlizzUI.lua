@@ -88,14 +88,6 @@ local function hideBlizzardFrame(frame)
     frame:Hide()
 end
 
---[[ --Hook UIParent_ManageFramePosition to allow for additional overrides
-local origUIParent_ManageFramePosition = UIParent_ManageFramePosition
-UIParent_ManageFramePosition = function(index, value, yOffsetFrames, xOffsetFrames, hasBottomLeft, hasBottomRight, hasPetBar)
-
-    origUIParent_ManageFramePosition(index, value, yOffsetFrames, xOffsetFrames, hasBottomLeft, hasBottomRight, hasPetBar)
-
-end ]]
-
 
 --------------------------------------------
 --Functions to move basic Blizzard Frames
