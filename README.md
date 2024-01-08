@@ -11,4 +11,4 @@ The XP and Rep bars will go to the foreground on hover, but remain behind the bu
 
 There is also an option to enable a screenshot on level up, since it's a nice little feature.
 
-![Example](Media\WoWScrnShot_010724_232929.jpg)
+![Example](Media/WoWScrnShot_010724_232929.jpg)
