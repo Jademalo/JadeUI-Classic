@@ -1,4 +1,4 @@
-## Interface: 110107
+## Interface: 110200
 ## Interface-Vanilla: 11507
 ### Interface-TBC: 20503 
 ### Interface-Wrath: 30403
