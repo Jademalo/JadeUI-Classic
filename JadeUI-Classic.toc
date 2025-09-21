@@ -1,5 +1,5 @@
-## Interface: 110200
-## Interface-Vanilla: 11507
+## Interface: 
+## Interface-Vanilla: 
 ### Interface-TBC: 20503 
 ### Interface-Wrath: 30403
 ### Interface-Cata: 40402
