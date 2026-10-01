@@ -275,7 +275,8 @@ optionsPanel:SetScript("OnEvent", function(self, event, arg1, arg2)
         buildOptions()
 
         --Register the Options Panel in the AddOn Menu
-        InterfaceOptions_AddCategory(optionsPanel)
+        local category = Settings.RegisterCanvasLayoutCategory(optionsPanel, "JadeUI Classic")
+        Settings.RegisterAddOnCategory(category)
     end
 
 end)
