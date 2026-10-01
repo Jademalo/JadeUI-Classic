@@ -6,6 +6,22 @@ local textures = JadeUI.textures
 JadeUI.expBar = {}
 local expBar = JadeUI.expBar
 
+--Get specific elements of the exp and rep bars
+local statusBars = {
+    exp = {},
+    rep = {},
+}
+statusBars.exp.StatusBar = GetDynamicChildren(MainStatusTrackingBarContainer, "StatusBar", 2)
+statusBars.exp.OverlayFrame = GetDynamicChildren(MainStatusTrackingBarContainer, "OverlayFrame", 2)
+statusBars.exp.ExhaustionLevelFillBar = GetDynamicChildren(MainStatusTrackingBarContainer, "ExhaustionLevelFillBar")
+statusBars.exp.ExhaustionTick = GetDynamicChildren(MainStatusTrackingBarContainer, "ExhaustionTick")
+statusBars.exp.RepStatusBar = GetDynamicChildren(MainStatusTrackingBarContainer, "StatusBar")
+statusBars.exp.RepOverlayFrame = GetDynamicChildren(MainStatusTrackingBarContainer, "OverlayFrame")
+statusBars.rep.StatusBar = GetDynamicChildren(SecondaryStatusTrackingBarContainer, "StatusBar")
+statusBars.rep.OverlayFrame = GetDynamicChildren(SecondaryStatusTrackingBarContainer, "OverlayFrame")
+statusBars.Offset = 1 --This controls how big the rep and xp bars are relative to eachother
+
+
 
 --------------------------------------------
 --Functions to handle strata changes on mouseover
@@ -16,7 +32,7 @@ local expBar = JadeUI.expBar
     Level 11    - JadeUIButtonParent
     Level 10    - ExhaustionTick
     Level 9     - MultiBarBottomRightButton8/9/10
-    Level 8     - JadeUIBarArtPanel                                         - Must be on top of the Exp bar
+    Level 8     - JadeUIBarArtFrame                                         - Must be on top of the Exp bar
     Level 7     - MainMenuExpBar                                            - Must be on top of the Rep bar
     Level 6     - ReputationWatchBar (Active)
     Level 5     - MultiBarBottomRightButtons
@@ -25,63 +41,107 @@ local expBar = JadeUI.expBar
     Level 2     - ReputationWatchBar (Inactive)
     Level 1     - JadeUIBar (Invisible parent)
     Level 0     - UIParent
+
+    LOW
+    Level 4     - SecondaryStatusTrackingBarContainer.<dynamic>.StatusBar
+    Level 3     - MainStatusTrackingBarContainer.<dynamic>.StatusBar        - Must be below the Rep bar
+    Level 2     - JadeUITopArtFrame                                         - Must be below XP bar when on LOW
  ]]
+ 
+function SetExpFrameLevel(value)
+    MainStatusTrackingBarContainer:SetFrameLevel(value)
+    statusBars.exp.StatusBar:SetFrameLevel(MainStatusTrackingBarContainer:GetFrameLevel()-1)
+    --statusBars.exp.ExhaustionLevelFillBar:SetFrameLevel(MainStatusTrackingBarContainer:GetFrameLevel())
+    statusBars.exp.OverlayFrame:SetFrameLevel(MainStatusTrackingBarContainer:GetFrameLevel()+2)
+    statusBars.exp.ExhaustionTick:SetFrameLevel(MainStatusTrackingBarContainer:GetFrameLevel()+3)
+    statusBars.exp.ExhaustionTick:SetFrameStrata("MEDIUM")
+end
+
+function SetRepFrameLevel(value)
+    SecondaryStatusTrackingBarContainer:SetFrameLevel(value)
+    SecondaryStatusTrackingBarContainer:SetFrameStrata("LOW")
+    statusBars.rep.StatusBar:SetFrameLevel(SecondaryStatusTrackingBarContainer:GetFrameLevel()-1)
+    statusBars.rep.OverlayFrame:SetFrameLevel(SecondaryStatusTrackingBarContainer:GetFrameLevel()+2)
+end
+
 --Set the frame strata for when the Exp bar is hovered over
 local function hoverExpForeground()
-    ExhaustionTick:SetFrameLevel(10)
     --Fix for the bottom 3 buttons needing to be on top of the art
-    MultiBarBottomRightButton8:SetParent(JadeUIBarArtFrame)
-    MultiBarBottomRightButton9:SetParent(JadeUIBarArtFrame)
-    MultiBarBottomRightButton10:SetParent(JadeUIBarArtFrame)
-    MainMenuExpBar:SetFrameLevel(7)
-    MultiBarBottomRight:SetFrameLevel(4)
-    JadeUIBarTopArtFrame:SetFrameLevel(3)
+    --MultiBarBottomRightButton8:SetParent(JadeUIBarArtFrame)
+    --MultiBarBottomRightButton9:SetParent(JadeUIBarArtFrame)
+    --MultiBarBottomRightButton10:SetParent(JadeUIBarArtFrame)
+    --MultiBarBottomRight:SetFrameLevel(4)
+    JadeUIBarTopArtFrame:SetFrameLevel(JadeUIBarArtFrame:GetFrameLevel()-3)
+    JadeUIBarTopArtFrame:SetFrameStrata("LOW")
+    SetExpFrameLevel(JadeUIBarArtFrame:GetFrameLevel()-1)
+    SetRepFrameLevel(JadeUIBarTopArtFrame:GetFrameLevel()-3)
 end
 
 --Set the frame strata for when the Rep bar is hovered over
 local function hoverRepForeground()
-    ReputationWatchBar:SetFrameLevel(6)
     hoverExpForeground()
+    SetRepFrameLevel(JadeUIBarTopArtFrame:GetFrameLevel()+2)
 end
 
 --Set the frame strata for when no longer hovering over the bars
 local function hoverExpBackground()
     JadeUI.SetDefaultStrata()
-    MultiBarBottomRightButton8:SetParent(MultiBarBottomRight)
-    MultiBarBottomRightButton9:SetParent(MultiBarBottomRight)
-    MultiBarBottomRightButton10:SetParent(MultiBarBottomRight)
+    --MultiBarBottomRightButton8:SetParent(MultiBarBottomRight)
+    --MultiBarBottomRightButton9:SetParent(MultiBarBottomRight)
+    --MultiBarBottomRightButton10:SetParent(MultiBarBottomRight)
 end
 
 
 --------------------------------------------
 --Functions to move Blizzard Bars
 --------------------------------------------
+
+local function forceHide(frame)
+    frame:Hide()
+    --frame.Show = function() end
+    frame.SetShown = function() end
+    --hooksecurefunc(frame, "Show", function(self) self:Hide() end)
+end
+
+local function moveBlizzStatusBars()
+    StatusTrackingBarManager:ClearAllPoints()
+    StatusTrackingBarManager:SetParent(JadeUIBar)
+    StatusTrackingBarManager:SetPoint("BOTTOM", JadeUIBar, "BOTTOM", 0, 41)
+    StatusTrackingBarManager:SetWidth(588)
+    StatusTrackingBarManager:SetHeight(20) --Default 23
+end
+
 local function moveBlizzExpBar()
     --Exp Bar
-    MainMenuExpBar:ClearAllPoints()
-    MainMenuExpBar:SetParent(JadeUIBar)
-    MainMenuExpBar:SetPoint("BOTTOM", JadeUIBar, "BOTTOM", 0, 39)
-    MainMenuExpBar:SetWidth(588)
-    hoverExpBackground()
-    ExhaustionTick_OnEvent(_,"PLAYER_XP_UPDATE") --Force an event to run ExhaustionTick_OnEvent which handles setting the exhaustion tick relative to the xp bar - https://github.com/Gethe/wow-ui-source/blob/bc566bcfb0633aa29255dc1bb65b4bbed00967a4/Interface/FrameXML/MainMenuBar.lua#L361
+    MainStatusTrackingBarContainer:ClearAllPoints()
+    MainStatusTrackingBarContainer:SetPoint("TOPLEFT", MainStatusTrackingBarContainer:GetParent(), "LEFT", 0, statusBars.Offset)
+    MainStatusTrackingBarContainer:SetPoint("BOTTOMRIGHT", MainStatusTrackingBarContainer:GetParent(), "BOTTOMRIGHT", 0, 0)
+    --These are necessary for the bar to scale to the container
+    statusBars.exp.StatusBar:SetPoint("TOPLEFT", statusBars.exp.StatusBar:GetParent(), "TOPLEFT", 0, 0)
+    statusBars.exp.StatusBar:SetPoint("BOTTOMRIGHT", statusBars.exp.StatusBar:GetParent(), "BOTTOMRIGHT", 0, 0)
+    statusBars.exp.ExhaustionTick:UpdateTickPosition() --Replacement for the ExhaustionTick_OnEvent using the new mixins - https://github.com/Gethe/wow-ui-source/blob/33e177d9bf38d76d5c6c6e05d5da78db1899659a/Interface/AddOns/Blizzard_ActionBar/Shared/ExpBar.lua#L27
+    --This is specifically for when the rep bar replaces the main bar at max level
+    statusBars.exp.RepStatusBar:SetPoint("TOPLEFT", statusBars.exp.StatusBar:GetParent(), "TOPLEFT", 0, 0)
+    statusBars.exp.RepStatusBar:SetPoint("BOTTOMRIGHT", statusBars.exp.StatusBar:GetParent(), "BOTTOMRIGHT", 0, 0)
 
-    MainMenuExpBar:HookScript("OnEnter", function(self, motion) hoverExpForeground() end)
-    MainMenuExpBar:HookScript("OnLeave", function(self, motion) hoverExpBackground() end)
+    statusBars.exp.StatusBar:GetParent():HookScript("OnEnter", function(self, motion) hoverExpForeground() end)
+    statusBars.exp.StatusBar:GetParent():HookScript("OnLeave", function(self, motion) hoverExpBackground() end)
 
-    ExhaustionTick:HookScript("OnEnter", function(self, motion) hoverExpForeground() end)
-    ExhaustionTick:HookScript("OnLeave", function(self, motion) hoverExpBackground() end)
+    statusBars.exp.ExhaustionTick:HookScript("OnEnter", function(self, motion) hoverExpForeground() end)
+    statusBars.exp.ExhaustionTick:HookScript("OnLeave", function(self, motion) hoverExpBackground() end)
 end
 
 local function moveBlizzRepBar()
-    --Exp Bar
-    ReputationWatchBar:ClearAllPoints()
-    ReputationWatchBar:SetParent(JadeUIBar)
-    ReputationWatchBar:SetPoint("BOTTOM", JadeUIBar, "BOTTOM", 0, 47)
-    ReputationWatchBar:SetWidth(588)
-    ReputationWatchBar.StatusBar:SetWidth(588)
+    --Rep Bar
+    SecondaryStatusTrackingBarContainer:ClearAllPoints()
+    SecondaryStatusTrackingBarContainer:SetPoint("TOPLEFT", SecondaryStatusTrackingBarContainer:GetParent(), "TOPLEFT", 0, 0)
+    SecondaryStatusTrackingBarContainer:SetPoint("BOTTOMRIGHT", SecondaryStatusTrackingBarContainer:GetParent(), "RIGHT", 0, statusBars.Offset)
+    --These are necessary for the bar to scale to the container
+    statusBars.rep.StatusBar:SetPoint("TOPLEFT", statusBars.rep.StatusBar:GetParent(), "TOPLEFT", 0, 0)
+    statusBars.rep.StatusBar:SetPoint("BOTTOMRIGHT", statusBars.rep.StatusBar:GetParent(), "BOTTOMRIGHT", 0, 0)
 
-    ReputationWatchBar:HookScript("OnEnter", function(self, motion) hoverRepForeground() end)
-    ReputationWatchBar:HookScript("OnLeave", function(self, motion) hoverExpBackground() end)
+    statusBars.rep.StatusBar:GetParent():HookScript("OnEnter", function(self, motion) hoverRepForeground() end)
+    statusBars.rep.StatusBar:GetParent():HookScript("OnLeave", function(self, motion) hoverExpBackground() end)
 end
 
 
@@ -97,27 +157,32 @@ end
 
 
 local function replaceBlizzExpBarTexture()
-    MainMenuXPBarTexture0:Hide()
-    MainMenuXPBarTexture1:Hide()
-    MainMenuXPBarTexture2:Hide()
-    MainMenuXPBarTexture3:Hide()
+    forceHide(MainStatusTrackingBarContainer.MainMenuBarFrameTexture1)
+    forceHide(MainStatusTrackingBarContainer.MainMenuBarFrameTexture2)
+    forceHide(MainStatusTrackingBarContainer.MainMenuBarFrameTexture3)
+    forceHide(MainStatusTrackingBarContainer.MainMenuBarFrameTexture4)
     JadeUIExpBarCover = JadeUIBar:CreateTexture("JadeUIExpBarCover")
-    JadeUIExpBarCover:SetPoint("CENTER", MainMenuExpBar, "CENTER", 0, 5)
+    JadeUIExpBarCover:SetPoint("BOTTOM", MainStatusTrackingBarContainer, "BOTTOM", 0, 2)
     JadeUIExpBarCover:SetTexture(textures.g13ExpBarTexture)
     JadeUIExpBarCover:SetDrawLayer("BORDER", 7)
-    JadeUIExpBarCover:SetParent(MainMenuXPBarTexture0:GetParent())
+    JadeUIExpBarCover:SetParent(MainStatusTrackingBarContainer)
 end
 
 local function replaceBlizzRepBarTexture()
-    ReputationWatchBar.StatusBar.WatchBarTexture0:Hide()
-    ReputationWatchBar.StatusBar.WatchBarTexture1:Hide()
-    ReputationWatchBar.StatusBar.WatchBarTexture2:Hide()
-    ReputationWatchBar.StatusBar.WatchBarTexture3:Hide()
+    forceHide(SecondaryStatusTrackingBarContainer.StandaloneFrameTexture1)
+    forceHide(SecondaryStatusTrackingBarContainer.StandaloneFrameTexture2)
+    forceHide(SecondaryStatusTrackingBarContainer.StandaloneFrameTexture3)
+    forceHide(SecondaryStatusTrackingBarContainer.StandaloneFrameTexture4)
+    forceHide(SecondaryStatusTrackingBarContainer.StandaloneFrameTexture5)
+    forceHide(SecondaryStatusTrackingBarContainer.StandaloneFrameTextureRightCapTop)
+    forceHide(SecondaryStatusTrackingBarContainer.StandaloneFrameTextureRightCapBottom)
+    forceHide(SecondaryStatusTrackingBarContainer.StandaloneFrameTextureLeftCapTop)
+    forceHide(SecondaryStatusTrackingBarContainer.StandaloneFrameTextureLeftCapBottom)
     JadeUIRepBarCover = JadeUIBar:CreateTexture("JadeUIRepBarCover")
-    JadeUIRepBarCover:SetPoint("CENTER", ReputationWatchBar.StatusBar, "CENTER", 0, 5)
+    JadeUIRepBarCover:SetPoint("BOTTOM", SecondaryStatusTrackingBarContainer, "BOTTOM", 0, 0)
     JadeUIRepBarCover:SetTexture(textures.g13RepBarTexture)
     JadeUIRepBarCover:SetDrawLayer("BORDER", 7)
-    JadeUIRepBarCover:SetParent(ReputationWatchBar.StatusBar.WatchBarTexture0:GetParent())
+    JadeUIRepBarCover:SetParent(SecondaryStatusTrackingBarContainer)
 end
 
 
@@ -125,6 +190,7 @@ end
 --Core functions to apply changes
 --------------------------------------------
 function expBar.BlizzExpBarMove()
+    moveBlizzStatusBars()
     moveBlizzExpBar()
     replaceBlizzExpBarTexture()
     createMaxLevelCover()

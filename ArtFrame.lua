@@ -82,26 +82,27 @@ end
     Level 12    - ActionButtons + MultiBarBottomRight + MultiBarBottomLeft
     Level 11    - JadeUIButtonParent
     Level 10    - 
-    Level 9     - JadeUIBarArtPanel + JadeUIBarTopArtFrame                  - Must be on top of the Exp bar
-    Level 8     - 
+    Level 9     - 
+    Level 8     - JadeUIBarTopArtFrame                                      - Must be on top of the Exp bar
     Level 7     - 
     Level 6     - 
     Level 5     - 
     Level 4     - ExhaustionTick
     Level 3     - MainMenuExpBar                                            - Must be on top of the Rep bar
-    Level 2     - ReputationWatchBar
-    Level 1     - JadeUIBar (Invisible parent)
+    Level 2     - ReputationWatchBar + JadeUIBarArtFrame
+    Level 1     - JadeUIBar (Invisible parent) 
     Level 0     - UIParent
  ]]
+
 --Set the frame strata to standard values for correct layering
 function JadeUI.SetDefaultStrata()
    MultiBarBottomRight:SetFrameLevel(JadeUIButtonParent:GetFrameLevel()+1) --Children are given +1 to their parent by default
    JadeUIButtonParent:SetFrameLevel(11)
-   JadeUIBarTopArtFrame:SetFrameLevel(9)
    JadeUIBarArtFrame:SetFrameLevel(9)
-   ExhaustionTick:SetFrameLevel(4)
-   MainMenuExpBar:SetFrameLevel(3)
-   ReputationWatchBar:SetFrameLevel(2)
+   JadeUIBarTopArtFrame:SetFrameLevel(JadeUIBarArtFrame:GetFrameLevel()+3)
+   JadeUIBarTopArtFrame:SetFrameStrata("MEDIUM")
+   SetExpFrameLevel(JadeUIBarArtFrame:GetFrameLevel()-3)
+   SetRepFrameLevel(JadeUIBarTopArtFrame:GetFrameLevel()-3)
 end
 
 --Sets the endstop texture based on a variable passed to it

@@ -29,6 +29,41 @@ local function minimapWidthOffset()
     return -(MinimapCluster:GetWidth()*MinimapCluster:GetScale())+VerticalMultiBarsContainer:GetWidth()
 end
 
+--Get a dynamic child object
+function GetDynamicChildren(frame, child, index)
+    index = index or 1
+
+    local count = 0
+    for _, children in ipairs({frame:GetChildren()}) do
+        if children[child] then
+            count = count + 1
+            if count == index then
+                return children[child]
+            end
+        end
+    end
+end
+
+function GetIndexedChild(frame, index)
+    local count = 0
+    for _, child in ipairs({frame:GetRegions()}) do
+        count = count + 1
+        if count == index then
+            return child
+        end
+    end
+end
+
+function GetIndexedRegion(frame, index)
+    local count = 0
+    for _, region in ipairs({frame:GetRegions()}) do
+        count = count + 1
+        if count == index then
+            return region
+        end
+    end
+end
+
 
 --------------------------------------------
 --Hooks

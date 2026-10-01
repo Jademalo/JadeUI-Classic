@@ -76,10 +76,6 @@ JadeUIBar:SetScript("OnEvent", function(self, event, arg1, arg2)
         JadeUI.SetDefaultStrata()
     end
 
-    if event == "UPDATE_FACTION" then
-        JadeUI.expBar.BlizzRepBarMove()
-    end
-
     if event == "PLAYER_LEVEL_UP" then
         JadeUI.expBar.showMaxCover()
         if JadeUIDB.levelScreenshot then
