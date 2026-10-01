@@ -26,7 +26,15 @@ end
 
 --Calculate the width of the map to offset the tooltip and bags. Pass as argument without () so the function itself is being passed and not the result 
 local function minimapWidthOffset()
-    return -(MinimapCluster:GetWidth()*MinimapCluster:GetScale())+VerticalMultiBarsContainer:GetWidth()
+    local barOffset = 0
+    
+    if MultiBarLeft:IsShown() and MultiBarRight:IsShown() then 
+        barOffset = select(4, MultiBarLeft:GetPoint())+select(5, MultiBarLeft:GetPoint()) 
+    elseif MultiBarLeft:IsShown() or MultiBarRight:IsShown() then
+        barOffset = select(4, MultiBarRight:GetPoint())+select(5, MultiBarRight:GetPoint())
+    end
+    
+    return -(MinimapCluster:GetWidth()*MinimapCluster:GetScale())-barOffset
 end
 
 --Get a dynamic child object
@@ -164,15 +172,11 @@ end
 function JadeUI.MoveMinimapFunc()
     --Minimap
     moveBlizzardFrame(MinimapCluster, "BOTTOMRIGHT", "BOTTOMRIGHT", 0, 0, nil, "moveMinimap")
-    --Zone Text
-    moveBlizzardFrame(MinimapZoneTextButton, "CENTER", "CENTER", 0, -77, nil, "moveMinimap")
-    --Minimap Toggle Button
-    moveBlizzardFrame(MinimapToggleButton, "CENTER", "BOTTOMRIGHT", -15, 19, nil, "moveMinimap")
-    --Minimap Top Border
-    moveBlizzardFrame(MinimapBorderTop, "BOTTOMRIGHT", "BOTTOMRIGHT", 0, 0, nil, "moveMinimap")
+    --Minimap Zone Info
+    moveBlizzardFrame(MinimapCluster.BorderTop, "BOTTOMRIGHT", "BOTTOMRIGHT", 0, 0, nil, "moveMinimap")
+    moveBlizzardFrame(MinimapCluster.MinimapContainer, "BOTTOM", "TOP", 0, 0, nil, "moveMinimap")
     --Clock
-    moveBlizzardFrame(TimeManagerClockButton, "CENTER", "CENTER", 0, 75, nil, "moveMinimap")
-
+    moveBlizzardFrame(TimeManagerClockButton, "CENTER", "CENTER", 0, 70, nil, "moveMinimap")
     --Buff Bar
     moveBlizzardFrame(BuffFrame, "TOPRIGHT", "TOPRIGHT", -13, -13, UIParent, "moveMinimap")
     --Quest Watch Frame
