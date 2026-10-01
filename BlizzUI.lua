@@ -176,7 +176,7 @@ function JadeUI.MoveMinimapFunc()
     moveBlizzardFrame(MinimapCluster.BorderTop, "BOTTOMRIGHT", "BOTTOMRIGHT", 0, 0, nil, "moveMinimap")
     moveBlizzardFrame(MinimapCluster.MinimapContainer, "BOTTOM", "TOP", 0, 0, nil, "moveMinimap")
     --Clock
-    moveBlizzardFrame(TimeManagerClockButton, "CENTER", "CENTER", 0, 70, nil, "moveMinimap")
+    moveBlizzardFrame(TimeManagerClockButton, "CENTER", "CENTER", 0, 68, nil, "moveMinimap")
     --Buff Bar
     moveBlizzardFrame(BuffFrame, "TOPRIGHT", "TOPRIGHT", -13, -13, UIParent, "moveMinimap")
     --Quest Watch Frame
@@ -193,6 +193,14 @@ end
 function JadeUI.MinimapScaleFunc()
     MinimapCluster:SetScale(JadeUIDB.minimapScaleFactor)
     ActionBarController_UpdateAll() --This makes sure that the right hand bar gets repositioned after the minimap is moved around (https://github.com/Gethe/wow-ui-source/blob/bc566bcfb0633aa29255dc1bb65b4bbed00967a4/Interface/FrameXML/ActionBarController.lua#L93)
+end
+
+function JadeUI.ClockFlipFunc()
+    if JadeUIDB.moveMinimap then
+        GetIndexedRegion(TimeManagerClockButton, 1):SetTexCoord(0.015625, 0.8125, 0.390625, 0.015625)
+    else
+        GetIndexedRegion(TimeManagerClockButton, 1):SetTexCoord(0.015625, 0.8125, 0.015625, 0.390625)
+    end
 end
 
 
@@ -326,6 +334,7 @@ function JadeUI.blizzUIMove()
     JadeUI.MinimapScaleFunc() --Minimap Scale. Needs to be above Minimap since Minimap includes scale calcs.
     --if JadeUIDB.moveMinimap then JadeUI.MoveMinimapFunc() end --Minimap
     JadeUI.MoveMinimapFunc()
+    JadeUI.ClockFlipFunc()
 
     if JadeUI.isVanilla then 
         moveBlizzardFrame(TutorialFrameParent,"BOTTOM", "BOTTOM", 0, 300) --Tutorial Frame
