@@ -276,9 +276,9 @@ local function moveActionBars()
 end
 
 local function movePetBar()
-    PetActionBarFrame:SetParent(JadeUIButtonParent)
-    PetActionBarFrame:SetScale(0.7)
-    moveBlizzardFrame(PetActionBarFrame, "BOTTOM", "TOP", 34, -1, JadeUIBarTopArtFrame)
+    PetActionBar:SetParent(JadeUIButtonParent)
+    PetActionBar:SetScale(0.7)
+    moveBlizzardFrame(PetActionBar, "BOTTOM", "TOP", 34, -1, JadeUIBarTopArtFrame)
 end
 
 local function hideButtons()
@@ -324,11 +324,11 @@ end
 --------------------------------------------
 --Move various Blizzard frames
 function JadeUI.blizzUIMove()
-    moveBlizzardFrame(CastingBarFrame,"BOTTOM", "BOTTOM", 0, 248) --Casting Bar
+    moveBlizzardFrame(PlayerCastingBarFrame,"BOTTOM", "BOTTOM", 0, 248) --Casting Bar
     moveBlizzardFrame(FramerateLabel, "BOTTOM", "BOTTOM", -190, 85) --Framerate
     moveBlizzardFrame(DurabilityFrame, "LEFT", "RIGHT", 0, 23, JadeUIBarTopArtFrame) --Durability Frame
 
-    verticalMultiBarFix()
+    --verticalMultiBarFix()
     --if JadeUIDB.moveUnitFrames then JadeUI.moveUnitFramesFunc() end --Unit Frames/ff
     JadeUI.moveUnitFramesFunc()
     JadeUI.MinimapScaleFunc() --Minimap Scale. Needs to be above Minimap since Minimap includes scale calcs.
@@ -345,23 +345,23 @@ end
 function JadeUI.blizzBarMove()
 
     --Move Bars
-    moveMicroMenu()
-    moveBagBar()
-    moveActionBars()
-    hideButtons()
+    --moveMicroMenu()
+    --moveBagBar()
+    --moveActionBars()
+    --hideButtons()
     if JadeUIDB.hideKeybinds then JadeUI.HideKeybinds() end
     hideBlizzardFrame(MainMenuBar)
     MainMenuBar.IsShown = function() return true end --Pretend that MainMenuBar is shown so blizz code is happy (https://github.com/Gethe/wow-ui-source/blob/bc566bcfb0633aa29255dc1bb65b4bbed00967a4/Interface/FrameXML/ActionBarController.lua#L163)
 
     local forms = GetNumShapeshiftForms()
     if forms > 0 then
-        moveBlizzardFrame(StanceBarFrame, "BOTTOMLEFT", "TOPLEFT", 133, -120, JadeUIBarTopArtFrame)
+        moveBlizzardFrame(StanceBar, "BOTTOMLEFT", "TOPLEFT", 133, -120, JadeUIBarTopArtFrame)
     end
     movePetBar()
 
     --Other Variables
     if stanceBarHide then
-        StanceBarFrame:Hide()
+        StanceBar:Hide()
     end
 end
 
@@ -375,11 +375,3 @@ function JadeUI.bartenderFix()
         BT4BarStanceBar:Hide()
     end
 end
-
-
-
-
-
-
-
-
