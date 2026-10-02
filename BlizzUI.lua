@@ -243,23 +243,35 @@ end
 
 
 local function moveActionBars()
+    -- Top Bar = 6
+    -- Second Bar = 1
+    -- Third Bar = 5 (1-5)
+    -- Fourth Bar = 5 (7-9)
+
     --Main Action Bar
-    for i = 1, 12 do
-        _G["ActionButton" .. i]:SetParent(JadeUIButtonParent)
-        --_G["ActionButton" .. i]:SetFrameLevel(JadeUIButtonParent:GetFrameLevel() + 1) --This is redundant because setting something's parent gives it +1 on the strata of that object
-    end
-    moveBlizzardFrame(ActionButton1, "CENTER", "CENTER", -125, -4.5, JadeUIBarTopArtFrame)
+    moveBlizzardFrame(MainActionBar, "LEFT", "LEFT", 11.5, -4.5, JadeUIBarTopArtFrame)
+    MainActionBar:SetParent(JadeUIButtonParent)
+    --Hide Bar Art
+    MainActionBar.hideBarArt = true
+    MainActionBar:RefreshBarArt(force) --https://github.com/Gethe/wow-ui-source/blob/09b9db7948abc9b9648dedaab51eb0cf3ee67b31/Interface/AddOns/Blizzard_EditMode/Shared/EditModeSystemTemplates.lua#L1011
+    MainActionBar.ActionBarPageNumber:Hide()
+    MainActionBar.numButtonsShowable = 7
+    MainActionBar:UpdateShownButtons()
 
     --Bottom Left Action Bar
     MultiBarBottomLeft:SetParent(JadeUIButtonParent)
-    moveBlizzardFrame(MultiBarBottomLeft, "BOTTOMLEFT", "TOPLEFT", 0, 7)
+    moveBlizzardFrame(MultiBarBottomLeft, "BOTTOMLEFT", "TOPLEFT", 0, 6.5, MainActionBar)
+    MultiBarBottomLeft.numButtonsShowable = 7
+    MultiBarBottomLeft:UpdateShownButtons()
 
     --Bottom Right Action Bar
     MultiBarBottomRight:SetParent(JadeUIButtonParent)
-    moveBlizzardFrame(MultiBarBottomRight, "TOPLEFT", "BOTTOMLEFT", 42, -47)
-
-    --Bottom Right Action Bar Second Row
-    moveBlizzardFrame(MultiBarBottomRightButton7, "TOPLEFT", "BOTTOMLEFT", 0, -7, MultiBarBottomRightButton1)
+    moveBlizzardFrame(MultiBarBottomRight, "TOPLEFT", "BOTTOMLEFT", 42, -6.5, MainActionBar)
+    MultiBarBottomRight.numButtons = 10
+    MultiBarBottomRight.numButtonsShowable = 10 --This is set to numButtons on load, but needs to be set manually here - https://github.com/Gethe/wow-ui-source/blob/09b9db7948abc9b9648dedaab51eb0cf3ee67b31/Interface/AddOns/Blizzard_ActionBar/Shared/ActionBar.lua#L4
+    MultiBarBottomRight:UpdateShownButtons() --This is necessary to run before changing the numRows because numRows uses shownButtonContainers - https://github.com/Gethe/wow-ui-source/blob/09b9db7948abc9b9648dedaab51eb0cf3ee67b31/Interface/AddOns/Blizzard_ActionBar/Shared/ActionBar.lua#L198 + https://github.com/Gethe/wow-ui-source/blob/09b9db7948abc9b9648dedaab51eb0cf3ee67b31/Interface/AddOns/Blizzard_ActionBar/Shared/ActionBar.lua#L100
+    MultiBarBottomRight.numRows = 2
+    MultiBarBottomRight:UpdateGridLayout()
 
 end
 
@@ -335,7 +347,7 @@ function JadeUI.blizzBarMove()
     --Move Bars
     moveMicroMenu()
     moveBagBar()
-    --moveActionBars()
+    moveActionBars()
     --hideButtons()
     if JadeUIDB.hideKeybinds then JadeUI.HideKeybinds() end
     hideBlizzardFrame(MainMenuBar)
