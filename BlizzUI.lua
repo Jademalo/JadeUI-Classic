@@ -211,25 +211,19 @@ end
 --Functions to move Blizzard Action Bars
 --------------------------------------------
 local function moveMicroMenu()
-
+    --Micro Menu
     hooksecurefunc("UpdateMicroButtons", function()
-        local spacing = 2
-        UpdateMicroButtonsParent(JadeUIButtonParent) --(https://github.com/Gethe/wow-ui-source/blob/bc566bcfb0633aa29255dc1bb65b4bbed00967a4/Interface/FrameXML/MainMenuBarMicroButtons.lua#L60)
+        MicroMenuContainer:SetParent(JadeUIButtonParent)
+        MicroMenuContainer:SetPoint("BOTTOMLEFT", JadeUIBarArtFrame, "BOTTOMLEFT", 11, 2)
 
-        CharacterMicroButton:SetPoint("BOTTOMLEFT", JadeUIBarArtFrame, "BOTTOMLEFT", 11, 2)
-        if JadeUIDB.showTalents == true or (UnitLevel("player") >= SHOW_SPEC_LEVEL) then
-            spacing = -2.5
-            TalentMicroButton:Show()
-            TalentMicroButton:SetPoint("BOTTOMLEFT", SpellbookMicroButton, "BOTTOMRIGHT", spacing, 0)
-            QuestLogMicroButton:SetPoint("BOTTOMLEFT", TalentMicroButton, "BOTTOMRIGHT", spacing, 0)
+        if JadeUIDB.showTalents == true or C_SpecializationInfo.CanPlayerUseTalentSpecUI() then --https://github.com/Gethe/wow-ui-source/blob/09b9db7948abc9b9648dedaab51eb0cf3ee67b31/Interface/AddOns/Blizzard_MicroMenu/Classic/MainMenuBarMicroButtons.lua#L594
+            TalentMicroButton:SetShown(JadeUIDB.showTalents or C_SpecializationInfo.CanPlayerUseTalentSpecUI())
+            MicroMenu.childXPadding = -2.5
         else
-            QuestLogMicroButton:SetPoint("BOTTOMLEFT", SpellbookMicroButton, "BOTTOMRIGHT", spacing, 0)
+            MicroMenu.childXPadding = 2
         end
-        SpellbookMicroButton:SetPoint("BOTTOMLEFT", CharacterMicroButton, "BOTTOMRIGHT", spacing, 0)
-        SocialsMicroButton:SetPoint("BOTTOMLEFT", QuestLogMicroButton, "BOTTOMRIGHT", spacing, 0)
-        WorldMapMicroButton:SetPoint("BOTTOMLEFT", SocialsMicroButton, "BOTTOMRIGHT", spacing, 0)
-        MainMenuMicroButton:SetPoint("BOTTOMLEFT", WorldMapMicroButton, "BOTTOMRIGHT", spacing, 0)
-        HelpMicroButton:SetPoint("BOTTOMLEFT", MainMenuMicroButton, "BOTTOMRIGHT", spacing, 0)
+
+        MicroMenu:Layout()
     end)
 
     UpdateMicroButtons()
@@ -345,7 +339,7 @@ end
 function JadeUI.blizzBarMove()
 
     --Move Bars
-    --moveMicroMenu()
+    moveMicroMenu()
     --moveBagBar()
     --moveActionBars()
     --hideButtons()
