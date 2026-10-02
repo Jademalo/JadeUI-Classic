@@ -232,19 +232,13 @@ end
 
 local function moveBagBar()
     --Bag Bar
-    MainMenuBarBackpackButton:SetParent(JadeUIButtonParent)
-    moveBlizzardFrame(MainMenuBarBackpackButton, "BOTTOMRIGHT", "BOTTOMRIGHT", -7, 3, JadeUIBarArtFrame)
+    BagsBar:SetParent(JadeUIButtonParent)
+    moveBlizzardFrame(BagsBar, "BOTTOMRIGHT", "BOTTOMRIGHT", -7, 3, JadeUIBarArtFrame)
 
     if not GetCVarBool("showKeyring") then
         SetCVar("showKeyring", 1)
     end
-    KeyRingButton:SetParent(JadeUIButtonParent)
-    moveBlizzardFrame(KeyRingButton, "RIGHT", "LEFT", -5, -1, CharacterBag3Slot)
-
-    for i = 0, 3 do
-        _G["CharacterBag" .. i .. "Slot"]:SetParent(JadeUIButtonParent)
-    end
-
+    moveBlizzardFrame(KeyRingButton, "RIGHT", "LEFT", -5, -1, CharacterBag3Slot) --Move keyring down 1 from default to better line it up with everything else
 end
 
 
@@ -340,7 +334,7 @@ function JadeUI.blizzBarMove()
 
     --Move Bars
     moveMicroMenu()
-    --moveBagBar()
+    moveBagBar()
     --moveActionBars()
     --hideButtons()
     if JadeUIDB.hideKeybinds then JadeUI.HideKeybinds() end
