@@ -282,7 +282,14 @@ end
 local function movePetBar()
     PetActionBar:SetParent(JadeUIButtonParent)
     PetActionBar:SetScale(0.7)
-    moveBlizzardFrame(PetActionBar, "BOTTOM", "TOP", 34, -1, JadeUIBarTopArtFrame)
+    moveBlizzardFrame(PetActionBar, "BOTTOM", "TOP", 1.5, 1.5, JadeUIBarTopArtFrame)
+    hooksecurefunc(PetActionBar, "SetBackgroundArtShown", function(self, shown) --Hook the show function to always force it to true
+        if not shown then
+            PetActionBar:SetBackgroundArtShown(true) --https://github.com/Gethe/wow-ui-source/blob/09b9db7948abc9b9648dedaab51eb0cf3ee67b31/Interface/AddOns/Blizzard_ActionBar/Shared/PetActionBar.lua#L228
+        end
+    end)
+    PetActionBar.BackgroundArt1:ClearAllPoints()
+    PetActionBar.BackgroundArt1:SetPoint("TOPLEFT", PetActionBar, "TOPLEFT", -35, 10)
 end
 
 local function hideButtons()

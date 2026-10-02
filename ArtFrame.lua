@@ -71,10 +71,10 @@ function JadeUI.createArtFrame()
    JadeUIBarTopTexture:SetDrawLayer("BACKGROUND", 0)
 
 
-   JadeUIPetBarTexture = JadeUIBarArtFrame:CreateTexture("JadeUIPetBarTexture")
-   JadeUIPetBarTexture:SetParent(PetActionBarFrame)
-   JadeUIPetBarTexture:SetPoint("BOTTOM", PetActionBarFrame, "BOTTOM", 3, -1)
-   JadeUIPetBarTexture:SetTexture(textures.petBarTexture)
+--[[    JadeUIPetBarTexture = JadeUIBarArtFrame:CreateTexture("JadeUIPetBarTexture")
+   JadeUIPetBarTexture:SetParent(PetActionBar) --This seems to break the size of the pet bar if set to PetActionBar
+   JadeUIPetBarTexture:SetPoint("BOTTOM", PetActionBar, "BOTTOM", 3, -1)
+   JadeUIPetBarTexture:SetTexture(textures.petBarTexture) ]]
 
    JadeUIStanceBarTexture = JadeUIBarArtFrame:CreateTexture("JadeUIStanceBarTexture")
    JadeUIStanceBarTexture:SetParent(StanceBar)
