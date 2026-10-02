@@ -248,6 +248,10 @@ local function moveActionBars()
     -- Third Bar = 5 (1-5)
     -- Fourth Bar = 5 (7-9)
 
+    --Forcibly enable bars 2 and 3
+    SetActionBarToggles(1, 1)
+    MultiActionBar_Update()
+
     --Main Action Bar
     moveBlizzardFrame(MainActionBar, "LEFT", "LEFT", 11.5, -4.5, JadeUIBarTopArtFrame)
     MainActionBar:SetParent(JadeUIButtonParent)
@@ -355,7 +359,7 @@ function JadeUI.blizzBarMove()
 
     local forms = GetNumShapeshiftForms()
     if forms > 0 then
-        moveBlizzardFrame(StanceBar, "BOTTOMLEFT", "TOPLEFT", 133, -120, JadeUIBarTopArtFrame)
+        moveBlizzardFrame(StanceBar, "BOTTOMLEFT", "TOPLEFT", 15, 2.5, JadeUIBarTopArtFrame)
     end
     movePetBar()
 

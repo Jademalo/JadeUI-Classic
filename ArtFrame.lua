@@ -14,6 +14,7 @@ JadeUI.textures = {
    g13TopBarTexture = "Interface/AddOns/JadeUI-Classic/Media/background/G13Classic/G13TopBar.tga",
    g13ExpBarTexture = "Interface/AddOns/JadeUI-Classic/Media/background/G13Classic/G13XPBar.tga",
    petBarTexture = "Interface/AddOns/JadeUI-Classic/Media/background/G13Classic/PetBar.tga",
+   stanceBarTexture = "Interface/AddOns/JadeUI-Classic/Media/background/G13Classic/StanceBar/StanceBar1.tga",
    endCapGryphonTexture = "Interface/MAINMENUBAR/UI-MainMenuBar-EndCap-Dwarf",
    endCapLionTexture = "Interface/MAINMENUBAR/UI-MainMenuBar-EndCap-Human"
 }
@@ -74,6 +75,11 @@ function JadeUI.createArtFrame()
    JadeUIPetBarTexture:SetParent(PetActionBarFrame)
    JadeUIPetBarTexture:SetPoint("BOTTOM", PetActionBarFrame, "BOTTOM", 3, -1)
    JadeUIPetBarTexture:SetTexture(textures.petBarTexture)
+
+   JadeUIStanceBarTexture = JadeUIBarArtFrame:CreateTexture("JadeUIStanceBarTexture")
+   JadeUIStanceBarTexture:SetParent(StanceBar)
+   JadeUIStanceBarTexture:SetPoint("BOTTOMLEFT", StanceBar, "BOTTOMLEFT", -10, -4)
+   JadeUIStanceBarTexture:SetTexture(textures.stanceBarTexture)
 end
 
 
