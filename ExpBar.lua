@@ -52,7 +52,7 @@ function SetExpFrameLevel(value)
     MainStatusTrackingBarContainer:SetFrameLevel(value)
     statusBars.exp.StatusBar:SetFrameLevel(MainStatusTrackingBarContainer:GetFrameLevel()-1)
     --statusBars.exp.ExhaustionLevelFillBar:SetFrameLevel(MainStatusTrackingBarContainer:GetFrameLevel())
-    statusBars.exp.OverlayFrame:SetFrameLevel(MainStatusTrackingBarContainer:GetFrameLevel()+2)
+    statusBars.exp.OverlayFrame:SetFrameLevel(MainStatusTrackingBarContainer:GetFrameLevel()+32)
     statusBars.exp.ExhaustionTick:SetFrameLevel(MainStatusTrackingBarContainer:GetFrameLevel()+3)
     statusBars.exp.ExhaustionTick:SetFrameStrata("MEDIUM")
 end
@@ -61,7 +61,7 @@ function SetRepFrameLevel(value)
     SecondaryStatusTrackingBarContainer:SetFrameLevel(value)
     SecondaryStatusTrackingBarContainer:SetFrameStrata("LOW")
     statusBars.rep.StatusBar:SetFrameLevel(SecondaryStatusTrackingBarContainer:GetFrameLevel()-1)
-    statusBars.rep.OverlayFrame:SetFrameLevel(SecondaryStatusTrackingBarContainer:GetFrameLevel()+2)
+    statusBars.rep.OverlayFrame:SetFrameLevel(SecondaryStatusTrackingBarContainer:GetFrameLevel()+32)
 end
 
 --Set the frame strata for when the Exp bar is hovered over
@@ -107,7 +107,7 @@ local function moveBlizzStatusBars()
     StatusTrackingBarManager:ClearAllPoints()
     StatusTrackingBarManager:SetParent(JadeUIBar)
     StatusTrackingBarManager:SetPoint("BOTTOM", JadeUIBar, "BOTTOM", 0, 41)
-    StatusTrackingBarManager:SetWidth(588)
+    StatusTrackingBarManager:SetWidth(598)
     StatusTrackingBarManager:SetHeight(20) --Default 23
 end
 
