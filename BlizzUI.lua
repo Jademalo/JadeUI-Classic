@@ -24,8 +24,8 @@ function JadeUI.TriggerFrameHooks()
     end
 end
 
---Calculate the width of the map to offset the tooltip and bags. Pass as argument without () so the function itself is being passed and not the result 
-local function minimapWidthOffset()
+--Calculate the width of the map to offset the bags. Pass as argument without () so the function itself is being passed and not the result 
+local function bagOffset()
     local barOffset = 0
     
     if MultiBarLeft:IsShown() and MultiBarRight:IsShown() then 
@@ -35,6 +35,31 @@ local function minimapWidthOffset()
     end
     
     return -(MinimapCluster:GetWidth()*MinimapCluster:GetScale())-barOffset
+end
+
+--Calculate the width of the map to offset the tooltip.
+local function tooltipOffset()
+    return -(MinimapCluster:GetWidth()*MinimapCluster:GetScale()) 
+end
+
+--Calculate the width of the map to offset the buffs, should be offset by 10 from minimap cluster. Pass as argument without () so the function itself is being passed and not the result 
+local function buffOffset()
+    local minimapWidth = MinimapCluster:GetWidth()*MinimapCluster:GetScale()
+    if JadeUIDB.moveMinimap then
+        return -10
+    else
+        return -(minimapWidth+10)
+    end
+end
+
+--Calculate the height of the map to offset the quest frame, should be offset 27 from minimap cluster. Pass as argument without () so the function itself is being passed and not the result 
+local function questOffset()
+    local minimapExtraSize = MinimapCluster:GetHeight()-(MinimapCluster:GetHeight()*MinimapCluster:GetScale())
+    if JadeUIDB.moveMinimap then
+        return 0
+    else
+        return minimapExtraSize
+    end
 end
 
 --Get a dynamic child object
@@ -177,24 +202,15 @@ function JadeUI.MoveMinimapFunc()
     moveBlizzardFrame(MinimapCluster.MinimapContainer, "BOTTOM", "TOP", 0, 0, nil, "moveMinimap")
     --Clock
     moveBlizzardFrame(TimeManagerClockButton, "CENTER", "CENTER", 0, 68, nil, "moveMinimap")
-    --Quest Watch Frame
-    offsetBlizzardFrame(QuestWatchFrame, 0, 0, BuffFrame, "moveMinimap")
 
     --Bags
-    for i = 1, 5 do offsetBlizzardFrame(_G["ContainerFrame" .. i], minimapWidthOffset, 0, nil, "moveMinimap") end
+    for i = 1, 5 do offsetBlizzardFrame(_G["ContainerFrame" .. i], bagOffset, 0, nil, "moveMinimap") end
     --Tooltip
-    offsetBlizzardFrame(GameTooltip, (function() return -(MinimapCluster:GetWidth()*MinimapCluster:GetScale()) end), 0, nil, "moveMinimap")
-
-    --Buff Bar, should be offset by 10 from minimap cluster
-    local function buffOffset()
-        local minimapWidth = MinimapCluster:GetWidth()*MinimapCluster:GetScale()
-        if JadeUIDB.moveMinimap then
-            return -10
-        else
-            return -(minimapWidth+10)
-        end
-    end
+    offsetBlizzardFrame(GameTooltip, tooltipOffset, 0, nil, "moveMinimap")
+    --Buff Bar
     moveBlizzardFrame(BuffFrame, "TOPRIGHT", "TOPRIGHT", buffOffset, -13)
+    --QuestWatchFrame
+    offsetBlizzardFrame(UIParentRightManagedFrameContainer, 0, questOffset)
 
     ActionBarController_UpdateAll() --This makes sure that the right hand bar gets repositioned after the minimap is moved around (https://github.com/Gethe/wow-ui-source/blob/bc566bcfb0633aa29255dc1bb65b4bbed00967a4/Interface/FrameXML/ActionBarController.lua#L93)
 end
