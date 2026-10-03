@@ -243,6 +243,12 @@ end
 
 
 local function moveActionBars()
+
+    local function SetButtonNum(frame, num)
+        frame.numButtons = num
+        frame.numButtonsShowable = num --This is set to numButtons on load, but needs to be set manually here - https://github.com/Gethe/wow-ui-source/blob/09b9db7948abc9b9648dedaab51eb0cf3ee67b31/Interface/AddOns/Blizzard_ActionBar/Shared/ActionBar.lua#L4
+        frame:UpdateShownButtons() --This is necessary to run before changing the numRows because numRows uses shownButtonContainers - https://github.com/Gethe/wow-ui-source/blob/09b9db7948abc9b9648dedaab51eb0cf3ee67b31/Interface/AddOns/Blizzard_ActionBar/Shared/ActionBar.lua#L198 + https://github.com/Gethe/wow-ui-source/blob/09b9db7948abc9b9648dedaab51eb0cf3ee67b31/Interface/AddOns/Blizzard_ActionBar/Shared/ActionBar.lua#L100
+    end
     -- Top Bar = 6
     -- Second Bar = 1
     -- Third Bar = 5 (1-5)
@@ -256,24 +262,19 @@ local function moveActionBars()
     moveBlizzardFrame(MainActionBar, "LEFT", "LEFT", 11.5, -4.5, JadeUIBarTopArtFrame)
     MainActionBar:SetParent(JadeUIButtonParent)
     --Hide Bar Art
-    MainActionBar.hideBarArt = true
-    MainActionBar:RefreshBarArt(force) --https://github.com/Gethe/wow-ui-source/blob/09b9db7948abc9b9648dedaab51eb0cf3ee67b31/Interface/AddOns/Blizzard_EditMode/Shared/EditModeSystemTemplates.lua#L1011
+    MainActionBar:UpdateEndCaps(true) --https://github.com/Gethe/wow-ui-source/blob/8165d4cd6e48d606369336cc3a7977902310e81e/Interface/AddOns/Blizzard_ActionBar/Classic/MainActionBarOverrides.lua#L17
     MainActionBar.ActionBarPageNumber:Hide()
-    MainActionBar.numButtonsShowable = 7
-    MainActionBar:UpdateShownButtons()
+    SetButtonNum(MainActionBar, 7)
 
     --Bottom Left Action Bar
     MultiBarBottomLeft:SetParent(JadeUIButtonParent)
     moveBlizzardFrame(MultiBarBottomLeft, "BOTTOMLEFT", "TOPLEFT", 0, 6.5, MainActionBar)
-    MultiBarBottomLeft.numButtonsShowable = 7
-    MultiBarBottomLeft:UpdateShownButtons()
+    SetButtonNum(MultiBarBottomLeft, 7)
 
     --Bottom Right Action Bar
     MultiBarBottomRight:SetParent(JadeUIButtonParent)
     moveBlizzardFrame(MultiBarBottomRight, "TOPLEFT", "BOTTOMLEFT", 42, -6.5, MainActionBar)
-    MultiBarBottomRight.numButtons = 10
-    MultiBarBottomRight.numButtonsShowable = 10 --This is set to numButtons on load, but needs to be set manually here - https://github.com/Gethe/wow-ui-source/blob/09b9db7948abc9b9648dedaab51eb0cf3ee67b31/Interface/AddOns/Blizzard_ActionBar/Shared/ActionBar.lua#L4
-    MultiBarBottomRight:UpdateShownButtons() --This is necessary to run before changing the numRows because numRows uses shownButtonContainers - https://github.com/Gethe/wow-ui-source/blob/09b9db7948abc9b9648dedaab51eb0cf3ee67b31/Interface/AddOns/Blizzard_ActionBar/Shared/ActionBar.lua#L198 + https://github.com/Gethe/wow-ui-source/blob/09b9db7948abc9b9648dedaab51eb0cf3ee67b31/Interface/AddOns/Blizzard_ActionBar/Shared/ActionBar.lua#L100
+    SetButtonNum(MultiBarBottomRight, 10)
     MultiBarBottomRight.numRows = 2
     MultiBarBottomRight:UpdateGridLayout()
 
@@ -290,20 +291,6 @@ local function movePetBar()
     end)
     PetActionBar.BackgroundArt1:ClearAllPoints()
     PetActionBar.BackgroundArt1:SetPoint("TOPLEFT", PetActionBar, "TOPLEFT", -35, 10)
-end
-
-local function hideButtons()
-    --Main Action Bar
-    for i = 8, 12 do
-        hideBlizzardFrame(_G["ActionButton" .. i])
-        hideBlizzardFrame(_G["MultiBarBottomLeftButton" .. i])
-    end
-
-    --Bottom Right Action Bar
-    hideBlizzardFrame(MultiBarBottomRightButton6)
-    hideBlizzardFrame(MultiBarBottomRightButton7)
-    hideBlizzardFrame(MultiBarBottomRightButton11)
-    hideBlizzardFrame(MultiBarBottomRightButton12)
 end
 
 --Adapted from https://github.com/erikbrgn/AutoHideBinds/blob/main/AutoHideBinds.lua with permission
@@ -359,10 +346,7 @@ function JadeUI.blizzBarMove()
     moveMicroMenu()
     moveBagBar()
     moveActionBars()
-    --hideButtons()
     if JadeUIDB.hideKeybinds then JadeUI.HideKeybinds() end
-    hideBlizzardFrame(MainMenuBar)
-    MainMenuBar.IsShown = function() return true end --Pretend that MainMenuBar is shown so blizz code is happy (https://github.com/Gethe/wow-ui-source/blob/bc566bcfb0633aa29255dc1bb65b4bbed00967a4/Interface/FrameXML/ActionBarController.lua#L163)
 
     local forms = GetNumShapeshiftForms()
     if forms > 0 then
