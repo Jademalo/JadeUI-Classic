@@ -96,11 +96,13 @@ end
 --Functions to move Blizzard Bars
 --------------------------------------------
 
-local function forceHide(frame)
-    frame:Hide()
-    --frame.Show = function() end
-    frame.SetShown = function() end
-    --hooksecurefunc(frame, "Show", function(self) self:Hide() end)
+local function hideBlizzardFrame(frame)
+    hooksecurefunc(frame,"SetShown", function(self, shown) 
+        if shown then
+            frame:SetShown(false)
+        end
+     end)
+    frame:SetShown(false)
 end
 
 local function moveBlizzStatusBars()
@@ -157,10 +159,10 @@ end
 
 
 local function replaceBlizzExpBarTexture()
-    forceHide(MainStatusTrackingBarContainer.MainMenuBarFrameTexture1)
-    forceHide(MainStatusTrackingBarContainer.MainMenuBarFrameTexture2)
-    forceHide(MainStatusTrackingBarContainer.MainMenuBarFrameTexture3)
-    forceHide(MainStatusTrackingBarContainer.MainMenuBarFrameTexture4)
+    hideBlizzardFrame(MainStatusTrackingBarContainer.MainMenuBarFrameTexture1)
+    hideBlizzardFrame(MainStatusTrackingBarContainer.MainMenuBarFrameTexture2)
+    hideBlizzardFrame(MainStatusTrackingBarContainer.MainMenuBarFrameTexture3)
+    hideBlizzardFrame(MainStatusTrackingBarContainer.MainMenuBarFrameTexture4)
     JadeUIExpBarCover = JadeUIBar:CreateTexture("JadeUIExpBarCover")
     JadeUIExpBarCover:SetPoint("BOTTOM", MainStatusTrackingBarContainer, "BOTTOM", 0, 2)
     JadeUIExpBarCover:SetTexture(textures.g13ExpBarTexture)
@@ -169,15 +171,15 @@ local function replaceBlizzExpBarTexture()
 end
 
 local function replaceBlizzRepBarTexture()
-    forceHide(SecondaryStatusTrackingBarContainer.StandaloneFrameTexture1)
-    forceHide(SecondaryStatusTrackingBarContainer.StandaloneFrameTexture2)
-    forceHide(SecondaryStatusTrackingBarContainer.StandaloneFrameTexture3)
-    forceHide(SecondaryStatusTrackingBarContainer.StandaloneFrameTexture4)
-    forceHide(SecondaryStatusTrackingBarContainer.StandaloneFrameTexture5)
-    forceHide(SecondaryStatusTrackingBarContainer.StandaloneFrameTextureRightCapTop)
-    forceHide(SecondaryStatusTrackingBarContainer.StandaloneFrameTextureRightCapBottom)
-    forceHide(SecondaryStatusTrackingBarContainer.StandaloneFrameTextureLeftCapTop)
-    forceHide(SecondaryStatusTrackingBarContainer.StandaloneFrameTextureLeftCapBottom)
+    hideBlizzardFrame(SecondaryStatusTrackingBarContainer.StandaloneFrameTexture1)
+    hideBlizzardFrame(SecondaryStatusTrackingBarContainer.StandaloneFrameTexture2)
+    hideBlizzardFrame(SecondaryStatusTrackingBarContainer.StandaloneFrameTexture3)
+    hideBlizzardFrame(SecondaryStatusTrackingBarContainer.StandaloneFrameTexture4)
+    hideBlizzardFrame(SecondaryStatusTrackingBarContainer.StandaloneFrameTexture5)
+    hideBlizzardFrame(SecondaryStatusTrackingBarContainer.StandaloneFrameTextureRightCapTop)
+    hideBlizzardFrame(SecondaryStatusTrackingBarContainer.StandaloneFrameTextureRightCapBottom)
+    hideBlizzardFrame(SecondaryStatusTrackingBarContainer.StandaloneFrameTextureLeftCapTop)
+    hideBlizzardFrame(SecondaryStatusTrackingBarContainer.StandaloneFrameTextureLeftCapBottom)
     JadeUIRepBarCover = JadeUIBar:CreateTexture("JadeUIRepBarCover")
     JadeUIRepBarCover:SetPoint("BOTTOM", SecondaryStatusTrackingBarContainer, "BOTTOM", 0, 0)
     JadeUIRepBarCover:SetTexture(textures.g13RepBarTexture)
