@@ -94,7 +94,7 @@ local function moveBlizzardFrame(frame, setPoint, setRelativePoint, setOffsetX, 
             setRelativeTo = setRelativeTo or frame.defaultPos[2] --relativeTo is either the existing point or an arg if set manually
 
             frame:ClearAllPoints()
-            frame:SetPoint(setPoint, setRelativeTo, setRelativePoint, setOffsetX, setOffsetY) --Make sure to get the actual scaled width of the minimap
+            frame:SetPoint(setPoint, setRelativeTo, setRelativePoint, calcFunction(setOffsetX), calcFunction(setOffsetY)) --Make sure to get the actual scaled width of the minimap
         hookSet = false
     end)
 
@@ -177,21 +177,32 @@ function JadeUI.MoveMinimapFunc()
     moveBlizzardFrame(MinimapCluster.MinimapContainer, "BOTTOM", "TOP", 0, 0, nil, "moveMinimap")
     --Clock
     moveBlizzardFrame(TimeManagerClockButton, "CENTER", "CENTER", 0, 68, nil, "moveMinimap")
-    --Buff Bar
-    moveBlizzardFrame(BuffFrame, "TOPRIGHT", "TOPRIGHT", -13, -13, UIParent, "moveMinimap")
     --Quest Watch Frame
     offsetBlizzardFrame(QuestWatchFrame, 0, 0, BuffFrame, "moveMinimap")
 
     --Bags
-    for i = 1, 5 do offsetBlizzardFrame(_G["ContainerFrame" .. i], minimapWidthOffset, 0, _G["ContainerFrame" .. i]:GetParent(), "moveMinimap") end
+    for i = 1, 5 do offsetBlizzardFrame(_G["ContainerFrame" .. i], minimapWidthOffset, 0, nil, "moveMinimap") end
     --Tooltip
-    offsetBlizzardFrame(GameTooltip, (function() return -(MinimapCluster:GetWidth()*MinimapCluster:GetScale()) end), 0, GameTooltip:GetParent(), "moveMinimap")
+    offsetBlizzardFrame(GameTooltip, (function() return -(MinimapCluster:GetWidth()*MinimapCluster:GetScale()) end), 0, nil, "moveMinimap")
+
+    --Buff Bar, should be offset by 10 from minimap cluster
+    local function buffOffset()
+        local minimapWidth = MinimapCluster:GetWidth()*MinimapCluster:GetScale()
+        print(minimapWidth)
+        if JadeUIDB.moveMinimap then
+            return -10
+        else
+            return -(minimapWidth+10)
+        end
+    end
+    moveBlizzardFrame(BuffFrame, "TOPRIGHT", "TOPRIGHT", buffOffset, -13)
 
     ActionBarController_UpdateAll() --This makes sure that the right hand bar gets repositioned after the minimap is moved around (https://github.com/Gethe/wow-ui-source/blob/bc566bcfb0633aa29255dc1bb65b4bbed00967a4/Interface/FrameXML/ActionBarController.lua#L93)
 end
 
 function JadeUI.MinimapScaleFunc()
     MinimapCluster:SetScale(JadeUIDB.minimapScaleFactor)
+    JadeUI.TriggerFrameHooks()
     ActionBarController_UpdateAll() --This makes sure that the right hand bar gets repositioned after the minimap is moved around (https://github.com/Gethe/wow-ui-source/blob/bc566bcfb0633aa29255dc1bb65b4bbed00967a4/Interface/FrameXML/ActionBarController.lua#L93)
 end
 
