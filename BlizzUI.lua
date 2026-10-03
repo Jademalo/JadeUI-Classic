@@ -183,9 +183,9 @@ function JadeUI.MoveMinimapFunc()
     offsetBlizzardFrame(QuestWatchFrame, 0, 0, BuffFrame, "moveMinimap")
 
     --Bags
-    for i = 1, 5 do offsetBlizzardFrame(_G["ContainerFrame" .. i], minimapWidthOffset, 0) end
+    for i = 1, 5 do offsetBlizzardFrame(_G["ContainerFrame" .. i], minimapWidthOffset, 0, _G["ContainerFrame" .. i]:GetParent(), "moveMinimap") end
     --Tooltip
-    offsetBlizzardFrame(GameTooltip, minimapWidthOffset, 0)
+    offsetBlizzardFrame(GameTooltip, (function() return -(MinimapCluster:GetWidth()*MinimapCluster:GetScale()) end), 0, GameTooltip:GetParent(), "moveMinimap")
 
     ActionBarController_UpdateAll() --This makes sure that the right hand bar gets repositioned after the minimap is moved around (https://github.com/Gethe/wow-ui-source/blob/bc566bcfb0633aa29255dc1bb65b4bbed00967a4/Interface/FrameXML/ActionBarController.lua#L93)
 end
@@ -255,8 +255,8 @@ local function moveActionBars()
     -- Fourth Bar = 5 (7-9)
 
     --Forcibly enable bars 2 and 3
-    SetActionBarToggles(1, 1)
-    MultiActionBar_Update()
+    --SetActionBarToggles(1, 1, 1, 1)
+    --MultiActionBar_Update()
 
     --Main Action Bar
     moveBlizzardFrame(MainActionBar, "LEFT", "LEFT", 11.5, -4.5, JadeUIBarTopArtFrame)
@@ -327,10 +327,8 @@ function JadeUI.blizzUIMove()
     moveBlizzardFrame(DurabilityFrame, "LEFT", "RIGHT", 0, 23, JadeUIBarTopArtFrame) --Durability Frame
 
     --verticalMultiBarFix()
-    --if JadeUIDB.moveUnitFrames then JadeUI.moveUnitFramesFunc() end --Unit Frames/ff
     JadeUI.moveUnitFramesFunc()
     JadeUI.MinimapScaleFunc() --Minimap Scale. Needs to be above Minimap since Minimap includes scale calcs.
-    --if JadeUIDB.moveMinimap then JadeUI.MoveMinimapFunc() end --Minimap
     JadeUI.MoveMinimapFunc()
     JadeUI.ClockFlipFunc()
 
