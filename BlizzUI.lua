@@ -188,7 +188,6 @@ function JadeUI.MoveMinimapFunc()
     --Buff Bar, should be offset by 10 from minimap cluster
     local function buffOffset()
         local minimapWidth = MinimapCluster:GetWidth()*MinimapCluster:GetScale()
-        print(minimapWidth)
         if JadeUIDB.moveMinimap then
             return -10
         else
@@ -207,11 +206,14 @@ function JadeUI.MinimapScaleFunc()
 end
 
 function JadeUI.ClockFlipFunc()
-    if JadeUIDB.moveMinimap then
-        GetIndexedRegion(TimeManagerClockButton, 1):SetTexCoord(0.015625, 0.8125, 0.390625, 0.015625)
-    else
-        GetIndexedRegion(TimeManagerClockButton, 1):SetTexCoord(0.015625, 0.8125, 0.015625, 0.390625)
-    end
+    hooksecurefunc(MinimapCluster, "SetPoint", function()
+        if JadeUIDB.moveMinimap then
+            GetIndexedRegion(TimeManagerClockButton, 1):SetTexCoord(0.015625, 0.8125, 0.390625, 0.015625)
+        else
+            GetIndexedRegion(TimeManagerClockButton, 1):SetTexCoord(0.015625, 0.8125, 0.015625, 0.390625)
+        end
+    end)
+    JadeUI.TriggerFrameHooks()
 end
 
 

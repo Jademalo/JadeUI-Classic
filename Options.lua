@@ -149,7 +149,6 @@ local function buildOptions()
             JadeUIDB.moveMinimap = minimapCheckbox:GetChecked()
             JadeUI.TriggerFrameHooks()
             ActionBarController_UpdateAll()
-            JadeUI.ClockFlipFunc()
         end)
 
         --Checkbox for taking a screenshot on level up
