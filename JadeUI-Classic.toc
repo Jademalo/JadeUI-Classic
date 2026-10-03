@@ -19,7 +19,7 @@
 
 ## Core ##
 Core.lua
-BlizzUI.lua
-ArtFrame.lua
-ExpBar.lua
 Options.lua
+[Family]\BlizzUI.lua
+[Family]\ArtFrame.lua [AllowLoadGameType classic]
+[Family]\ExpBar.lua [AllowLoadGameType classic]
