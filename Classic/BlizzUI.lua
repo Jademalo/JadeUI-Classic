@@ -2,28 +2,10 @@
 --Variables
 --------------------------------------------
 local addonName, JadeUI = ...
-local hookTable = {}
 
 --------------------------------------------
 --Functions
 --------------------------------------------
---If the passed variable is a function calculate it, else return the variable.
-local function calcFunction(var)
-    if type(var) == "function" then --Calculate functions for the offsets if we're being passed one
-        return var()
-    else
-        return var
-    end
-end
-
---Trigger the hook for every frame by running SetPoint with their default position
-function JadeUI.TriggerFrameHooks()
-    for _, frame in pairs(hookTable) do
-        frame:ClearAllPoints()
-        frame:SetPoint(SafeUnpack(frame.defaultPos))
-    end
-end
-
 --Calculate the width of the map to offset the bags. Pass as argument without () so the function itself is being passed and not the result 
 local function bagOffset()
     local barOffset = 0
@@ -99,76 +81,17 @@ end
 
 
 --------------------------------------------
---Hooks
---------------------------------------------
---Move a frame by hooking its SetPoint and overriding it's position every time it tries to move
-local function moveBlizzardFrame(frame, setPoint, setRelativePoint, setOffsetX, setOffsetY, setRelativeTo, savedVar)
-    local hookSet = false
-    table.insert(hookTable, frame) --Add any frame with a hook to the table of hooked frames (This adds the pointer to the table, not a copy)
-    frame.defaultPos = {frame:GetPoint()} --Get the default position of the frame before the hook started to mess with things
-
-    hooksecurefunc(frame, "SetPoint", function()
-        if hookSet then return end --Don't infinitely fire from itself
-
-        if savedVar then
-            if not JadeUIDB[savedVar] then return end
-        end
-
-        hookSet = true
-            --local _,oldAnchor = frame:GetPoint()
-            setRelativeTo = setRelativeTo or frame.defaultPos[2] --relativeTo is either the existing point or an arg if set manually
-
-            frame:ClearAllPoints()
-            frame:SetPoint(setPoint, setRelativeTo, setRelativePoint, calcFunction(setOffsetX), calcFunction(setOffsetY)) --Make sure to get the actual scaled width of the minimap
-        hookSet = false
-    end)
-
-    frame:SetPoint(frame:GetPoint()) --Fire SetPoint to fire the hook with the original frame data to prevent the hook from having bad data
-end
-
---Offset a frame by hooking its SetPoint and adding the offset to its position
-local function offsetBlizzardFrame(frame, setOffsetX, setOffsetY, setRelativeTo, savedVar)
-    local hookSet = false
-
-    hooksecurefunc(frame, "SetPoint", function()
-        if hookSet then return end --Don't infinitely fire from itself
-        if savedVar then
-            if not JadeUIDB[savedVar] then return end
-        end
-
-        local basePos = {frame:GetPoint()} --Back up the current position of the frame
-        if (basePos[2] ~= UIParent) and (not setRelativeTo) then return end --Hacky fix for item tooltips and secondary bags being offset, while letting quest frame still move. Needs improvement.
-
-        local offsetXCalc = basePos[4]+calcFunction(setOffsetX)
-        local offsetYCalc = basePos[5]+calcFunction(setOffsetY)
-        local setRelativeToOut = setRelativeTo or basePos[2] --If no new parent is defined, use the old one. Use a new variable so as not to pollute setRelativeTo and have subsequent runs of the hook get stuck on the first relative used
-
-        hookSet = true
-            frame:ClearAllPoints()
-            frame:SetPoint(basePos[1], setRelativeToOut, basePos[3], offsetXCalc, offsetYCalc) --Make sure to get the actual scaled width of the minimap
-        hookSet = false
-    end)
-end
-
---Forcibly hide a frame by hooking Show and forcing it to hide whenever it tries
-local function hideBlizzardFrame(frame)
-    hooksecurefunc(frame,"Show", function() frame:Hide() end)
-    frame:Hide()
-end
-
-
---------------------------------------------
 --Functions to move basic Blizzard Frames
 --------------------------------------------
 function JadeUI.moveUnitFramesFunc()
     --Player Frame
-    moveBlizzardFrame(PlayerFrame, "BOTTOMLEFT", "TOPLEFT", 0, 0, JadeUIMainFrame, "moveUnitFrames")
+    JadeUI.MoveBlizzardFrame(PlayerFrame, "BOTTOMLEFT", "TOPLEFT", 0, 0, JadeUIMainFrame, "moveUnitFrames")
     --Target Frame
-    moveBlizzardFrame(TargetFrame, "BOTTOMRIGHT", "TOPRIGHT", 0, 0, JadeUIMainFrame, "moveUnitFrames")
+    JadeUI.MoveBlizzardFrame(TargetFrame, "BOTTOMRIGHT", "TOPRIGHT", 0, 0, JadeUIMainFrame, "moveUnitFrames")
 
-    if not JadeUI.isVanilla then
+    if not JadeUI.isClassic then
         --Focus Frame
-        moveBlizzardFrame(FocusFrame, "BOTTOMLEFT", "BOTTOM", - 163, 250, nil, "moveUnitFrames")
+        JadeUI.MoveBlizzardFrame(FocusFrame, "BOTTOMLEFT", "BOTTOM", - 163, 250, nil, "moveUnitFrames")
     end
 end
 
@@ -196,21 +119,21 @@ end
 
 function JadeUI.MoveMinimapFunc()
     --Minimap
-    moveBlizzardFrame(MinimapCluster, "BOTTOMRIGHT", "BOTTOMRIGHT", 0, 0, nil, "moveMinimap")
+    JadeUI.MoveBlizzardFrame(MinimapCluster, "BOTTOMRIGHT", "BOTTOMRIGHT", 0, 0, nil, "moveMinimap")
     --Minimap Zone Info
-    moveBlizzardFrame(MinimapCluster.BorderTop, "BOTTOMRIGHT", "BOTTOMRIGHT", 0, 0, nil, "moveMinimap")
-    moveBlizzardFrame(MinimapCluster.MinimapContainer, "BOTTOM", "TOP", 0, 0, nil, "moveMinimap")
+    JadeUI.MoveBlizzardFrame(MinimapCluster.BorderTop, "BOTTOMRIGHT", "BOTTOMRIGHT", 0, 0, nil, "moveMinimap")
+    JadeUI.MoveBlizzardFrame(MinimapCluster.MinimapContainer, "BOTTOM", "TOP", 0, 0, nil, "moveMinimap")
     --Clock
-    moveBlizzardFrame(TimeManagerClockButton, "CENTER", "CENTER", 0, 68, nil, "moveMinimap")
+    JadeUI.MoveBlizzardFrame(TimeManagerClockButton, "CENTER", "CENTER", 0, 68, nil, "moveMinimap")
 
     --Bags
-    for i = 1, 5 do offsetBlizzardFrame(_G["ContainerFrame" .. i], bagOffset, 0, nil, "moveMinimap") end
+    for i = 1, 5 do JadeUI.OffsetBlizzardFrame(_G["ContainerFrame" .. i], bagOffset, 0, nil, "moveMinimap") end
     --Tooltip
-    offsetBlizzardFrame(GameTooltip, tooltipOffset, 0, nil, "moveMinimap")
+    JadeUI.OffsetBlizzardFrame(GameTooltip, tooltipOffset, 0, nil, "moveMinimap")
     --Buff Bar
-    moveBlizzardFrame(BuffFrame, "TOPRIGHT", "TOPRIGHT", buffOffset, -13)
+    JadeUI.MoveBlizzardFrame(BuffFrame, "TOPRIGHT", "TOPRIGHT", buffOffset, -13)
     --QuestWatchFrame
-    offsetBlizzardFrame(UIParentRightManagedFrameContainer, 0, questOffset)
+    JadeUI.OffsetBlizzardFrame(UIParentRightManagedFrameContainer, 0, questOffset)
 
     ActionBarController_UpdateAll() --This makes sure that the right hand bar gets repositioned after the minimap is moved around (https://github.com/Gethe/wow-ui-source/blob/bc566bcfb0633aa29255dc1bb65b4bbed00967a4/Interface/FrameXML/ActionBarController.lua#L93)
 end
@@ -262,12 +185,12 @@ end
 local function moveBagBar()
     --Bag Bar
     BagsBar:SetParent(JadeUIButtonParent)
-    moveBlizzardFrame(BagsBar, "BOTTOMRIGHT", "BOTTOMRIGHT", -7, 3, JadeUIBarArtFrame)
+    JadeUI.MoveBlizzardFrame(BagsBar, "BOTTOMRIGHT", "BOTTOMRIGHT", -7, 3, JadeUIBarArtFrame)
 
     if not GetCVarBool("showKeyring") then
         SetCVar("showKeyring", 1)
     end
-    moveBlizzardFrame(KeyRingButton, "RIGHT", "LEFT", -5, -1, CharacterBag3Slot) --Move keyring down 1 from default to better line it up with everything else
+    JadeUI.MoveBlizzardFrame(KeyRingButton, "RIGHT", "LEFT", -5, -1, CharacterBag3Slot) --Move keyring down 1 from default to better line it up with everything else
 end
 
 
@@ -288,7 +211,7 @@ local function moveActionBars()
     --MultiActionBar_Update()
 
     --Main Action Bar
-    moveBlizzardFrame(MainActionBar, "LEFT", "LEFT", 11.5, -4.5, JadeUIBarTopArtFrame)
+    JadeUI.MoveBlizzardFrame(MainActionBar, "LEFT", "LEFT", 11.5, -4.5, JadeUIBarTopArtFrame)
     MainActionBar:SetParent(JadeUIButtonParent)
     --Hide Bar Art
     MainActionBar:UpdateEndCaps(true) --https://github.com/Gethe/wow-ui-source/blob/8165d4cd6e48d606369336cc3a7977902310e81e/Interface/AddOns/Blizzard_ActionBar/Classic/MainActionBarOverrides.lua#L17
@@ -297,12 +220,12 @@ local function moveActionBars()
 
     --Bottom Left Action Bar
     MultiBarBottomLeft:SetParent(JadeUIButtonParent)
-    moveBlizzardFrame(MultiBarBottomLeft, "BOTTOMLEFT", "TOPLEFT", 0, 6.5, MainActionBar)
+    JadeUI.MoveBlizzardFrame(MultiBarBottomLeft, "BOTTOMLEFT", "TOPLEFT", 0, 6.5, MainActionBar)
     SetButtonNum(MultiBarBottomLeft, 7)
 
     --Bottom Right Action Bar
     MultiBarBottomRight:SetParent(JadeUIButtonParent)
-    moveBlizzardFrame(MultiBarBottomRight, "TOPLEFT", "BOTTOMLEFT", 42, -6.5, MainActionBar)
+    JadeUI.MoveBlizzardFrame(MultiBarBottomRight, "TOPLEFT", "BOTTOMLEFT", 42, -6.5, MainActionBar)
     SetButtonNum(MultiBarBottomRight, 10)
     MultiBarBottomRight.numRows = 2
     MultiBarBottomRight:UpdateGridLayout()
@@ -312,7 +235,7 @@ end
 local function movePetBar()
     PetActionBar:SetParent(JadeUIButtonParent)
     PetActionBar:SetScale(0.7)
-    moveBlizzardFrame(PetActionBar, "BOTTOM", "TOP", 1.5, 1.5, JadeUIBarTopArtFrame)
+    JadeUI.MoveBlizzardFrame(PetActionBar, "BOTTOM", "TOP", 1.5, 1.5, JadeUIBarTopArtFrame)
     hooksecurefunc(PetActionBar, "SetBackgroundArtShown", function(self, shown) --Hook the show function to always force it to true
         if not shown then
             PetActionBar:SetBackgroundArtShown(true) --https://github.com/Gethe/wow-ui-source/blob/09b9db7948abc9b9648dedaab51eb0cf3ee67b31/Interface/AddOns/Blizzard_ActionBar/Shared/PetActionBar.lua#L228
@@ -351,9 +274,9 @@ end
 --------------------------------------------
 --Move various Blizzard frames
 function JadeUI.blizzUIMove()
-    moveBlizzardFrame(PlayerCastingBarFrame,"BOTTOM", "BOTTOM", 0, 248) --Casting Bar
-    moveBlizzardFrame(FramerateLabel, "BOTTOM", "BOTTOM", -190, 85) --Framerate
-    moveBlizzardFrame(DurabilityFrame, "LEFT", "RIGHT", 0, 23, JadeUIBarTopArtFrame) --Durability Frame
+    JadeUI.MoveBlizzardFrame(PlayerCastingBarFrame,"BOTTOM", "BOTTOM", 0, 248) --Casting Bar
+    JadeUI.MoveBlizzardFrame(FramerateLabel, "BOTTOM", "BOTTOM", -190, 85) --Framerate
+    JadeUI.MoveBlizzardFrame(DurabilityFrame, "LEFT", "RIGHT", 0, 23, JadeUIBarTopArtFrame) --Durability Frame
 
     --verticalMultiBarFix()
     JadeUI.moveUnitFramesFunc()
@@ -361,8 +284,8 @@ function JadeUI.blizzUIMove()
     JadeUI.MoveMinimapFunc()
     JadeUI.ClockFlipFunc()
 
-    if JadeUI.isVanilla then 
-        moveBlizzardFrame(TutorialFrameParent,"BOTTOM", "BOTTOM", 0, 300) --Tutorial Frame
+    if JadeUI.isClassic then 
+        JadeUI.MoveBlizzardFrame(TutorialFrameParent,"BOTTOM", "BOTTOM", 0, 300) --Tutorial Frame
     end
 end
 
@@ -377,7 +300,7 @@ function JadeUI.blizzBarMove()
 
     local forms = GetNumShapeshiftForms()
     if forms > 0 then
-        moveBlizzardFrame(StanceBar, "BOTTOMLEFT", "TOPLEFT", 15, 2.5, JadeUIBarTopArtFrame)
+        JadeUI.MoveBlizzardFrame(StanceBar, "BOTTOMLEFT", "TOPLEFT", 15, 2.5, JadeUIBarTopArtFrame)
     end
     movePetBar()
 
