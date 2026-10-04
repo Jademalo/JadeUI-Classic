@@ -166,7 +166,8 @@ local function moveMicroMenu()
     --Micro Menu
     hooksecurefunc("UpdateMicroButtons", function()
         MicroMenuContainer:SetParent(JadeUIButtonParent)
-        MicroMenuContainer:SetPoint("BOTTOMLEFT", JadeUIBarArtFrame, "BOTTOMLEFT", 11, 2)
+        MicroMenuContainer:ClearAllPoints()
+        MicroMenuContainer:SetPoint("BOTTOMLEFT", JadeUIMainFrame, "BOTTOM", -288, 2)
 
         if JadeUIDB.showTalents == true or C_SpecializationInfo.CanPlayerUseTalentSpecUI() then --https://github.com/Gethe/wow-ui-source/blob/09b9db7948abc9b9648dedaab51eb0cf3ee67b31/Interface/AddOns/Blizzard_MicroMenu/Classic/MainMenuBarMicroButtons.lua#L594
             TalentMicroButton:SetShown(JadeUIDB.showTalents or C_SpecializationInfo.CanPlayerUseTalentSpecUI())
@@ -185,7 +186,7 @@ end
 local function moveBagBar()
     --Bag Bar
     BagsBar:SetParent(JadeUIButtonParent)
-    JadeUI.MoveBlizzardFrame(BagsBar, "BOTTOMRIGHT", "BOTTOMRIGHT", -7, 3, JadeUIBarArtFrame)
+    JadeUI.MoveBlizzardFrame(BagsBar, "BOTTOMLEFT", "BOTTOM", 64, 3, JadeUIMainFrame)
 
     if not GetCVarBool("showKeyring") then
         SetCVar("showKeyring", 1)
@@ -200,6 +201,7 @@ local function moveActionBars()
         frame.numButtons = num
         frame.numButtonsShowable = num --This is set to numButtons on load, but needs to be set manually here - https://github.com/Gethe/wow-ui-source/blob/09b9db7948abc9b9648dedaab51eb0cf3ee67b31/Interface/AddOns/Blizzard_ActionBar/Shared/ActionBar.lua#L4
         frame:UpdateShownButtons() --This is necessary to run before changing the numRows because numRows uses shownButtonContainers - https://github.com/Gethe/wow-ui-source/blob/09b9db7948abc9b9648dedaab51eb0cf3ee67b31/Interface/AddOns/Blizzard_ActionBar/Shared/ActionBar.lua#L198 + https://github.com/Gethe/wow-ui-source/blob/09b9db7948abc9b9648dedaab51eb0cf3ee67b31/Interface/AddOns/Blizzard_ActionBar/Shared/ActionBar.lua#L100
+        frame:UpdateGridLayout()
     end
     -- Top Bar = 6
     -- Second Bar = 1
@@ -211,7 +213,7 @@ local function moveActionBars()
     --MultiActionBar_Update()
 
     --Main Action Bar
-    JadeUI.MoveBlizzardFrame(MainActionBar, "LEFT", "LEFT", 11.5, -4.5, JadeUIBarTopArtFrame)
+    JadeUI.MoveBlizzardFrame(MainActionBar, "CENTER", "CENTER", -1, 2, JadeUIMainFrame)
     MainActionBar:SetParent(JadeUIButtonParent)
     --Hide Bar Art
     MainActionBar:UpdateEndCaps(true) --https://github.com/Gethe/wow-ui-source/blob/8165d4cd6e48d606369336cc3a7977902310e81e/Interface/AddOns/Blizzard_ActionBar/Classic/MainActionBarOverrides.lua#L17
@@ -220,22 +222,24 @@ local function moveActionBars()
 
     --Bottom Left Action Bar
     MultiBarBottomLeft:SetParent(JadeUIButtonParent)
-    JadeUI.MoveBlizzardFrame(MultiBarBottomLeft, "BOTTOMLEFT", "TOPLEFT", 0, 6.5, MainActionBar)
+    JadeUI.MoveBlizzardFrame(MultiBarBottomLeft, "BOTTOM", "TOP", 0, 6.5, MainActionBar)
     SetButtonNum(MultiBarBottomLeft, 7)
 
     --Bottom Right Action Bar
     MultiBarBottomRight:SetParent(JadeUIButtonParent)
-    JadeUI.MoveBlizzardFrame(MultiBarBottomRight, "TOPLEFT", "BOTTOMLEFT", 42, -6.5, MainActionBar)
+    JadeUI.MoveBlizzardFrame(MultiBarBottomRight, "TOP", "BOTTOM", 0, -6.5, MainActionBar)
     SetButtonNum(MultiBarBottomRight, 10)
     MultiBarBottomRight.numRows = 2
     MultiBarBottomRight:UpdateGridLayout()
+    JadeUI.HideBlizzardFrame(MultiBarBottomRightButtonContainer1)
+    JadeUI.HideBlizzardFrame(MultiBarBottomRightButtonContainer5)
 
 end
 
 local function movePetBar()
     PetActionBar:SetParent(JadeUIButtonParent)
     PetActionBar:SetScale(0.7)
-    JadeUI.MoveBlizzardFrame(PetActionBar, "BOTTOM", "TOP", 1.5, 1.5, JadeUIBarTopArtFrame)
+    JadeUI.MoveBlizzardFrame(PetActionBar, "BOTTOM", "TOP", -1.5, -41, JadeUIMainFrame)
     hooksecurefunc(PetActionBar, "SetBackgroundArtShown", function(self, shown) --Hook the show function to always force it to true
         if not shown then
             PetActionBar:SetBackgroundArtShown(true) --https://github.com/Gethe/wow-ui-source/blob/09b9db7948abc9b9648dedaab51eb0cf3ee67b31/Interface/AddOns/Blizzard_ActionBar/Shared/PetActionBar.lua#L228
@@ -276,7 +280,7 @@ end
 function JadeUI.blizzUIMove()
     JadeUI.MoveBlizzardFrame(PlayerCastingBarFrame,"BOTTOM", "BOTTOM", 0, 248) --Casting Bar
     JadeUI.MoveBlizzardFrame(FramerateLabel, "BOTTOM", "BOTTOM", -190, 85) --Framerate
-    JadeUI.MoveBlizzardFrame(DurabilityFrame, "LEFT", "RIGHT", 0, 23, JadeUIBarTopArtFrame) --Durability Frame
+    JadeUI.MoveBlizzardFrame(DurabilityFrame, "LEFT", "RIGHT", 0, 23, JadeUIMainFrame) --Durability Frame
 
     --verticalMultiBarFix()
     JadeUI.moveUnitFramesFunc()
@@ -300,7 +304,7 @@ function JadeUI.blizzBarMove()
 
     local forms = GetNumShapeshiftForms()
     if forms > 0 then
-        JadeUI.MoveBlizzardFrame(StanceBar, "BOTTOMLEFT", "TOPLEFT", 15, 2.5, JadeUIBarTopArtFrame)
+        JadeUI.MoveBlizzardFrame(StanceBar, "BOTTOMLEFT", "TOP", -141.5, -27.5, JadeUIMainFrame)
     end
     movePetBar()
 
