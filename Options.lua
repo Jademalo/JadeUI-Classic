@@ -164,6 +164,22 @@ local function minimapScaleSlider(category)
 
 end
 
+local function offsetStanceBarCheckbox(category)
+
+    local variable = "offsetStanceBar"
+    local name = "Offset Stance Bar"
+    local description = "Move the Stance Bar to the left hand edge of the main frame"
+    local defaultValue = false
+
+    local setting = Settings.RegisterAddOnSetting(category, addonName.."_"..variable, variable, JadeUIDB, type(defaultValue), name, defaultValue)
+    Settings.CreateCheckbox(category, setting, description)
+
+    Settings.GetSetting(addonName.."_"..variable):SetValueChangedCallback(function()
+        JadeUI.TriggerFrameHooks()
+    end)
+
+end
+
 --------------------------------------------------------------------------------
 --Event Handler
 --------------------------------------------------------------------------------
@@ -180,6 +196,7 @@ optionsPanel:SetScript("OnEvent", function(self, event, arg1, arg2)
         --Add Items
         if JadeUI.isClassic then
             talentCheckbox(category)
+            offsetStanceBarCheckbox(category)
         end
         unitFramesCheckbox(category)
         hideKeybindsCheckbox(category)

@@ -249,6 +249,33 @@ local function movePetBar()
     PetActionBar.BackgroundArt1:SetPoint("TOPLEFT", PetActionBar, "TOPLEFT", -35, 10)
 end
 
+local function moveStanceBar()
+
+    local hookSet = false
+    table.insert(JadeUI.hookTable, StanceBar) --Add any frame with a hook to the table of hooked frames (This adds the pointer to the table, not a copy)
+    StanceBar.defaultPos = {StanceBar:GetPoint()} --Get the default position of the frame before the hook started to mess with things
+
+    hooksecurefunc(StanceBar, "SetPoint", function()
+        if hookSet then return end --Don't infinitely fire from itself
+
+        if JadeUIDB.offsetStanceBar then
+            hookSet = true
+            StanceBar:ClearAllPoints()
+            StanceBar:SetPoint("BOTTOMLEFT", JadeUIMainFrame, "TOP", -141.5, -27.5)
+            hookSet = false
+        else
+            hookSet = true
+            StanceBar:ClearAllPoints()
+            StanceBar:SetPoint("BOTTOM", JadeUIMainFrame, "TOP", -1.5, -27.5)
+            hookSet = false
+        end
+    end)
+
+    StanceBar:SetPoint(StanceBar:GetPoint()) --Fire SetPoint to fire the hook with the original frame data to prevent the hook from having bad data
+    hooksecurefunc("GetNumShapeshiftForms", function() StanceBar:SetPoint(StanceBar:GetPoint()) end) --Update the position if the UI ever checks the number of shapeshift forms, which should happen on learning a new one
+
+end
+
 --Adapted from https://github.com/erikbrgn/AutoHideBinds/blob/main/AutoHideBinds.lua with permission
 function JadeUI.HideKeybinds()
     local bars = {
@@ -302,10 +329,7 @@ function JadeUI.blizzBarMove()
     moveActionBars()
     if JadeUIDB.hideKeybinds then JadeUI.HideKeybinds() end
 
-    local forms = GetNumShapeshiftForms()
-    if forms > 0 then
-        JadeUI.MoveBlizzardFrame(StanceBar, "BOTTOMLEFT", "TOP", -141.5, -27.5, JadeUIMainFrame)
-    end
+    moveStanceBar()
     movePetBar()
 
     --Other Variables
