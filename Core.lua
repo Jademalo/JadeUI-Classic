@@ -143,20 +143,22 @@ JadeUIBar:SetScript("OnEvent", function(self, event, arg1, arg2)
 
         --Move various Blizzard frames
         JadeUI.blizzUIMove()
+        if not C_AddOns.IsAddOnLoaded("Bartender4") then
+            JadeUIButtonParent = CreateFrame("Frame", "JadeUIButtonParent", JadeUIBar)
+            JadeUI.blizzBarMove() --Move the Blizzard Action Bars
+        end
 
         if JadeUI.isClassic then
             JadeUI.createArtFrame() --Create the main art frame for the bars
             JadeUI.setEndstop(JadeUIDB.endstopType) --Set the endstop type based on the saved variable
 
-            --Move Blizzard Bars if not using Bartender
-            if not C_AddOns.IsAddOnLoaded("Bartender4") then
-                JadeUIButtonParent = CreateFrame("Frame", "JadeUIButtonParent", JadeUIBar)
-                JadeUI.blizzBarMove() --Move the Blizzard Action Bars
-                JadeUI.expBar.BlizzExpBarMove()
-                JadeUI.expBar.BlizzRepBarMove()
-                JadeUIBar:RegisterEvent("UPDATE_FACTION") --Register the update faction event to run Rep Bar Move after. For some reason if this isn't here, I get an error about JadeUIButtonParent
-                JadeUI.expBar.showMaxCover()
-            else
+            --Move Blizzard status bars if not using Bartender
+            JadeUI.expBar.BlizzExpBarMove()
+            JadeUI.expBar.BlizzRepBarMove()
+            JadeUIBar:RegisterEvent("UPDATE_FACTION") --Register the update faction event to run Rep Bar Move after. For some reason if this isn't here, I get an error about JadeUIButtonParent
+            JadeUI.expBar.showMaxCover()
+
+            if C_AddOns.IsAddOnLoaded("Bartender4") then
                 JadeUI.bartenderFix() --Fix some issues with Bartender
             end
 

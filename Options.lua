@@ -178,10 +178,14 @@ optionsPanel:SetScript("OnEvent", function(self, event, arg1, arg2)
         Settings.RegisterAddOnCategory(category)
 
         --Add Items
-        talentCheckbox(category)
+        if JadeUI.isClassic then
+            talentCheckbox(category)
+        end
         unitFramesCheckbox(category)
         hideKeybindsCheckbox(category)
-        endstopDropDown(category)
+        if JadeUI.isClassic then
+            endstopDropDown(category)
+        end
         minimapCheckbox(category)
         minimapScaleSlider(category)
         levelScreenshotCheckbox(category)
