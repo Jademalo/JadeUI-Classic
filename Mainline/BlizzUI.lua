@@ -93,9 +93,9 @@ function UpdateDividers(self)
 	self.HorizontalDividersPool:ReleaseAll();
 	self.VerticalDividersPool:ReleaseAll();
 
---[[ 	if self.hideBarArt or self.numRows > 1 or self.buttonPadding > self.minButtonPadding then
+	if self.hideBarArt or self.numRows > 2 or self.buttonPadding > self.minButtonPadding then
 		return;
-	end ]]
+	end
 
 	local dividersPool = self.isHorizontal and self.HorizontalDividersPool or self.VerticalDividersPool;
 	local wasLastButtonShown = false;
@@ -148,7 +148,7 @@ function JadeUI.moveUnitFramesFunc()
     --Target Frame
     JadeUI.MoveBlizzardFrame(TargetFrame, "BOTTOMRIGHT", "TOPRIGHT", 0, 0, JadeUIMainFrame, "moveUnitFrames")
     --Focus Frame
-    JadeUI.MoveBlizzardFrame(FocusFrame, "BOTTOMLEFT", "BOTTOM", - 163, 250, nil, "moveUnitFrames")
+    JadeUI.MoveBlizzardFrame(FocusFrame, "BOTTOMLEFT", "TOPRIGHT", -26, -26, PlayerFrame, "moveUnitFrames")
 end
 
 --Fixes for the vertical multi bars to have them properly react to the minimap's position
@@ -201,9 +201,6 @@ function JadeUI.MinimapScaleFunc()
 end
 
 
-
-
-
 --------------------------------------------
 --Functions to move Blizzard Action Bars
 --------------------------------------------
@@ -212,12 +209,8 @@ local function moveMicroMenu()
     hooksecurefunc("UpdateMicroButtons", function()
         MicroMenuContainer:SetParent(JadeUIButtonParent)
         MicroMenuContainer:SetPoint("BOTTOMLEFT", JadeUIBar, "BOTTOMLEFT", 15, 5)
-
-        --MicroMenu.childXPadding = 2
-
         MicroMenu:Layout()
     end)
-
     UpdateMicroButtons()
 end
 
@@ -230,7 +223,6 @@ local function moveBagBar()
     if not GetCVarBool("showKeyring") then
         SetCVar("showKeyring", 1)
     end
-    --JadeUI.MoveBlizzardFrame(KeyRingButton, "RIGHT", "LEFT", -5, -1, CharacterBag3Slot) --Move keyring down 1 from default to better line it up with everything else
 end
 
 
@@ -291,15 +283,12 @@ end
 
 local function movePetBar()
     PetActionBar:SetParent(JadeUIButtonParent)
-    PetActionBar:SetScale(0.7)
-    JadeUI.MoveBlizzardFrame(PetActionBar, "BOTTOM", "TOP", 1.5, 1.5, JadeUIBar)
+    JadeUI.MoveBlizzardFrame(PetActionBar, "BOTTOM", "TOP", 1.5, 1.5, MultiBarBottomLeft)
     hooksecurefunc(PetActionBar, "SetBackgroundArtShown", function(self, shown) --Hook the show function to always force it to true
         if not shown then
             PetActionBar:SetBackgroundArtShown(true) --https://github.com/Gethe/wow-ui-source/blob/09b9db7948abc9b9648dedaab51eb0cf3ee67b31/Interface/AddOns/Blizzard_ActionBar/Shared/PetActionBar.lua#L228
         end
     end)
-    --PetActionBar.BackgroundArt1:ClearAllPoints()
-    --PetActionBar.BackgroundArt1:SetPoint("TOPLEFT", PetActionBar, "TOPLEFT", -35, 10)
 end
 
 --Adapted from https://github.com/erikbrgn/AutoHideBinds/blob/main/AutoHideBinds.lua with permission
