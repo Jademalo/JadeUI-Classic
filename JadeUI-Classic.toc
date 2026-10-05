@@ -7,6 +7,7 @@
 
 ## Title: JadeUI Classic
 ## Notes: A Redesigned Blizzard interface for use with a Logitech G13
+## IconTexture: 134134
 
 ## Version: @project-version@
 
