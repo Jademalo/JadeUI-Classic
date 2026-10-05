@@ -204,7 +204,9 @@ optionsPanel:SetScript("OnEvent", function(self, event, arg1, arg2)
             endstopDropDown(category)
         end
         minimapCheckbox(category)
-        minimapScaleSlider(category)
+        if JadeUI.isClassic then
+            minimapScaleSlider(category)
+        end
         levelScreenshotCheckbox(category)
         uiScaleCheckbox(category)
 
