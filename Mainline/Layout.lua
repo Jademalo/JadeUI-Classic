@@ -2,7 +2,7 @@ local addonName, JadeUI = ...
 
 --Dump the current edit mode layouts into a savedvariable
 JadeUIEditDB = JadeUIEditDB or {}
-function ExportToSavedVariables(exportString)
+function ExportToSavedVariables()
     local layoutInfo = C_EditMode.GetLayouts()
     if layoutInfo then
         JadeUIEditDB = layoutInfo
@@ -11,7 +11,7 @@ function ExportToSavedVariables(exportString)
 end
 
 --JadeUI Layout
-JadeUI.Layout = {
+JadeUI.defaultLayout = {
         ["layoutName"] = "JadeUI",
         ["interfaceStyle"] = 0,
         ["layoutType"] = 1,

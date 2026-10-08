@@ -164,7 +164,9 @@ JadeUIBar:SetScript("OnEvent", function(self, event, arg1, arg2)
 
             JadeUI.SetDefaultStrata()
         end
-        CreateJadeUILayout()
+        JadeUI.EnableJadeUILayout()
+        ExportToSavedVariables()
+        JadeUI.AddBorderArt()
 
     end
 

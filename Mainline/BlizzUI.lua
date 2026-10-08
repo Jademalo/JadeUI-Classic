@@ -2,7 +2,7 @@
 --Variables
 --------------------------------------------
 local addonName, JadeUI = ...
-STATUS_BAR_MANAGER_WIDTH = 772 --Override the base variable for status bar width - https://github.com/Gethe/wow-ui-source/blob/e3ecc27b64d30fdc735a3f6579b866858f9f9df1/Interface/AddOns/Blizzard_StatusTrackingBar/Shared/StatusTrackingManager.lua#L6
+--STATUS_BAR_MANAGER_WIDTH = 772 --Override the base variable for status bar width - https://github.com/Gethe/wow-ui-source/blob/e3ecc27b64d30fdc735a3f6579b866858f9f9df1/Interface/AddOns/Blizzard_StatusTrackingBar/Shared/StatusTrackingManager.lua#L6
 
 --------------------------------------------
 --Functions
@@ -367,6 +367,24 @@ local function moveStatusBars()
 
     setOverlayStrataHigh(MainStatusTrackingBarContainer)
     setOverlayStrataHigh(SecondaryStatusTrackingBarContainer)
+end
+
+function JadeUI.AddBorderArt()
+
+    local function AddArt(frame)
+        frame.UpdateDividers = UpdateDividers
+        frame.enableDividers = true
+        frame:UpdateDividers()
+        BorderArt(frame)
+    end
+
+    AddArt(MultiBarBottomLeft)
+    AddArt(MultiBarBottomRight)
+
+    JadeUI.HideBlizzardFrame(MultiBarBottomRightButtonContainer1)
+    JadeUI.HideBlizzardFrame(MultiBarBottomRightButtonContainer5)
+
+    JadeUI.MoveBlizzardFrame(BottomManagedFrameContainer, "BOTTOM", "TOP", 0, 50, MultiBarBottomLeft)
 end
 
 --------------------------------------------
