@@ -173,16 +173,6 @@ JadeUIBar:SetScript("OnEvent", function(self, event, arg1, arg2)
             JadeUI.expBar.showMaxCover()
         end
 
-        if JadeUIDB.levelScreenshot then
-            RequestTimePlayed() --Show /played when levelling up
-            JadeUIBar:RegisterEvent("TIME_PLAYED_MSG") --Register the return of the message being sent to screenshot
-        end
-
-    end
-
-    if event == "TIME_PLAYED_MSG" then
-        C_Timer.After(0.5, function() Screenshot() end) --Take a screenshot on Level Up
-        JadeUIBar:UnregisterEvent("TIME_PLAYED_MSG") --Unregister the event so it doesn't fire on every /played
     end
 
 end)

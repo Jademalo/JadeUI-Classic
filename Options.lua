@@ -71,18 +71,6 @@ local function minimapCheckbox(category)
 
 end
 
-local function levelScreenshotCheckbox(category)
-
-    local variable = "levelScreenshot"
-    local name = "Screenshot on Level Up"
-    local description = "Automatically take a screenshot on levelling up"
-    local defaultValue = true
-
-    local setting = Settings.RegisterAddOnSetting(category, addonName.."_"..variable, variable, JadeUIDB, type(defaultValue), name, defaultValue)
-    Settings.CreateCheckbox(category, setting, description)
-
-end
-
 local function hideKeybindsCheckbox(category)
 
     local variable = "hideKeybinds"
@@ -207,7 +195,6 @@ optionsPanel:SetScript("OnEvent", function(self, event, arg1, arg2)
         if JadeUI.isClassic then
             minimapScaleSlider(category)
         end
-        levelScreenshotCheckbox(category)
         uiScaleCheckbox(category)
 
     end
