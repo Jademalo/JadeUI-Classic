@@ -142,10 +142,10 @@ JadeUIBar:SetScript("OnEvent", function(self, event, arg1, arg2)
         JadeUIBar:SetPoint("BOTTOM", UIParent, "BOTTOM")
 
         --Move various Blizzard frames
-        JadeUI.blizzUIMove()
+        --JadeUI.blizzUIMove()
         if not C_AddOns.IsAddOnLoaded("Bartender4") then
-            JadeUIButtonParent = CreateFrame("Frame", "JadeUIButtonParent", JadeUIBar)
-            JadeUI.blizzBarMove() --Move the Blizzard Action Bars
+            --JadeUIButtonParent = CreateFrame("Frame", "JadeUIButtonParent", JadeUIBar)
+            --JadeUI.blizzBarMove() --Move the Blizzard Action Bars
         end
 
         if JadeUI.isClassic then
@@ -164,6 +164,7 @@ JadeUIBar:SetScript("OnEvent", function(self, event, arg1, arg2)
 
             JadeUI.SetDefaultStrata()
         end
+        CreateJadeUILayout()
 
     end
 

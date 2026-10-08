@@ -13,7 +13,7 @@
 
 ## Author: @project-author@
 
-## SavedVariables: JadeUIDB
+## SavedVariables: JadeUIDB, JadeUIEditDB
 
 ## OptionalDeps: Bartender4
 
@@ -22,5 +22,7 @@
 Core.lua
 Options.lua
 [Family]\BlizzUI.lua
+[Family]\EditMode.lua [ExcludeLoadGameType classic]
+[Family]\Layout.lua [ExcludeLoadGameType classic]
 [Family]\ArtFrame.lua [AllowLoadGameType classic]
 [Family]\ExpBar.lua [AllowLoadGameType classic]
