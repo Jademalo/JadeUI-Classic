@@ -1,5 +1,5 @@
 local addonName, JadeUI = ...
-local reInit = false
+local reInit = true
 
 --Get layout
 --If the layout doesn't contain JadeUI, import the default to edit
@@ -22,12 +22,29 @@ local function editModeSetPoint(system, point, relativeTo, relativePoint, offset
     system.isInDefaultPosition = false
 end
 
+local function setEditModeSetting(system, id, value)
+
+    --Look for existing settings in the array
+    for _, entry in ipairs(system.settings) do
+        if entry.setting == id then
+            entry.value = value
+            return
+        end
+    end
+
+    --If setting not found, insert a new table to the array
+    table.insert(system.settings, {
+        ["setting"] = id,
+        ["value"] = value,
+    })
+end
+
 
 local function actionBars(layout)
     --MainActionBar
     local MainActionBar = layout.systems[1]
-    MainActionBar.settings[3].value = 7 --# of Icons
-    MainActionBar.settings[7].value = 1 --Hide Bar Scrolling
+    setEditModeSetting(MainActionBar, 2, 7) --# of Icons
+    setEditModeSetting(MainActionBar, 8, 1) --# of Icons
     editModeSetPoint(MainActionBar, "BOTTOM", "UIParent", "BOTTOM", 0, 95)
     --LeftEndCap
     local LeftEndCap = layout.systems[53]
@@ -35,15 +52,15 @@ local function actionBars(layout)
 
     --MultiBarBottomLeft
     local MultiBarBottomLeft = layout.systems[2]
-    MultiBarBottomLeft.settings[3].value = 7 --# of Icons
-    MultiBarBottomLeft.settings[8] = {["value"] = 0 ,["setting"] = 6,} --Add Hide Bar Art and set false
+    setEditModeSetting(MultiBarBottomLeft, 2, 7) --# of Icons
+    setEditModeSetting(MultiBarBottomLeft, 6, 0) --Add Hide Bar Art and set false
     editModeSetPoint(MultiBarBottomLeft, "BOTTOM", "MainActionBar", "TOP", 0, 0)
 
     --MultiBarBottomRight
     local MultiBarBottomRight = layout.systems[3]
-    MultiBarBottomRight.settings[2].value = 2 --# of Rows
-    MultiBarBottomRight.settings[3].value = 10 --# of Icons
-    MultiBarBottomRight.settings[8] = {["value"] = 0 ,["setting"] = 6,} --Add Hide Bar Art and set false
+    setEditModeSetting(MultiBarBottomRight, 1, 2) --# of Rows
+    setEditModeSetting(MultiBarBottomRight, 2, 10) --# of Icons
+    setEditModeSetting(MultiBarBottomRight, 6, 0) --Add Hide Bar Art and set false
     editModeSetPoint(MultiBarBottomRight, "TOP", "MainActionBar", "BOTTOM", 0, 0)
 end
 
@@ -67,12 +84,12 @@ local function statusBars(layout)
     --STATUS_BAR_MANAGER_WIDTH = 772 --Override the base variable for status bar width - https://github.com/Gethe/wow-ui-source/blob/e3ecc27b64d30fdc735a3f6579b866858f9f9df1/Interface/AddOns/Blizzard_StatusTrackingBar/Shared/StatusTrackingManager.lua#L6
     --MainStatusTrackingBarContainer
     local MainStatusTrackingBarContainer = layout.systems[35]
-    MainStatusTrackingBarContainer.settings[1].value = 3 --Width
+    setEditModeSetting(MainStatusTrackingBarContainer, 3, 3) --Width
     editModeSetPoint(MainStatusTrackingBarContainer, "BOTTOMLEFT", "MicroMenu", "TOPLEFT", -3, 6)
 
     --SecondaryStatusTrackingBarContainer
     local SecondaryStatusTrackingBarContainer = layout.systems[36]
-    SecondaryStatusTrackingBarContainer.settings[1].value = 3 --Width
+    setEditModeSetting(SecondaryStatusTrackingBarContainer, 3, 3) --Width
     editModeSetPoint(SecondaryStatusTrackingBarContainer, "BOTTOMLEFT", "MainStatusTrackingBarContainer", "TOPLEFT", 0, -1)
 end
 
@@ -96,21 +113,21 @@ local function swingTimers(layout)
     local height = 5
     --SwingTimerMainHandFrame
     local SwingTimerMainHandFrame = layout.systems[57]
-    SwingTimerMainHandFrame.settings[3].value = visibility --Visibility
-    SwingTimerMainHandFrame.settings[4].value = width --Width
-    SwingTimerMainHandFrame.settings[5].value = height --Height
+    setEditModeSetting(SwingTimerMainHandFrame, 2, visibility) --Visibility
+    setEditModeSetting(SwingTimerMainHandFrame, 3, width) --Width
+    setEditModeSetting(SwingTimerMainHandFrame, 4, height) --Height
 
     --SwingTimerOffHandFrame
     local SwingTimerOffHandFrame = layout.systems[58]
-    SwingTimerOffHandFrame.settings[3].value = visibility --Visibility
-    SwingTimerOffHandFrame.settings[4].value = width --Width
-    SwingTimerOffHandFrame.settings[5].value = height --Height
+    setEditModeSetting(SwingTimerOffHandFrame, 2, visibility) --Visibility
+    setEditModeSetting(SwingTimerOffHandFrame, 3, width) --Width
+    setEditModeSetting(SwingTimerOffHandFrame, 4, height) --Height
 
     --SwingTimerRangedFrame
     local SwingTimerRangedFrame = layout.systems[59]
-    SwingTimerRangedFrame.settings[3].value = visibility --Visibility
-    SwingTimerRangedFrame.settings[4].value = width --Width
-    SwingTimerRangedFrame.settings[5].value = height --Height
+    setEditModeSetting(SwingTimerRangedFrame, 2, visibility) --Visibility
+    setEditModeSetting(SwingTimerRangedFrame, 3, width) --Width
+    setEditModeSetting(SwingTimerRangedFrame, 4, height) --Height
 
 end
 
