@@ -384,7 +384,7 @@ function JadeUI.AddBorderArt()
     JadeUI.HideBlizzardFrame(MultiBarBottomRightButtonContainer1)
     JadeUI.HideBlizzardFrame(MultiBarBottomRightButtonContainer5)
 
-    JadeUI.MoveBlizzardFrame(BottomManagedFrameContainer, "BOTTOM", "TOP", 0, 50, MultiBarBottomLeft)
+    JadeUI.MoveBlizzardFrame(BottomManagedFrameContainer, "BOTTOM", "TOP", 0, 47, MultiBarBottomLeft)
 end
 
 --------------------------------------------

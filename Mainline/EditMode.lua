@@ -55,8 +55,8 @@ local function actionBars(layout)
     --MainActionBar
     local MainActionBar = getSystem(layout, Enum.EditModeSystem.ActionBar, 1)
     setEditModeSetting(MainActionBar, 2, 7) --# of Icons
-    setEditModeSetting(MainActionBar, 8, 1) --# of Icons
-    editModeSetPoint(MainActionBar, "BOTTOM", "UIParent", "BOTTOM", 0, 95)
+    setEditModeSetting(MainActionBar, 8, 1) --Hide bar scrolling
+    editModeSetPoint(MainActionBar, "BOTTOM", "UIParent", "BOTTOM", 0, 98)
     --LeftEndCap
     local LeftEndCap = getSystem(layout, Enum.EditModeSystem.MainActionBarEndCap, 1)
     editModeSetPoint(LeftEndCap, "BOTTOMRIGHT", "MicroMenu", "BOTTOMLEFT", 28.25, -7)
@@ -65,14 +65,14 @@ local function actionBars(layout)
     local MultiBarBottomLeft = getSystem(layout, Enum.EditModeSystem.ActionBar, 2)
     setEditModeSetting(MultiBarBottomLeft, 2, 7) --# of Icons
     setEditModeSetting(MultiBarBottomLeft, 6, 0) --Add Hide Bar Art and set false
-    editModeSetPoint(MultiBarBottomLeft, "BOTTOM", "MainActionBar", "TOP", 0, 0)
+    editModeSetPoint(MultiBarBottomLeft, "BOTTOM", "MainActionBar", "TOP", 0, 3)
 
     --MultiBarBottomRight
     local MultiBarBottomRight = getSystem(layout, Enum.EditModeSystem.ActionBar, 3)
     setEditModeSetting(MultiBarBottomRight, 1, 2) --# of Rows
     setEditModeSetting(MultiBarBottomRight, 2, 10) --# of Icons
     setEditModeSetting(MultiBarBottomRight, 6, 0) --Add Hide Bar Art and set false
-    editModeSetPoint(MultiBarBottomRight, "TOP", "MainActionBar", "BOTTOM", 0, 0)
+    editModeSetPoint(MultiBarBottomRight, "TOP", "MainActionBar", "BOTTOM", 0, -3)
 end
 
 local function microMenu(layout)
@@ -119,7 +119,7 @@ local function unitFrames(layout)
 end
 
 local function swingTimers(layout)
-    local visibility = 0 --0: Always Visible, 1: In Combat, 2: Hidden
+    local visibility = 1 --0: Always Visible, 1: In Combat, 2: Hidden
     local width = 100
     local height = 5
 
