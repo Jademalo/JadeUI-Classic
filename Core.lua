@@ -164,9 +164,16 @@ JadeUIBar:SetScript("OnEvent", function(self, event, arg1, arg2)
 
             JadeUI.SetDefaultStrata()
         end
-        JadeUI.EnableJadeUILayout()
-        ExportToSavedVariables()
-        JadeUI.AddBorderArt()
+
+        if JadeUI.isForever then 
+            JadeUI.EnableJadeUILayout()
+            print(C_EditMode.GetLayouts().activeLayout, JadeUI.layoutIndex)
+            if C_EditMode.GetLayouts().activeLayout == JadeUI.layoutIndex then
+                ExportToSavedVariables()
+                JadeUI.AddBorderArt()
+            end
+            JadeUIBar:RegisterEvent("EDIT_MODE_LAYOUTS_UPDATED") --Register this event to handle changing layouts
+        end
 
     end
 
@@ -176,6 +183,15 @@ JadeUIBar:SetScript("OnEvent", function(self, event, arg1, arg2)
             JadeUI.expBar.showMaxCover()
         end
 
+    end
+
+    if event == "EDIT_MODE_LAYOUTS_UPDATED" then
+        print(C_EditMode.GetLayouts().activeLayout, JadeUI.layoutIndex)
+        if JadeUI.isForever and C_EditMode.GetLayouts().activeLayout == JadeUI.layoutIndex then
+            JadeUI.AddBorderArt()
+        else
+            StaticPopup_Show("JADEUI_RELOAD_REQUIRED")
+        end
     end
 
 end)

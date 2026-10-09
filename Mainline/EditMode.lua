@@ -1,5 +1,5 @@
 local addonName, JadeUI = ...
-local reInit = true
+local init = true
 
 --Get layout
 --If the layout doesn't contain JadeUI, import the default to edit
@@ -145,6 +145,7 @@ local function swingTimers(layout)
     local width = 100
     local height = 5
 
+    --Cast Bar, Extra Abilities, Encounter Bar, and Swing Timer are all part of BottomManagedFrameContainer
     --SwingTimerMainHandFrame
     local SwingTimerMainHandFrame = getSystem(layout, Enum.EditModeSystem.SwingTimer, 1)
     setEditModeSetting(SwingTimerMainHandFrame, 2, visibility) --Visibility
@@ -208,10 +209,16 @@ local function updateLayout(base, addition)
     else
         table.insert(base.layouts, addition)
         targetIndex = #base.layouts
+        init = true
     end
 
+    JadeUI.layoutIndex = targetIndex+layoutOffset
     C_EditMode.SaveLayouts(base)
-    C_EditMode.SetActiveLayout(targetIndex+layoutOffset)
+    --Set JadeUI to the active layout if re-initialised
+    if init then
+        C_EditMode.SetActiveLayout(JadeUI.layoutIndex)
+        init = false
+    end
 
 end
 

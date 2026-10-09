@@ -18,6 +18,20 @@ local function round(number, decimals)
 end
 
 
+StaticPopupDialogs["JADEUI_RELOAD_REQUIRED"] = {
+    text = "Switching to another profile from JadeUI requires a reload",
+    button1 = "Reload UI",
+    button2 = "Cancel",
+    OnAccept = function()
+        C_UI.Reload()
+    end,
+    timeout = 0,
+    whileDead = true,
+    hideOnEscape = true,
+    preferredIndex = 3,
+}
+
+
 --------------------------------------------------------------------------------
 --Buttons
 --------------------------------------------------------------------------------
