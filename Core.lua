@@ -167,7 +167,6 @@ JadeUIBar:SetScript("OnEvent", function(self, event, arg1, arg2)
 
         if JadeUI.isForever then 
             JadeUI.EnableJadeUILayout()
-            print(C_EditMode.GetLayouts().activeLayout, JadeUI.layoutIndex)
             if C_EditMode.GetLayouts().activeLayout == JadeUI.layoutIndex then
                 ExportToSavedVariables()
                 JadeUI.AddBorderArt()
@@ -186,7 +185,6 @@ JadeUIBar:SetScript("OnEvent", function(self, event, arg1, arg2)
     end
 
     if event == "EDIT_MODE_LAYOUTS_UPDATED" then
-        print(C_EditMode.GetLayouts().activeLayout, JadeUI.layoutIndex)
         if JadeUI.isForever and C_EditMode.GetLayouts().activeLayout == JadeUI.layoutIndex then
             JadeUI.AddBorderArt()
         else

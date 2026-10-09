@@ -1,5 +1,4 @@
 local addonName, JadeUI = ...
-local init = true
 
 --Get layout
 --If the layout doesn't contain JadeUI, import the default to edit
@@ -170,18 +169,18 @@ end
 ----------------------------------
 -- Layout Activation
 ----------------------------------
-local function generateLayout(base)
+local function generateLayout(base, force)
+    force = force or false --Forcibly refresh the JadeUI layout
 
     --Find the existing JadeUI layout if it exists
-    local targetIndex = nil
-    for index, layout in ipairs(base.layouts) do
-        if layout.layoutName == JadeUI.defaultLayout.layoutName and not reInit then --If it finds an existing JadeUI layout and reInit is not enabled
-            return layout
+    for _, layout in ipairs(base.layouts) do
+        if layout.layoutName == JadeUI.defaultLayout.layoutName and not force then --If it finds an existing JadeUI layout and reInit is not enabled
+            return layout, false
         end
     end
 
     --Return the existing JadeUI layout if it exists, else return the default blank layout
-    return JadeUI.defaultLayout
+    return JadeUI.defaultLayout, true
 
 end
 
@@ -209,24 +208,21 @@ local function updateLayout(base, addition)
     else
         table.insert(base.layouts, addition)
         targetIndex = #base.layouts
-        init = true
+        ForceInit = true
     end
 
     JadeUI.layoutIndex = targetIndex+layoutOffset
     C_EditMode.SaveLayouts(base)
-    --Set JadeUI to the active layout if re-initialised
-    if init then
-        C_EditMode.SetActiveLayout(JadeUI.layoutIndex)
-        init = false
-    end
 
 end
 
 
-function JadeUI.EnableJadeUILayout()
+function JadeUI.EnableJadeUILayout(forceInit)
+    --Only switch to the JadeUI profile if the re-init button is pressed, or if the profile is being created
+    forceInit = forceInit or false
 
     local baseLayout = C_EditMode.GetLayouts()
-    local jadeUILayout = generateLayout(baseLayout)
+    local jadeUILayout, initProfile = generateLayout(baseLayout, forceInit)
 
     actionBars(jadeUILayout)
     microMenu(jadeUILayout)
@@ -236,5 +232,10 @@ function JadeUI.EnableJadeUILayout()
     swingTimers(jadeUILayout)
 
     updateLayout(baseLayout, jadeUILayout)
+
+    --Set JadeUI to the active layout if re-initialised
+    if initProfile then
+        C_EditMode.SetActiveLayout(JadeUI.layoutIndex)
+    end
 
 end

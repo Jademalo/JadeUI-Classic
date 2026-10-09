@@ -182,6 +182,18 @@ local function offsetStanceBarCheckbox(category)
 
 end
 
+local function editModeInitButton(layout)
+    local name = "Re-Initialise JadeUI"
+    local label = "Reset"
+    local description = "Click here to reset the JadeUI layout to default settings"
+    local function onButtonClick()
+        JadeUI.EnableJadeUILayout(true)
+    end
+
+    layout:AddInitializer(CreateSettingsButtonInitializer(name, label, onButtonClick, description, true))
+
+end
+
 --------------------------------------------------------------------------------
 --Event Handler
 --------------------------------------------------------------------------------
@@ -196,6 +208,9 @@ optionsPanel:SetScript("OnEvent", function(self, event, arg1, arg2)
         Settings.RegisterAddOnCategory(category)
 
         --Add Items
+        if JadeUI.isForever then
+            editModeInitButton(layout)
+        end
         if JadeUI.isClassic then
             talentCheckbox(category)
             offsetStanceBarCheckbox(category)
