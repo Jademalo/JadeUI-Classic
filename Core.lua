@@ -28,7 +28,11 @@ function JadeUI.SetScale()
         local width,height = GetPhysicalScreenSize()
         UIParent:SetScale((768/height)*1)
     else
-        UIParent:SetScale(C_CVar.GetCVar("uiScale"))
+        if C_CVar.GetCVar("useUiScale") == "1" then
+            UIParent:SetScale(C_CVar.GetCVar("uiScale"))
+        else
+            UIParent:SetScale(2/3)
+        end
     end
 end
 
