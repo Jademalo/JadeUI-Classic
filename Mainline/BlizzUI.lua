@@ -370,23 +370,26 @@ local function moveStatusBars()
 end
 
 function JadeUI.AddBorderArt()
+    if not JadeUI.borderArtAdded then
 
-    local function AddArt(frame)
-        frame.UpdateDividers = UpdateDividers
-        frame.enableDividers = true
-        frame:UpdateDividers()
-        BorderArt(frame)
+        local function AddArt(frame)
+            frame.UpdateDividers = UpdateDividers
+            frame.enableDividers = true
+            frame:UpdateDividers()
+            BorderArt(frame)
+        end
+
+        AddArt(MultiBarBottomLeft)
+        AddArt(MultiBarBottomRight)
+        --AddArt(PetActionBar)
+
+        JadeUI.HideBlizzardFrame(MultiBarBottomRightButtonContainer1)
+        JadeUI.HideBlizzardFrame(MultiBarBottomRightButtonContainer5)
+        JadeUI.HideBlizzardFrame(GetIndexedChild(MultiBarBottomRight, 18)) --Remove left edge divider
+
+        JadeUI.MoveBlizzardFrame(BottomManagedFrameContainer, "BOTTOM", "TOP", 0, 47, MultiBarBottomLeft)
+        JadeUI.borderArtAdded = true
     end
-
-    AddArt(MultiBarBottomLeft)
-    AddArt(MultiBarBottomRight)
-    --AddArt(PetActionBar)
-
-    JadeUI.HideBlizzardFrame(MultiBarBottomRightButtonContainer1)
-    JadeUI.HideBlizzardFrame(MultiBarBottomRightButtonContainer5)
-    JadeUI.HideBlizzardFrame(GetIndexedChild(MultiBarBottomRight, 18)) --Remove left edge divider
-
-    JadeUI.MoveBlizzardFrame(BottomManagedFrameContainer, "BOTTOM", "TOP", 0, 47, MultiBarBottomLeft)
 end
 
 --------------------------------------------
