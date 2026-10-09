@@ -165,23 +165,21 @@ local function swingTimers(layout)
 
 end
 
+
 ----------------------------------
 -- Layout Activation
 ----------------------------------
-
 local function generateLayout(base)
 
     --Find the existing JadeUI layout if it exists
     local targetIndex = nil
     for index, layout in ipairs(base.layouts) do
         if layout.layoutName == JadeUI.defaultLayout.layoutName and not reInit then --If it finds an existing JadeUI layout and reInit is not enabled
-            print("update")
             return layout
         end
     end
 
     --Return the existing JadeUI layout if it exists, else return the default blank layout
-    print("init")
     return JadeUI.defaultLayout
 
 end
