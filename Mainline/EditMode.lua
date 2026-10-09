@@ -73,6 +73,28 @@ local function actionBars(layout)
     setEditModeSetting(MultiBarBottomRight, 2, 10) --# of Icons
     setEditModeSetting(MultiBarBottomRight, 6, 0) --Add Hide Bar Art and set false
     editModeSetPoint(MultiBarBottomRight, "TOP", "MainActionBar", "BOTTOM", 0, -3)
+
+    --Stance Bar, Pet Bar, and Possess Bar all stack when default above MainActionBar
+    --StanceBar
+    local StanceBar = getSystem(layout, Enum.EditModeSystem.ActionBar, 11)
+    editModeSetPoint(StanceBar, "BOTTOM", "MultiBarBottomLeft", "TOP", 0, 8)
+    setEditModeSetting(StanceBar, 6, 0) --Add Hide Bar Art and set false
+
+    --PetActionBar
+    local PetActionBar = getSystem(layout, Enum.EditModeSystem.ActionBar, 12)
+    editModeSetPoint(PetActionBar, "BOTTOM", "MultiBarBottomLeft", "TOP", 0, 8)
+    setEditModeSetting(PetActionBar, 6, 0) --Add Hide Bar Art and set false
+    --setEditModeSetting(PetActionBar, 4, 10) --Icon padding
+    --setEditModeSetting(PetActionBar, 9, 1) --Always show buttons
+
+    --PossessActionBar
+    local PossessActionBar = getSystem(layout, Enum.EditModeSystem.ActionBar, 13)
+    editModeSetPoint(PossessActionBar, "BOTTOM", "MultiBarBottomLeft", "TOP", 0, 8)
+    setEditModeSetting(PossessActionBar, 6, 0) --Add Hide Bar Art and set false
+
+    --MultiCastActionBarFrame
+    local MultiCastActionBarFrame = getSystem(layout, Enum.EditModeSystem.TotemActionBar)
+    editModeSetPoint(MultiCastActionBarFrame, "BOTTOM", "MultiBarBottomLeft", "TOP", 0, 8)
 end
 
 local function microMenu(layout)

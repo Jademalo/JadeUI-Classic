@@ -380,9 +380,11 @@ function JadeUI.AddBorderArt()
 
     AddArt(MultiBarBottomLeft)
     AddArt(MultiBarBottomRight)
+    --AddArt(PetActionBar)
 
     JadeUI.HideBlizzardFrame(MultiBarBottomRightButtonContainer1)
     JadeUI.HideBlizzardFrame(MultiBarBottomRightButtonContainer5)
+    JadeUI.HideBlizzardFrame(GetIndexedChild(MultiBarBottomRight, 18)) --Remove left edge divider
 
     JadeUI.MoveBlizzardFrame(BottomManagedFrameContainer, "BOTTOM", "TOP", 0, 47, MultiBarBottomLeft)
 end
