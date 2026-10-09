@@ -10,6 +10,17 @@ local reInit = true
 ----------------------------------
 -- Layout Modification
 ----------------------------------
+--Get a specific entry within the edit mode systems, with index to differentiate between those which use the same enum
+local function getSystem(layout, systemEnum, systemIndex)
+    for _, sys in ipairs(layout.systems) do
+        if sys.system == systemEnum then
+            if not systemIndex or sys.systemIndex == systemIndex then
+                return sys
+            end
+        end
+    end
+end
+
 --SetPoint equivalent to modify the anchor info of a given system
 local function editModeSetPoint(system, point, relativeTo, relativePoint, offsetX, offsetY)
     system.anchorInfo = {
@@ -42,22 +53,22 @@ end
 
 local function actionBars(layout)
     --MainActionBar
-    local MainActionBar = layout.systems[1]
+    local MainActionBar = getSystem(layout, 0, 1)
     setEditModeSetting(MainActionBar, 2, 7) --# of Icons
     setEditModeSetting(MainActionBar, 8, 1) --# of Icons
     editModeSetPoint(MainActionBar, "BOTTOM", "UIParent", "BOTTOM", 0, 95)
     --LeftEndCap
-    local LeftEndCap = layout.systems[53]
+    local LeftEndCap = getSystem(layout, 26, 1)
     editModeSetPoint(LeftEndCap, "BOTTOMRIGHT", "MicroMenu", "BOTTOMLEFT", 28.25, -7)
 
     --MultiBarBottomLeft
-    local MultiBarBottomLeft = layout.systems[2]
+    local MultiBarBottomLeft = getSystem(layout, 0, 2)
     setEditModeSetting(MultiBarBottomLeft, 2, 7) --# of Icons
     setEditModeSetting(MultiBarBottomLeft, 6, 0) --Add Hide Bar Art and set false
     editModeSetPoint(MultiBarBottomLeft, "BOTTOM", "MainActionBar", "TOP", 0, 0)
 
     --MultiBarBottomRight
-    local MultiBarBottomRight = layout.systems[3]
+    local MultiBarBottomRight = getSystem(layout, 0, 3)
     setEditModeSetting(MultiBarBottomRight, 1, 2) --# of Rows
     setEditModeSetting(MultiBarBottomRight, 2, 10) --# of Icons
     setEditModeSetting(MultiBarBottomRight, 6, 0) --Add Hide Bar Art and set false
@@ -66,13 +77,13 @@ end
 
 local function microMenu(layout)
     --MicroMenu
-    local MicroMenu = layout.systems[33]
+    local MicroMenu = getSystem(layout, 13)
     editModeSetPoint(MicroMenu, "BOTTOMRIGHT", "MultiBarBottomRight", "BOTTOMLEFT", 38.5, 2)
 end
 
 local function bagsBar(layout)
     --BagsBar
-    local BagsBar = layout.systems[34]
+    local BagsBar = getSystem(layout, 14)
     editModeSetPoint(BagsBar, "BOTTOMLEFT", "MultiBarBottomRight", "BOTTOMRIGHT", -41.5, -1)
 
     if not GetCVarBool("showKeyring") then
@@ -83,27 +94,27 @@ end
 local function statusBars(layout)
     --STATUS_BAR_MANAGER_WIDTH = 772 --Override the base variable for status bar width - https://github.com/Gethe/wow-ui-source/blob/e3ecc27b64d30fdc735a3f6579b866858f9f9df1/Interface/AddOns/Blizzard_StatusTrackingBar/Shared/StatusTrackingManager.lua#L6
     --MainStatusTrackingBarContainer
-    local MainStatusTrackingBarContainer = layout.systems[35]
+    local MainStatusTrackingBarContainer = getSystem(layout, 15, 1)
     setEditModeSetting(MainStatusTrackingBarContainer, 3, 3) --Width
     editModeSetPoint(MainStatusTrackingBarContainer, "BOTTOMLEFT", "MicroMenu", "TOPLEFT", -3, 6)
 
     --SecondaryStatusTrackingBarContainer
-    local SecondaryStatusTrackingBarContainer = layout.systems[36]
+    local SecondaryStatusTrackingBarContainer = getSystem(layout, 15, 2)
     setEditModeSetting(SecondaryStatusTrackingBarContainer, 3, 3) --Width
     editModeSetPoint(SecondaryStatusTrackingBarContainer, "BOTTOMLEFT", "MainStatusTrackingBarContainer", "TOPLEFT", 0, -1)
 end
 
 local function unitFrames(layout)
     --PlayerFrame
-    local PlayerFrame = layout.systems[14]
+    local PlayerFrame = getSystem(layout, 3, 1)
     editModeSetPoint(PlayerFrame, "BOTTOMRIGHT", "UIParent", "BOTTOM", -163, 209)
 
     --TargetFrame
-    local TargetFrame = layout.systems[15]
+    local TargetFrame = getSystem(layout, 3, 2)
     editModeSetPoint(TargetFrame, "BOTTOMLEFT", "UIParent", "BOTTOM", 163, 209)
 
     --FocusFrame
-    local FocusFrame = layout.systems[16]
+    local FocusFrame = getSystem(layout, 3, 3)
     editModeSetPoint(FocusFrame, "BOTTOMLEFT", "PlayerFrame", "TOPRIGHT", -26, -26)
 end
 
@@ -112,19 +123,19 @@ local function swingTimers(layout)
     local width = 100
     local height = 5
     --SwingTimerMainHandFrame
-    local SwingTimerMainHandFrame = layout.systems[57]
+    local SwingTimerMainHandFrame = getSystem(layout, 29, 1)
     setEditModeSetting(SwingTimerMainHandFrame, 2, visibility) --Visibility
     setEditModeSetting(SwingTimerMainHandFrame, 3, width) --Width
     setEditModeSetting(SwingTimerMainHandFrame, 4, height) --Height
 
     --SwingTimerOffHandFrame
-    local SwingTimerOffHandFrame = layout.systems[58]
+    local SwingTimerOffHandFrame = getSystem(layout, 29, 2)
     setEditModeSetting(SwingTimerOffHandFrame, 2, visibility) --Visibility
     setEditModeSetting(SwingTimerOffHandFrame, 3, width) --Width
     setEditModeSetting(SwingTimerOffHandFrame, 4, height) --Height
 
     --SwingTimerRangedFrame
-    local SwingTimerRangedFrame = layout.systems[59]
+    local SwingTimerRangedFrame = getSystem(layout, 29, 3)
     setEditModeSetting(SwingTimerRangedFrame, 2, visibility) --Visibility
     setEditModeSetting(SwingTimerRangedFrame, 3, width) --Width
     setEditModeSetting(SwingTimerRangedFrame, 4, height) --Height
