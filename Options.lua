@@ -208,22 +208,14 @@ optionsPanel:SetScript("OnEvent", function(self, event, arg1, arg2)
         Settings.RegisterAddOnCategory(category)
 
         --Add Items
-        if JadeUI.isForever then
-            editModeInitButton(layout)
-        end
-        if JadeUI.isClassic then
-            talentCheckbox(category)
-            offsetStanceBarCheckbox(category)
-        end
+        if JadeUI.isForever then editModeInitButton(layout) end
+        if JadeUI.isClassic then talentCheckbox(category) end
+        if JadeUI.isClassic then offsetStanceBarCheckbox(category) end
         unitFramesCheckbox(category)
         hideKeybindsCheckbox(category)
-        if JadeUI.isClassic then
-            endstopDropDown(category)
-        end
+        if JadeUI.isClassic then endstopDropDown(category) end
         minimapCheckbox(category)
-        if JadeUI.isClassic then
-            minimapScaleSlider(category)
-        end
+        if JadeUI.isClassic then minimapScaleSlider(category) end
         uiScaleCheckbox(category)
 
     end
