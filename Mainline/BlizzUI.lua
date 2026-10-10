@@ -101,8 +101,8 @@ function UpdateDividers(self)
 	local wasLastButtonShown = false;
 	for i, actionButton in pairs(self.actionButtons) do
 		if actionButton:IsShown() then
-			if wasLastButtonShown then
-				local divider = dividersPool:Acquire();
+			if wasLastButtonShown and (actionButton ~= _G["MultiBarBottomRightButton"..math.ceil(self.numButtonsShowable/self.numRows)+1]) then --Specifically don't draw the divider if the next button is on the second level
+                local divider = dividersPool:Acquire();
 				divider:ClearAllPoints();
 				if self.isHorizontal then
 					divider:SetPoint("TOP", actionButton, "TOP", 0, 0);
@@ -385,7 +385,6 @@ function JadeUI.AddBorderArt()
 
         JadeUI.HideBlizzardFrame(MultiBarBottomRightButtonContainer1)
         JadeUI.HideBlizzardFrame(MultiBarBottomRightButtonContainer5)
-        JadeUI.HideBlizzardFrame(GetIndexedChild(MultiBarBottomRight, 18)) --Remove left edge divider
 
         JadeUI.MoveBlizzardFrame(BottomManagedFrameContainer, "BOTTOM", "TOP", 0, 47, MultiBarBottomLeft)
         JadeUI.borderArtAdded = true
