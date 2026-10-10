@@ -84,7 +84,11 @@ local function minimapCheckbox(category)
 
     Settings.GetSetting(addonName.."_"..variable):SetValueChangedCallback(function()
         JadeUI.TriggerFrameHooks()
-        ActionBarController_UpdateAll()
+        if JadeUI.isForever then
+            JadeUI.SetJadeUILayout()
+        else
+            ActionBarController_UpdateAll()
+        end
     end)
 
 end
@@ -216,10 +220,10 @@ optionsPanel:SetScript("OnEvent", function(self, event, arg1, arg2)
         if JadeUI.isClassic then talentCheckbox(category) end
         if JadeUI.isClassic then offsetStanceBarCheckbox(category) end
         unitFramesCheckbox(category)
-        hideKeybindsCheckbox(category)
         if JadeUI.isClassic then endstopDropDown(category) end
         minimapCheckbox(category)
         if JadeUI.isClassic then minimapScaleSlider(category) end
+        hideKeybindsCheckbox(category)
         uiScaleCheckbox(category)
 
     end

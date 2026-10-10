@@ -185,6 +185,46 @@ local function swingTimers(layout)
 
 end
 
+local function minimap(layout)
+    local MinimapCluster = getSystem(layout, Enum.EditModeSystem.Minimap)
+    local BuffFrame = getSystem(layout, Enum.EditModeSystem.AuraFrame, 1)
+    local DebuffFrame = getSystem(layout, Enum.EditModeSystem.AuraFrame, 2)
+    local MultiBarRight = getSystem(layout, Enum.EditModeSystem.ActionBar, 4)
+    local MultiBarLeft = getSystem(layout, Enum.EditModeSystem.ActionBar, 5)
+    local GameTooltip = getSystem(layout, Enum.EditModeSystem.HudTooltip)
+
+    if Settings.GetValue(addonName.."_moveMinimap") == true then
+
+        --Minimap
+        editModeSetPoint(MinimapCluster, "BOTTOMRIGHT", "UIParent", "BOTTOMRIGHT", 0, 0)
+        setEditModeSetting(MinimapCluster, 0, 1) --Header Underneath
+        --Buffs
+        editModeSetPoint(BuffFrame, "TOPRIGHT", "UIParent", "TOPRIGHT", -10, -10)
+        --Debuffs
+        editModeSetPoint(DebuffFrame, "TOPRIGHT", "UIParent", "TOPRIGHT", -25, -155)
+        --ActionBars
+        editModeSetPoint(MultiBarRight, "BOTTOMRIGHT", "MinimapCluster", "TOPRIGHT", -5, -0)
+        editModeSetPoint(MultiBarLeft, "RIGHT", "MultiBarRight", "RIGHT", -50, -0)
+        --GameTooltip
+        editModeSetPoint(GameTooltip, "BOTTOMRIGHT", "MinimapCluster", "BOTTOMLEFT", -9, 85)
+
+        JadeUI.minimapTainted = true
+
+    else
+
+        if JadeUI.minimapTainted then --Specifically only do this if the minimap config is tainted
+            editModeSetDefault(layout, Enum.EditModeSystem.Minimap)
+            editModeSetDefault(layout, Enum.EditModeSystem.AuraFrame, 1)
+            editModeSetDefault(layout, Enum.EditModeSystem.AuraFrame, 2)
+            editModeSetDefault(layout, Enum.EditModeSystem.ActionBar, 4)
+            editModeSetDefault(layout, Enum.EditModeSystem.ActionBar, 5)
+            editModeSetDefault(layout, Enum.EditModeSystem.HudTooltip)
+
+            JadeUI.minimapTainted = false
+        end
+
+    end
+end
 
 ----------------------------------
 -- Layout Activation
@@ -249,6 +289,7 @@ function JadeUI.SetJadeUILayout(forceInit)
     statusBars(jadeUILayout)
     unitFrames(jadeUILayout)
     swingTimers(jadeUILayout)
+    minimap(jadeUILayout)
 
     C_EditMode.SaveLayouts(updateLayout(baseLayout, jadeUILayout))
 

@@ -369,8 +369,28 @@ local function moveStatusBars()
     setOverlayStrataHigh(SecondaryStatusTrackingBarContainer)
 end
 
-function JadeUI.AddBorderArt()
-    if not JadeUI.borderArtAdded then
+local function containerOffset()
+    local hookSet = false
+    table.insert(JadeUI.hookTable, ContainerFrameContainer) --Add any frame with a hook to the table of hooked frames (This adds the pointer to the table, not a copy)
+    ContainerFrameContainer.defaultPos = {ContainerFrameContainer:GetPoint()}
+
+    hooksecurefunc(ContainerFrameContainer, "SetPoint", function()
+        if hookSet then return end --Don't infinitely fire from itself
+
+        if not JadeUIDB["moveMinimap"] then ContainerFrameContainer:SetAllPoints() return end --Rather than using the defaultPos like the other hooks, we use SetAllPoints to set both to UIParent
+
+        hookSet = true
+            ContainerFrameContainer:ClearAllPoints()
+            ContainerFrameContainer:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 0, 0)
+            ContainerFrameContainer:SetPoint("BOTTOMRIGHT", MinimapCluster, "BOTTOMLEFT", 0, 0)
+        hookSet = false
+    end)
+
+    ContainerFrameContainer:SetPoint(ContainerFrameContainer:GetPoint()) --Fire SetPoint to fire the hook with the original frame data to prevent the hook from having bad data
+end
+
+function JadeUI.SetupHooksForLayout()
+    if not JadeUI.setupHooks then
 
         local function AddArt(frame)
             frame.UpdateDividers = UpdateDividers
@@ -387,7 +407,10 @@ function JadeUI.AddBorderArt()
         JadeUI.HideBlizzardFrame(MultiBarBottomRightButtonContainer5)
 
         JadeUI.MoveBlizzardFrame(BottomManagedFrameContainer, "BOTTOM", "TOP", 0, 47, MultiBarBottomLeft)
-        JadeUI.borderArtAdded = true
+        JadeUI.MoveBlizzardFrame(RightManagedFrameContainer, "TOPRIGHT", "TOPLEFT", -5, 0, MultiBarLeft, "moveMinimap")
+        containerOffset()
+
+        JadeUI.setupHooks = true
     end
 end
 
