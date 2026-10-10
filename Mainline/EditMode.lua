@@ -180,7 +180,7 @@ local function generateLayout(base, force)
     end
 
     --Return the existing JadeUI layout if it exists, else return the default blank layout
-    return JadeUI.defaultLayout, true
+    return CopyTable(JadeUI.defaultLayout), true --This must be a copy or Unitframes can't be moved repeatedly as it gets polluted
 
 end
 
@@ -208,16 +208,15 @@ local function updateLayout(base, addition)
     else
         table.insert(base.layouts, addition)
         targetIndex = #base.layouts
-        ForceInit = true
     end
 
     JadeUI.layoutIndex = targetIndex+layoutOffset
-    C_EditMode.SaveLayouts(base)
+    return base
 
 end
 
 
-function JadeUI.EnableJadeUILayout(forceInit)
+function JadeUI.SetJadeUILayout(forceInit)
     --Only switch to the JadeUI profile if the re-init button is pressed, or if the profile is being created
     forceInit = forceInit or false
 
@@ -228,13 +227,13 @@ function JadeUI.EnableJadeUILayout(forceInit)
     microMenu(jadeUILayout)
     bagsBar(jadeUILayout)
     statusBars(jadeUILayout)
-    unitFrames(jadeUILayout)
+    if Settings.GetValue(addonName.."_moveUnitFrames") == true then unitFrames(jadeUILayout) end
     swingTimers(jadeUILayout)
 
-    updateLayout(baseLayout, jadeUILayout)
+    C_EditMode.SaveLayouts(updateLayout(baseLayout, jadeUILayout))
 
-    --Set JadeUI to the active layout if re-initialised
-    if initProfile then
+    --Set JadeUI to the active layout if re-initialised, or if already applied to fix bar backgrounds
+    if initProfile or C_EditMode.GetLayouts().activeLayout == JadeUI.layoutIndex then
         C_EditMode.SetActiveLayout(JadeUI.layoutIndex)
     end
 

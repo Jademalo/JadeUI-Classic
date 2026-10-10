@@ -170,9 +170,9 @@ JadeUIBar:SetScript("OnEvent", function(self, event, arg1, arg2)
         end
 
         if JadeUI.isForever then 
-            JadeUI.EnableJadeUILayout()
+            JadeUI.SetJadeUILayout()
             if C_EditMode.GetLayouts().activeLayout == JadeUI.layoutIndex then
-                ExportToSavedVariables()
+                --ExportToSavedVariables()
                 JadeUI.AddBorderArt()
             end
             JadeUIBar:RegisterEvent("EDIT_MODE_LAYOUTS_UPDATED") --Register this event to handle changing layouts

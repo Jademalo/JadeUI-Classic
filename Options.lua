@@ -62,8 +62,12 @@ local function unitFramesCheckbox(category)
     Settings.CreateCheckbox(category, setting, description)
 
     Settings.GetSetting(addonName.."_"..variable):SetValueChangedCallback(function()
-        JadeUI.TriggerFrameHooks()
-        ActionBarController_UpdateAll()
+        if JadeUI.isForever then
+            JadeUI.SetJadeUILayout(true)
+        else
+            JadeUI.TriggerFrameHooks()
+            ActionBarController_UpdateAll()
+        end
     end)
 
 end
@@ -187,7 +191,7 @@ local function editModeInitButton(layout)
     local label = "Reset"
     local description = "Click here to reset the JadeUI layout to default settings"
     local function onButtonClick()
-        JadeUI.EnableJadeUILayout(true)
+        JadeUI.SetJadeUILayout(true)
     end
 
     layout:AddInitializer(CreateSettingsButtonInitializer(name, label, onButtonClick, description, true))
