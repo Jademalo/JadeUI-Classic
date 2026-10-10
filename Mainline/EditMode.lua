@@ -164,7 +164,6 @@ local function swingTimers(layout)
     local width = 100
     local height = 5
 
-    --Cast Bar, Extra Abilities, Encounter Bar, and Swing Timer are all part of BottomManagedFrameContainer
     --SwingTimerMainHandFrame
     local SwingTimerMainHandFrame = getSystem(layout, Enum.EditModeSystem.SwingTimer, 1)
     setEditModeSetting(SwingTimerMainHandFrame, 2, visibility) --Visibility
@@ -192,6 +191,7 @@ local function minimap(layout)
     local MultiBarRight = getSystem(layout, Enum.EditModeSystem.ActionBar, 4)
     local MultiBarLeft = getSystem(layout, Enum.EditModeSystem.ActionBar, 5)
     local GameTooltip = getSystem(layout, Enum.EditModeSystem.HudTooltip)
+    local BossTargetFrameContainer = getSystem(layout, Enum.EditModeSystem.UnitFrame, 6)
 
     if Settings.GetValue(addonName.."_moveMinimap") == true then
 
@@ -204,9 +204,11 @@ local function minimap(layout)
         editModeSetPoint(DebuffFrame, "TOPRIGHT", "UIParent", "TOPRIGHT", -25, -155)
         --ActionBars
         editModeSetPoint(MultiBarRight, "BOTTOMRIGHT", "MinimapCluster", "TOPRIGHT", -5, -0)
-        editModeSetPoint(MultiBarLeft, "RIGHT", "MultiBarRight", "RIGHT", -50, -0)
+        editModeSetPoint(MultiBarLeft, "RIGHT", "MultiBarRight", "LEFT", -5, -0)
         --GameTooltip
         editModeSetPoint(GameTooltip, "BOTTOMRIGHT", "MinimapCluster", "BOTTOMLEFT", -9, 85)
+        --Boss Frames
+        editModeSetPoint(BossTargetFrameContainer, "LEFT", "UIParent", "LEFT", 10, 0)
 
         JadeUI.minimapTainted = true
 
@@ -219,6 +221,7 @@ local function minimap(layout)
             editModeSetDefault(layout, Enum.EditModeSystem.ActionBar, 4)
             editModeSetDefault(layout, Enum.EditModeSystem.ActionBar, 5)
             editModeSetDefault(layout, Enum.EditModeSystem.HudTooltip)
+            editModeSetDefault(layout, Enum.EditModeSystem.UnitFrame, 6)
 
             JadeUI.minimapTainted = false
         end

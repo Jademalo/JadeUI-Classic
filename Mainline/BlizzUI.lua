@@ -403,11 +403,16 @@ function JadeUI.SetupHooksForLayout()
         AddArt(MultiBarBottomRight)
         --AddArt(PetActionBar)
 
+        --These have errors with taintLog 1, otherwise work fine
         JadeUI.HideBlizzardFrame(MultiBarBottomRightButtonContainer1)
         JadeUI.HideBlizzardFrame(MultiBarBottomRightButtonContainer5)
 
+        --Cast Bar, Extra Abilities, Encounter Bar, and Swing Timer are all part of BottomManagedFrameContainer
         JadeUI.MoveBlizzardFrame(BottomManagedFrameContainer, "BOTTOM", "TOP", 0, 47, MultiBarBottomLeft)
-        JadeUI.MoveBlizzardFrame(RightManagedFrameContainer, "TOPRIGHT", "TOPLEFT", -5, 0, MultiBarLeft, "moveMinimap")
+        --Boss Frames, Equipment Durability, and Objective Tracker are all part of RightManagedFrameContainer
+        --This actively causes a taint failure in combat if Boss Frames are part of it
+        JadeUI.MoveBlizzardFrame(RightManagedFrameContainer, "TOPRIGHT", "TOPLEFT", -5, 26, MultiBarLeft, "moveMinimap")
+
         JadeUI.OffsetBlizzardFrame(ContainerFrameCombinedBags, bagOffset, 0, nil, "moveMinimap")
         containerOffset()
 
