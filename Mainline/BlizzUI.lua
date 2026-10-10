@@ -408,6 +408,7 @@ function JadeUI.SetupHooksForLayout()
 
         JadeUI.MoveBlizzardFrame(BottomManagedFrameContainer, "BOTTOM", "TOP", 0, 47, MultiBarBottomLeft)
         JadeUI.MoveBlizzardFrame(RightManagedFrameContainer, "TOPRIGHT", "TOPLEFT", -5, 0, MultiBarLeft, "moveMinimap")
+        JadeUI.OffsetBlizzardFrame(ContainerFrameCombinedBags, bagOffset, 0, nil, "moveMinimap")
         containerOffset()
 
         JadeUI.setupHooks = true
