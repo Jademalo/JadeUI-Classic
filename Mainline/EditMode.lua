@@ -32,6 +32,20 @@ local function editModeSetPoint(system, point, relativeTo, relativePoint, offset
     system.isInDefaultPosition = false
 end
 
+local function editModeSetDefault(layout, system, systemIndex)
+    local defaultLayout = CopyTable(JadeUI.defaultLayout)
+    local targetFrame = getSystem(layout, system, systemIndex)
+    local defaultFrame = getSystem(defaultLayout, system, systemIndex)
+
+    for key in pairs(targetFrame) do
+        targetFrame[key] = nil
+    end
+
+    for key, value in pairs(defaultFrame) do
+        targetFrame[key] = value
+    end
+end
+
 local function setEditModeSetting(system, id, value)
 
     --Look for existing settings in the array
@@ -126,17 +140,23 @@ local function statusBars(layout)
 end
 
 local function unitFrames(layout)
-    --PlayerFrame
-    local PlayerFrame = getSystem(layout, Enum.EditModeSystem.UnitFrame, 1)
-    editModeSetPoint(PlayerFrame, "BOTTOMRIGHT", "UIParent", "BOTTOM", -163, 209)
+    if Settings.GetValue(addonName.."_moveUnitFrames") == true then
+        --PlayerFrame
+        local PlayerFrame = getSystem(layout, Enum.EditModeSystem.UnitFrame, 1)
+        editModeSetPoint(PlayerFrame, "BOTTOMRIGHT", "UIParent", "BOTTOM", -163, 209)
 
-    --TargetFrame
-    local TargetFrame = getSystem(layout, Enum.EditModeSystem.UnitFrame, 2)
-    editModeSetPoint(TargetFrame, "BOTTOMLEFT", "UIParent", "BOTTOM", 163, 209)
+        --TargetFrame
+        local TargetFrame = getSystem(layout, Enum.EditModeSystem.UnitFrame, 2)
+        editModeSetPoint(TargetFrame, "BOTTOMLEFT", "UIParent", "BOTTOM", 163, 209)
 
-    --FocusFrame
-    local FocusFrame = getSystem(layout, Enum.EditModeSystem.UnitFrame, 3)
-    editModeSetPoint(FocusFrame, "BOTTOMLEFT", "PlayerFrame", "TOPRIGHT", -26, -26)
+        --FocusFrame
+        local FocusFrame = getSystem(layout, Enum.EditModeSystem.UnitFrame, 3)
+        editModeSetPoint(FocusFrame, "BOTTOMLEFT", "PlayerFrame", "TOPRIGHT", -26, -26)
+    else
+        editModeSetDefault(layout, Enum.EditModeSystem.UnitFrame, 1)
+        editModeSetDefault(layout, Enum.EditModeSystem.UnitFrame, 2)
+        editModeSetDefault(layout, Enum.EditModeSystem.UnitFrame, 3)
+    end
 end
 
 local function swingTimers(layout)
@@ -227,7 +247,7 @@ function JadeUI.SetJadeUILayout(forceInit)
     microMenu(jadeUILayout)
     bagsBar(jadeUILayout)
     statusBars(jadeUILayout)
-    if Settings.GetValue(addonName.."_moveUnitFrames") == true then unitFrames(jadeUILayout) end
+    unitFrames(jadeUILayout)
     swingTimers(jadeUILayout)
 
     C_EditMode.SaveLayouts(updateLayout(baseLayout, jadeUILayout))

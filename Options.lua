@@ -63,7 +63,7 @@ local function unitFramesCheckbox(category)
 
     Settings.GetSetting(addonName.."_"..variable):SetValueChangedCallback(function()
         if JadeUI.isForever then
-            JadeUI.SetJadeUILayout(true)
+            JadeUI.SetJadeUILayout()
         else
             JadeUI.TriggerFrameHooks()
             ActionBarController_UpdateAll()
