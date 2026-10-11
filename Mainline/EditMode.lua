@@ -129,6 +129,12 @@ local function bagsBar(layout)
     end
 end
 
+local function durabilityFrame(layout)
+    --DurabilityFrame
+    local DurabilityFrame = getSystem(layout, Enum.EditModeSystem.DurabilityFrame)
+    editModeSetPoint(DurabilityFrame, "LEFT", "MainActionBar", "TOPRIGHT", 88.5, 1)
+end
+
 local function statusBars(layout)
     --STATUS_BAR_MANAGER_WIDTH = 772 --Override the base variable for status bar width - https://github.com/Gethe/wow-ui-source/blob/e3ecc27b64d30fdc735a3f6579b866858f9f9df1/Interface/AddOns/Blizzard_StatusTrackingBar/Shared/StatusTrackingManager.lua#L6
     --MainStatusTrackingBarContainer
@@ -154,7 +160,8 @@ local function unitFrames(layout)
 
         --FocusFrame
         local FocusFrame = getSystem(layout, Enum.EditModeSystem.UnitFrame, 3)
-        editModeSetPoint(FocusFrame, "BOTTOMLEFT", "PlayerFrame", "TOPRIGHT", -26, -26)
+        --editModeSetPoint(FocusFrame, "BOTTOMLEFT", "PlayerFrame", "TOPRIGHT", -26, -26) --Traditional Top Right of player frame position
+        editModeSetPoint(FocusFrame, "TOP", "PlayerFrame", "BOTTOM", 0, -20)
     else
         editModeSetDefault(layout, Enum.EditModeSystem.UnitFrame, 1)
         editModeSetDefault(layout, Enum.EditModeSystem.UnitFrame, 2)
@@ -162,25 +169,33 @@ local function unitFrames(layout)
     end
 end
 
-local function swingTimers(layout)
+local function castBars(layout)
     local visibility = 1 --0: Always Visible, 1: In Combat, 2: Hidden
     local width = 100
     local height = 5
+    local SwingTimerMainHandFrame = getSystem(layout, Enum.EditModeSystem.SwingTimer, 1)
+    local SwingTimerOffHandFrame = getSystem(layout, Enum.EditModeSystem.SwingTimer, 2)
+    local SwingTimerRangedFrame = getSystem(layout, Enum.EditModeSystem.SwingTimer, 3)
+    local PlayerCastingBarFrame = getSystem(layout, Enum.EditModeSystem.CastBar)
+
+    --Cast Bar
+    if JadeUI.taintSafety > 1 then editModeSetPoint(PlayerCastingBarFrame, "BOTTOM", "MultiBarBottomLeft", "TOP", 0, 120) end
+    setEditModeSetting(PlayerCastingBarFrame, 2, visibility) --Visibility
 
     --SwingTimerMainHandFrame
-    local SwingTimerMainHandFrame = getSystem(layout, Enum.EditModeSystem.SwingTimer, 1)
+    if JadeUI.taintSafety > 1 then editModeSetPoint(SwingTimerMainHandFrame, "TOP", "PlayerCastingBarFrame", "BOTTOM", 0, -20) end
     setEditModeSetting(SwingTimerMainHandFrame, 2, visibility) --Visibility
     setEditModeSetting(SwingTimerMainHandFrame, 3, width) --Width
     setEditModeSetting(SwingTimerMainHandFrame, 4, height) --Height
 
     --SwingTimerOffHandFrame
-    local SwingTimerOffHandFrame = getSystem(layout, Enum.EditModeSystem.SwingTimer, 2)
+    if JadeUI.taintSafety > 1 then editModeSetPoint(SwingTimerOffHandFrame, "TOP", "SwingTimerMainHandFrame", "BOTTOM", 0, 0) end
     setEditModeSetting(SwingTimerOffHandFrame, 2, visibility) --Visibility
     setEditModeSetting(SwingTimerOffHandFrame, 3, width) --Width
-    setEditModeSetting(SwingTimerOffHandFrame, 4, height) --Height
+    setEditModeSetting(SwingTimerOffHandFrame, 4, 0) --Height
 
     --SwingTimerRangedFrame
-    local SwingTimerRangedFrame = getSystem(layout, Enum.EditModeSystem.SwingTimer, 3)
+    if JadeUI.taintSafety > 1 then editModeSetPoint(SwingTimerRangedFrame, "TOP", "SwingTimerOffHandFrame", "BOTTOM", 0, 0) end
     setEditModeSetting(SwingTimerRangedFrame, 2, visibility) --Visibility
     setEditModeSetting(SwingTimerRangedFrame, 3, width) --Width
     setEditModeSetting(SwingTimerRangedFrame, 4, height) --Height
@@ -195,6 +210,7 @@ local function minimap(layout)
     local MultiBarLeft = getSystem(layout, Enum.EditModeSystem.ActionBar, 5)
     local GameTooltip = getSystem(layout, Enum.EditModeSystem.HudTooltip)
     local BossTargetFrameContainer = getSystem(layout, Enum.EditModeSystem.UnitFrame, 6)
+    local ObjectiveTrackerFrame = getSystem(layout, Enum.EditModeSystem.ObjectiveTracker)
 
     if Settings.GetValue(addonName.."_moveMinimap") == true then
 
@@ -211,7 +227,8 @@ local function minimap(layout)
         --GameTooltip
         editModeSetPoint(GameTooltip, "BOTTOMRIGHT", "MinimapCluster", "BOTTOMLEFT", -9, 85)
         --Boss Frames
-        editModeSetPoint(BossTargetFrameContainer, "LEFT", "UIParent", "LEFT", 10, 0)
+        if JadeUI.taintSafety > 0 then editModeSetPoint(BossTargetFrameContainer, "LEFT", "UIParent", "LEFT", 10, 0) end
+        if JadeUI.taintSafety > 1 then editModeSetPoint(ObjectiveTrackerFrame, "TOPRIGHT", "MultiBarLeft", "TOPLEFT", -5, 0) end
 
         JadeUI.minimapTainted = true
 
@@ -225,6 +242,7 @@ local function minimap(layout)
             editModeSetDefault(layout, Enum.EditModeSystem.ActionBar, 5)
             editModeSetDefault(layout, Enum.EditModeSystem.HudTooltip)
             editModeSetDefault(layout, Enum.EditModeSystem.UnitFrame, 6)
+            editModeSetDefault(layout, Enum.EditModeSystem.ObjectiveTracker)
 
             JadeUI.minimapTainted = false
         end
@@ -292,9 +310,10 @@ function JadeUI.SetJadeUILayout(forceInit)
     actionBars(jadeUILayout)
     microMenu(jadeUILayout)
     bagsBar(jadeUILayout)
+    durabilityFrame(jadeUILayout)
     statusBars(jadeUILayout)
     unitFrames(jadeUILayout)
-    swingTimers(jadeUILayout)
+    castBars(jadeUILayout)
     minimap(jadeUILayout)
 
     C_EditMode.SaveLayouts(updateLayout(baseLayout, jadeUILayout))

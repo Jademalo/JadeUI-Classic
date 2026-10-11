@@ -403,15 +403,21 @@ function JadeUI.SetupHooksForLayout()
         AddArt(MultiBarBottomRight)
         --AddArt(PetActionBar)
 
-        --These have errors with taintLog 1, otherwise work fine
-        JadeUI.HideBlizzardFrame(MultiBarBottomRightButtonContainer1)
-        JadeUI.HideBlizzardFrame(MultiBarBottomRightButtonContainer5)
+        if JadeUI.taintSafety < 1 then --Only on taintSafety 0
+            --These have errors with taintLog 1, otherwise work fine unless you try to drag a button in combat
+            JadeUI.HideBlizzardFrame(MultiBarBottomRightButtonContainer1)
+            JadeUI.HideBlizzardFrame(MultiBarBottomRightButtonContainer5)
+        end
 
-        --Cast Bar, Extra Abilities, Encounter Bar, and Swing Timer are all part of BottomManagedFrameContainer
-        JadeUI.MoveBlizzardFrame(BottomManagedFrameContainer, "BOTTOM", "TOP", 0, 47, MultiBarBottomLeft)
-        --Boss Frames, Equipment Durability, and Objective Tracker are all part of RightManagedFrameContainer
-        --This actively causes a taint failure in combat if Boss Frames are part of it
-        JadeUI.MoveBlizzardFrame(RightManagedFrameContainer, "TOPRIGHT", "TOPLEFT", -5, 26, MultiBarLeft, "moveMinimap")
+        if JadeUI.taintSafety < 2 then --Only on taintSafety 0 and 1
+            --Weirdly, if BottomManagedFrameContainer is disabled but RightManagedFrameContainer is not, then Right works fine
+            --If taintLog 0 is set then they both also seems to work fine
+            --Cast Bar, Extra Abilities, Encounter Bar, and Swing Timer are all part of BottomManagedFrameContainer
+            JadeUI.MoveBlizzardFrame(BottomManagedFrameContainer, "BOTTOM", "TOP", 0, 47, MultiBarBottomLeft)
+            --Boss Frames, Equipment Durability, and Objective Tracker are all part of RightManagedFrameContainer
+            --This actively causes a taint failure in combat if Boss Frames are part of it, so they are always moved when moveMinimap is true
+            JadeUI.MoveBlizzardFrame(RightManagedFrameContainer, "TOPRIGHT", "TOPLEFT", -5, 26, MultiBarLeft, "moveMinimap")
+        end
 
         JadeUI.OffsetBlizzardFrame(ContainerFrameCombinedBags, bagOffset, 0, nil, "moveMinimap")
         containerOffset()
