@@ -95,9 +95,12 @@ local function actionBars(layout)
 
     --PetActionBar
     local PetActionBar = getSystem(layout, Enum.EditModeSystem.ActionBar, 12)
-    editModeSetPoint(PetActionBar, "BOTTOM", "MultiBarBottomLeft", "TOP", 0, 8)
-    setEditModeSetting(PetActionBar, 6, 0) --Add Hide Bar Art and set false
-    --setEditModeSetting(PetActionBar, 4, 10) --Icon padding
+    setEditModeSetting(PetActionBar, 3, 4) --Icon size
+    --Position without Bar Art
+    editModeSetPoint(PetActionBar, "BOTTOM", "MultiBarBottomLeft", "TOP", -1, 5)
+    --Position with Bar Art
+    --editModeSetPoint(PetActionBar, "BOTTOM", "MultiBarBottomLeft", "TOP", 0, 8)
+    --setEditModeSetting(PetActionBar, 6, 0) --Add Hide Bar Art and set false
     --setEditModeSetting(PetActionBar, 9, 1) --Always show buttons
 
     --PossessActionBar
@@ -143,11 +146,11 @@ local function unitFrames(layout)
     if Settings.GetValue(addonName.."_moveUnitFrames") == true then
         --PlayerFrame
         local PlayerFrame = getSystem(layout, Enum.EditModeSystem.UnitFrame, 1)
-        editModeSetPoint(PlayerFrame, "BOTTOMRIGHT", "UIParent", "BOTTOM", -163, 209)
+        editModeSetPoint(PlayerFrame, "BOTTOMRIGHT", "UIParent", "BOTTOM", -172, 209)
 
         --TargetFrame
         local TargetFrame = getSystem(layout, Enum.EditModeSystem.UnitFrame, 2)
-        editModeSetPoint(TargetFrame, "BOTTOMLEFT", "UIParent", "BOTTOM", 163, 209)
+        editModeSetPoint(TargetFrame, "BOTTOMLEFT", "UIParent", "BOTTOM", 172, 209)
 
         --FocusFrame
         local FocusFrame = getSystem(layout, Enum.EditModeSystem.UnitFrame, 3)
