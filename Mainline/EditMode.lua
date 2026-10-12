@@ -88,11 +88,6 @@ local function actionBars(layout)
     editModeSetPoint(MultiBarBottomRight, "TOP", "MainActionBar", "BOTTOM", 0, -3)
 
     --Stance Bar, Pet Bar, and Possess Bar all stack when default above MainActionBar
-    --StanceBar
-    local StanceBar = getSystem(layout, Enum.EditModeSystem.ActionBar, 11)
-    editModeSetPoint(StanceBar, "BOTTOM", "MultiBarBottomLeft", "TOP", 0, 8)
-    setEditModeSetting(StanceBar, 6, 0) --Add Hide Bar Art and set false
-
     --PetActionBar
     local PetActionBar = getSystem(layout, Enum.EditModeSystem.ActionBar, 12)
     setEditModeSetting(PetActionBar, 3, 4) --Icon size
@@ -111,6 +106,17 @@ local function actionBars(layout)
     --MultiCastActionBarFrame
     local MultiCastActionBarFrame = getSystem(layout, Enum.EditModeSystem.TotemActionBar)
     editModeSetPoint(MultiCastActionBarFrame, "BOTTOM", "MultiBarBottomLeft", "TOP", 0, 8)
+end
+
+local function stanceBar(layout)
+    local StanceBar = getSystem(layout, Enum.EditModeSystem.ActionBar, 11)
+    if Settings.GetValue(addonName.."_offsetStanceBar") == true then
+        --StanceBar
+        editModeSetPoint(StanceBar, "BOTTOMLEFT", "MultiBarBottomLeft", "TOPLEFT", 0, 5)
+        --setEditModeSetting(StanceBar, 6, 0) --Add Hide Bar Art and set false
+    else
+        editModeSetPoint(StanceBar, "BOTTOM", "MultiBarBottomLeft", "TOP", -1, 5)
+    end
 end
 
 local function microMenu(layout)
@@ -308,6 +314,7 @@ function JadeUI.SetJadeUILayout(forceInit)
     local jadeUILayout, initProfile = generateLayout(baseLayout, forceInit)
 
     actionBars(jadeUILayout)
+    stanceBar(jadeUILayout)
     microMenu(jadeUILayout)
     bagsBar(jadeUILayout)
     durabilityFrame(jadeUILayout)

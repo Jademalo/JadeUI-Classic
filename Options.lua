@@ -185,7 +185,11 @@ local function offsetStanceBarCheckbox(category)
     Settings.CreateCheckbox(category, setting, description)
 
     Settings.GetSetting(addonName.."_"..variable):SetValueChangedCallback(function()
-        JadeUI.TriggerFrameHooks()
+        if JadeUI.isForever then
+            JadeUI.SetJadeUILayout()
+        else
+            JadeUI.TriggerFrameHooks()
+        end
     end)
 
 end
@@ -218,7 +222,7 @@ optionsPanel:SetScript("OnEvent", function(self, event, arg1, arg2)
         --Add Items
         if JadeUI.isForever then editModeInitButton(layout) end
         if JadeUI.isClassic then talentCheckbox(category) end
-        if JadeUI.isClassic then offsetStanceBarCheckbox(category) end
+        offsetStanceBarCheckbox(category)
         unitFramesCheckbox(category)
         if JadeUI.isClassic then endstopDropDown(category) end
         minimapCheckbox(category)
