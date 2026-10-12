@@ -62,12 +62,7 @@ local function unitFramesCheckbox(category)
     Settings.CreateCheckbox(category, setting, description)
 
     Settings.GetSetting(addonName.."_"..variable):SetValueChangedCallback(function()
-        if JadeUI.isForever then
-            JadeUI.SetJadeUILayout()
-        else
-            JadeUI.TriggerFrameHooks()
-            ActionBarController_UpdateAll()
-        end
+        JadeUI.SetJadeUILayout()
     end)
 
 end
@@ -84,11 +79,7 @@ local function minimapCheckbox(category)
 
     Settings.GetSetting(addonName.."_"..variable):SetValueChangedCallback(function()
         JadeUI.TriggerFrameHooks()
-        if JadeUI.isForever then
-            JadeUI.SetJadeUILayout()
-        else
-            ActionBarController_UpdateAll()
-        end
+        JadeUI.SetJadeUILayout()
     end)
 
 end
@@ -157,19 +148,22 @@ local function minimapScaleSlider(category)
     local variable = "minimapScaleFactor"
     local name = "Minimap Scale"
     local description = "Select the scale for the Minimap"
-    local defaultValue = 1.35
+    local defaultValue = 9
 
-    local minRange = 1
-    local maxRange = 1.5
-    local stepSize = 0.05
+    local minRange = 0
+    local maxRange = 15
+    local stepSize = 1
 
     local setting = Settings.RegisterAddOnSetting(category, addonName.."_"..variable, variable, JadeUIDB, type(defaultValue), name, defaultValue)
     local options = Settings.CreateSliderOptions(minRange, maxRange, stepSize)
-    options:SetLabelFormatter(MinimalSliderWithSteppersMixin.Label.Right, function(value) return round(value, 2) end)
+    options:SetLabelFormatter(MinimalSliderWithSteppersMixin.Label.Right, function(value)
+        local percentage = 50 + (value * 10)
+        return string.format("%d%%", percentage)
+     end)
     Settings.CreateSlider(category, setting, options, description)
 
     Settings.GetSetting(addonName.."_"..variable):SetValueChangedCallback(function()
-        JadeUI.MinimapScaleFunc()
+        JadeUI.SetJadeUILayout()
     end)
 
 end
@@ -185,11 +179,7 @@ local function offsetStanceBarCheckbox(category)
     Settings.CreateCheckbox(category, setting, description)
 
     Settings.GetSetting(addonName.."_"..variable):SetValueChangedCallback(function()
-        if JadeUI.isForever then
             JadeUI.SetJadeUILayout()
-        else
-            JadeUI.TriggerFrameHooks()
-        end
     end)
 
 end
@@ -244,7 +234,7 @@ optionsPanel:SetScript("OnEvent", function(self, event, arg1, arg2)
         Settings.RegisterAddOnCategory(category)
 
         --Add Items
-        if JadeUI.isForever then editModeInitButton(layout) end
+        editModeInitButton(layout)
         if JadeUI.isClassic then talentCheckbox(category) end
         offsetStanceBarCheckbox(category)
         unitFramesCheckbox(category)

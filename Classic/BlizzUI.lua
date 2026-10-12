@@ -8,15 +8,7 @@ local addonName, JadeUI = ...
 --------------------------------------------
 --Calculate the width of the map to offset the bags. Pass as argument without () so the function itself is being passed and not the result 
 local function bagOffset()
-    local barOffset = 0
-    
-    if MultiBarLeft:IsShown() and MultiBarRight:IsShown() then 
-        barOffset = select(4, MultiBarLeft:GetPoint())+select(5, MultiBarLeft:GetPoint()) 
-    elseif MultiBarLeft:IsShown() or MultiBarRight:IsShown() then
-        barOffset = select(4, MultiBarRight:GetPoint())+select(5, MultiBarRight:GetPoint())
-    end
-    
-    return -(MinimapCluster:GetWidth()*MinimapCluster:GetScale())-barOffset
+    return -(MinimapCluster:GetWidth()*MinimapCluster:GetScale())
 end
 
 --Calculate the width of the map to offset the tooltip.
@@ -24,292 +16,206 @@ local function tooltipOffset()
     return -(MinimapCluster:GetWidth()*MinimapCluster:GetScale()) 
 end
 
---Calculate the width of the map to offset the buffs, should be offset by 10 from minimap cluster. Pass as argument without () so the function itself is being passed and not the result 
-local function buffOffset()
-    local minimapWidth = MinimapCluster:GetWidth()*MinimapCluster:GetScale()
-    if JadeUIDB.moveMinimap then
-        return -10
-    else
-        return -(minimapWidth+10)
-    end
+--Add UpdateDividers to frames that don't have it - https://github.com/Gethe/wow-ui-source/blob/09b9db7948abc9b9648dedaab51eb0cf3ee67b31/Interface/AddOns/Blizzard_ActionBar/Shared/MainActionBar.lua#L86
+function UpdateDividers(self)
+	if (not self.enableDividers) then
+		return;
+	end
+
+	if not self.HorizontalDividersPool then
+		self.HorizontalDividersPool = CreateFramePool("FRAME", self, "HorizontalDividerTemplate");
+		self.VerticalDividersPool = CreateFramePool("FRAME", self, "VerticalDividerTemplate");
+	end
+	self.HorizontalDividersPool:ReleaseAll();
+	self.VerticalDividersPool:ReleaseAll();
+
+	if self.hideBarArt or self.numRows > 2 or self.buttonPadding > self.minButtonPadding then
+		return;
+	end
+
+	local dividersPool = self.isHorizontal and self.HorizontalDividersPool or self.VerticalDividersPool;
+	local wasLastButtonShown = false;
+	for i, actionButton in pairs(self.actionButtons) do
+		if actionButton:IsShown() then
+			if wasLastButtonShown and (actionButton ~= _G["MultiBarBottomRightButton"..math.ceil(self.numButtonsShowable/self.numRows)+1]) then --Specifically don't draw the divider if the next button is on the second level
+                local divider = dividersPool:Acquire();
+				divider:ClearAllPoints();
+				if self.isHorizontal then
+					divider:SetPoint("TOP", actionButton, "TOP", 0, 0);
+					divider:SetPoint("BOTTOM", actionButton, "BOTTOM", 0, 0);
+					divider:SetPoint("RIGHT", actionButton, "LEFT", 5, 0);
+				else
+					divider:SetPoint("LEFT", actionButton, "LEFT", 0, 0);
+					divider:SetPoint("RIGHT", actionButton, "RIGHT", 0, 0);
+					divider:SetPoint("BOTTOM", actionButton, "TOP", 0, -5);
+				end
+				divider:Show();
+			end
+			wasLastButtonShown = true;
+		else
+			wasLastButtonShown = false;
+		end
+	end
 end
 
---Calculate the height of the map to offset the quest frame, should be offset 27 from minimap cluster. Pass as argument without () so the function itself is being passed and not the result 
-local function questOffset()
-    local minimapExtraSize = MinimapCluster:GetHeight()-(MinimapCluster:GetHeight()*MinimapCluster:GetScale())
-    if JadeUIDB.moveMinimap then
-        return 0
-    else
-        return minimapExtraSize
-    end
+--Add background to bar - https://github.com/Gethe/wow-ui-source/blob/09b9db7948abc9b9648dedaab51eb0cf3ee67b31/Interface/AddOns/Blizzard_ActionBar/Mainline/MainActionBar.xml#L52
+local function BorderArt(targetBar)
+
+    local borderArt = targetBar:CreateTexture(nil, "BACKGROUND", nil, -3)
+    borderArt:SetAtlas("UI-HUD-ActionBar-Frame", true)
+    borderArt.ignoreInLayout = true
+
+    borderArt:ClearAllPoints()
+    borderArt:SetPoint("TOPLEFT", targetBar, "TOPLEFT", -6, 6)
+    borderArt:SetPoint("BOTTOMRIGHT", targetBar, "BOTTOMRIGHT", 4, -5)
+
+    targetBar.BorderArt = borderArt
+
+    return borderArt
 end
 
-
---------------------------------------------
---Functions to move basic Blizzard Frames
---------------------------------------------
-function JadeUI.moveUnitFramesFunc()
-    --Player Frame
-    JadeUI.MoveBlizzardFrame(PlayerFrame, "BOTTOMLEFT", "TOPLEFT", 0, 0, JadeUIMainFrame, "moveUnitFrames")
-    --Target Frame
-    JadeUI.MoveBlizzardFrame(TargetFrame, "BOTTOMRIGHT", "TOPRIGHT", 0, 0, JadeUIMainFrame, "moveUnitFrames")
-
-    if not JadeUI.isClassic then
-        --Focus Frame
-        JadeUI.MoveBlizzardFrame(FocusFrame, "BOTTOMLEFT", "BOTTOM", - 163, 250, nil, "moveUnitFrames")
-    end
+--Hide the art for the main status bar - https://github.com/Gethe/wow-ui-source/blob/8165d4cd6e48d606369336cc3a7977902310e81e/Interface/AddOns/Blizzard_ActionBar/Classic/StatusTrackingManagerOverrides.lua#L64
+local function UseMainMenuBarArt(self, useMainMenuBarArt)
+	for index, texture in ipairs(self.MainMenuBarTextures) do
+		texture:SetShown(false);
+	end
+	for index, texture in ipairs(self.StandaloneTextures) do
+		texture:SetShown(false);
+	end
 end
 
---Fixes for the vertical multi bars to have them properly react to the minimap's position
-local function verticalMultiBarFix()
-    --Fix error when map at the bottom by anchoring the top of right actionbars to BuffFrame instead (https://github.com/Gethe/wow-ui-source/blob/bc566bcfb0633aa29255dc1bb65b4bbed00967a4/Interface/FrameXML/MultiActionBars.lua#L60)
-    local oldMinimapGetBottom = MinimapCluster.GetBottom
-    function MinimapCluster:GetBottom()
-        if oldMinimapGetBottom(self) < (UIParent:GetBottom() + (MinimapCluster:GetHeight()*MinimapCluster:GetScale())) then --If minimap get bottom is below the height of the minimap cluster off the bottom of UIParent
-            return BuffFrame:GetBottom() --Return the bottom of the Buff Bar
-        else
-            return oldMinimapGetBottom(self)*self:GetScale() --GetBottom gives a position value relative to the scale domain of the minimap, rather than UIParent. We need to fix that.
-        end
-    end
-
-    --Adjust the right action bars to bottom anchor to the minimap size when above it (https://github.com/Gethe/wow-ui-source/blob/bc566bcfb0633aa29255dc1bb65b4bbed00967a4/Interface/FrameXML/MultiActionBars.lua#L65)
-    function MainMenuBarArtFrame:GetTop()
-        if oldMinimapGetBottom(MinimapCluster) < (UIParent:GetBottom() + (MinimapCluster:GetHeight()*MinimapCluster:GetScale())) then
-            return MinimapCluster:GetTop()*MinimapCluster:GetScale() --GetTop gives a position value relative to the scale domain of the minimap, rather than UIParent. We need to fix that since the minimap scale might not be 0.
-        else
-            return JadeUIBarTopArtFrame:GetTop()*JadeUIBarTopArtFrame:GetScale() --GetTop gives a position value relative to the scale domain of the frame, rather than UIParent. We need to fix that since the frame scale might not be 0. 
-        end
-    end
+local function resizeStatusBar(bar, width, height)
+    bar:SetWidth(width)
+    bar:SetHeight(height)
+    bar:GetShownBar():SetShown(false) --Hide the previously initalised bar
+    bar:InitializeBars()
+    bar:SetShownBar(bar:GetShownBar()) --https://github.com/Gethe/wow-ui-source/blob/09b9db7948abc9b9648dedaab51eb0cf3ee67b31/Interface/AddOns/Blizzard_ActionBar/Shared/StatusTrackingManager.lua#L185
 end
 
-function JadeUI.MoveMinimapFunc()
-    --Minimap
-    JadeUI.MoveBlizzardFrame(MinimapCluster, "BOTTOMRIGHT", "BOTTOMRIGHT", 0, 0, nil, "moveMinimap")
-    --Minimap Zone Info
-    JadeUI.MoveBlizzardFrame(MinimapCluster.BorderTop, "BOTTOMRIGHT", "BOTTOMRIGHT", 0, 0, nil, "moveMinimap")
-    JadeUI.MoveBlizzardFrame(MinimapCluster.MinimapContainer, "BOTTOM", "TOP", 0, 0, nil, "moveMinimap")
-    --Clock
-    JadeUI.MoveBlizzardFrame(TimeManagerClockButton, "CENTER", "CENTER", 0, 68, nil, "moveMinimap")
-
-    --Bags
-    for i = 1, 5 do JadeUI.OffsetBlizzardFrame(_G["ContainerFrame" .. i], bagOffset, 0, nil, "moveMinimap") end
-    --Tooltip
-    JadeUI.OffsetBlizzardFrame(GameTooltip, tooltipOffset, 0, nil, "moveMinimap")
-    --Buff Bar
-    JadeUI.MoveBlizzardFrame(BuffFrame, "TOPRIGHT", "TOPRIGHT", buffOffset, -13)
-    --QuestWatchFrame
-    JadeUI.OffsetBlizzardFrame(UIParentRightManagedFrameContainer, 0, questOffset)
-
-    ActionBarController_UpdateAll() --This makes sure that the right hand bar gets repositioned after the minimap is moved around (https://github.com/Gethe/wow-ui-source/blob/bc566bcfb0633aa29255dc1bb65b4bbed00967a4/Interface/FrameXML/ActionBarController.lua#L93)
+local function replaceBlizzExpBarTexture()
+    MainStatusTrackingBarContainer.UseMainMenuBarArt = UseMainMenuBarArt
+    MainStatusTrackingBarContainer:UseMainMenuBarArt()
+    JadeUIExpBarCover = JadeUIBar:CreateTexture("JadeUIExpBarCover")
+    JadeUIExpBarCover:SetPoint("BOTTOM", MainStatusTrackingBarContainer, "BOTTOM", 0, 2)
+    JadeUIExpBarCover:SetTexture(JadeUI.textures.g13ExpBarTexture)
+    JadeUIExpBarCover:SetDrawLayer("BORDER", 7)
+    JadeUIExpBarCover:SetParent(MainStatusTrackingBarContainer)
+    JadeUIExpBarCover:SetScale(1 / StatusTrackingBarManager.ClassicScale)
 end
 
-function JadeUI.MinimapScaleFunc()
-    MinimapCluster:SetScale(JadeUIDB.minimapScaleFactor)
-    JadeUI.TriggerFrameHooks()
-    ActionBarController_UpdateAll() --This makes sure that the right hand bar gets repositioned after the minimap is moved around (https://github.com/Gethe/wow-ui-source/blob/bc566bcfb0633aa29255dc1bb65b4bbed00967a4/Interface/FrameXML/ActionBarController.lua#L93)
+local function replaceBlizzRepBarTexture()
+    SecondaryStatusTrackingBarContainer.UseMainMenuBarArt = UseMainMenuBarArt
+    SecondaryStatusTrackingBarContainer:UseMainMenuBarArt()
+    JadeUIRepBarCover = JadeUIBar:CreateTexture("JadeUIRepBarCover")
+    JadeUIRepBarCover:SetPoint("BOTTOM", SecondaryStatusTrackingBarContainer, "BOTTOM", 0, 0)
+    JadeUIRepBarCover:SetTexture(JadeUI.textures.g13RepBarTexture)
+    JadeUIRepBarCover:SetDrawLayer("BORDER", 7)
+    JadeUIRepBarCover:SetParent(SecondaryStatusTrackingBarContainer)
+    JadeUIRepBarCover:SetScale(1 / StatusTrackingBarManager.ClassicScale)
 end
 
-function JadeUI.ClockFlipFunc()
-    hooksecurefunc(MinimapCluster, "SetPoint", function()
-        if JadeUIDB.moveMinimap then
-            GetIndexedRegion(TimeManagerClockButton, 1):SetTexCoord(0.015625, 0.8125, 0.390625, 0.015625)
-        else
-            GetIndexedRegion(TimeManagerClockButton, 1):SetTexCoord(0.015625, 0.8125, 0.015625, 0.390625)
-        end
-    end)
-    JadeUI.TriggerFrameHooks()
-end
-
-
-
-
-
---------------------------------------------
---Functions to move Blizzard Action Bars
---------------------------------------------
-local function moveMicroMenu()
+local function talentButtonToggle()
     --Micro Menu
     hooksecurefunc("UpdateMicroButtons", function()
-        MicroMenuContainer:SetParent(JadeUIButtonParent)
-        MicroMenuContainer:ClearAllPoints()
-        MicroMenuContainer:SetPoint("BOTTOMLEFT", JadeUIMainFrame, "BOTTOM", -288, 2)
 
         if JadeUIDB.showTalents == true or C_SpecializationInfo.CanPlayerUseTalentSpecUI() then --https://github.com/Gethe/wow-ui-source/blob/09b9db7948abc9b9648dedaab51eb0cf3ee67b31/Interface/AddOns/Blizzard_MicroMenu/Classic/MainMenuBarMicroButtons.lua#L594
             TalentMicroButton:SetShown(JadeUIDB.showTalents or C_SpecializationInfo.CanPlayerUseTalentSpecUI())
             MicroMenu.childXPadding = -2.5
         else
-            MicroMenu.childXPadding = 2
+            MicroMenu.childXPadding = 1.9
         end
 
-        MicroMenu:Layout()
+        MicroMenuContainer:Layout()
     end)
 
     UpdateMicroButtons()
 end
 
-
-local function moveBagBar()
-    --Bag Bar
-    BagsBar:SetParent(JadeUIButtonParent)
-    JadeUI.MoveBlizzardFrame(BagsBar, "BOTTOMLEFT", "BOTTOM", 64, 3, JadeUIMainFrame)
-
-    if not GetCVarBool("showKeyring") then
-        SetCVar("showKeyring", 1)
-    end
-    JadeUI.MoveBlizzardFrame(KeyRingButton, "RIGHT", "LEFT", -5, -1, CharacterBag3Slot) --Move keyring down 1 from default to better line it up with everything else
-end
-
-
-local function moveActionBars()
-
-    local function SetButtonNum(frame, num)
-        frame.numButtons = num
-        frame.numButtonsShowable = num --This is set to numButtons on load, but needs to be set manually here - https://github.com/Gethe/wow-ui-source/blob/09b9db7948abc9b9648dedaab51eb0cf3ee67b31/Interface/AddOns/Blizzard_ActionBar/Shared/ActionBar.lua#L4
-        frame:UpdateShownButtons() --This is necessary to run before changing the numRows because numRows uses shownButtonContainers - https://github.com/Gethe/wow-ui-source/blob/09b9db7948abc9b9648dedaab51eb0cf3ee67b31/Interface/AddOns/Blizzard_ActionBar/Shared/ActionBar.lua#L198 + https://github.com/Gethe/wow-ui-source/blob/09b9db7948abc9b9648dedaab51eb0cf3ee67b31/Interface/AddOns/Blizzard_ActionBar/Shared/ActionBar.lua#L100
-        frame:UpdateGridLayout()
-    end
-    -- Top Bar = 6
-    -- Second Bar = 1
-    -- Third Bar = 5 (1-5)
-    -- Fourth Bar = 5 (7-9)
-
-    --Forcibly enable bars 2 and 3
-    --SetActionBarToggles(1, 1, 1, 1)
-    --MultiActionBar_Update()
-
-    --Main Action Bar
-    JadeUI.MoveBlizzardFrame(MainActionBar, "CENTER", "CENTER", -1, 2, JadeUIMainFrame)
-    MainActionBar:SetParent(JadeUIButtonParent)
-    --Hide Bar Art
-    MainActionBar:UpdateEndCaps(true) --https://github.com/Gethe/wow-ui-source/blob/8165d4cd6e48d606369336cc3a7977902310e81e/Interface/AddOns/Blizzard_ActionBar/Classic/MainActionBarOverrides.lua#L17
-    MainActionBar.ActionBarPageNumber:Hide()
-    SetButtonNum(MainActionBar, 7)
-
-    --Bottom Left Action Bar
-    MultiBarBottomLeft:SetParent(JadeUIButtonParent)
-    JadeUI.MoveBlizzardFrame(MultiBarBottomLeft, "BOTTOM", "TOP", 0, 6.5, MainActionBar)
-    SetButtonNum(MultiBarBottomLeft, 7)
-
-    --Bottom Right Action Bar
-    MultiBarBottomRight:SetParent(JadeUIButtonParent)
-    JadeUI.MoveBlizzardFrame(MultiBarBottomRight, "TOP", "BOTTOM", 0, -6.5, MainActionBar)
-    SetButtonNum(MultiBarBottomRight, 10)
-    MultiBarBottomRight.numRows = 2
-    MultiBarBottomRight:UpdateGridLayout()
-    JadeUI.HideBlizzardFrame(MultiBarBottomRightButtonContainer1)
-    JadeUI.HideBlizzardFrame(MultiBarBottomRightButtonContainer5)
-
-end
-
-local function movePetBar()
-    PetActionBar:SetParent(JadeUIButtonParent)
-    PetActionBar:SetScale(0.7)
-    JadeUI.MoveBlizzardFrame(PetActionBar, "BOTTOM", "TOP", -1.5, -41, JadeUIMainFrame)
-    hooksecurefunc(PetActionBar, "SetBackgroundArtShown", function(self, shown) --Hook the show function to always force it to true
-        if not shown then
-            PetActionBar:SetBackgroundArtShown(true) --https://github.com/Gethe/wow-ui-source/blob/09b9db7948abc9b9648dedaab51eb0cf3ee67b31/Interface/AddOns/Blizzard_ActionBar/Shared/PetActionBar.lua#L228
-        end
-    end)
-    PetActionBar.BackgroundArt1:ClearAllPoints()
-    PetActionBar.BackgroundArt1:SetPoint("TOPLEFT", PetActionBar, "TOPLEFT", -35, 10)
-end
-
-local function moveStanceBar()
-
+--------------------------------------------
+--Functions to move Blizzard Action Bars
+--------------------------------------------
+local function containerOffset()
     local hookSet = false
-    table.insert(JadeUI.hookTable, StanceBar) --Add any frame with a hook to the table of hooked frames (This adds the pointer to the table, not a copy)
-    StanceBar.defaultPos = {StanceBar:GetPoint()} --Get the default position of the frame before the hook started to mess with things
+    table.insert(JadeUI.hookTable, ContainerFrameContainer) --Add any frame with a hook to the table of hooked frames (This adds the pointer to the table, not a copy)
+    ContainerFrameContainer.defaultPos = {ContainerFrameContainer:GetPoint()}
 
-    hooksecurefunc(StanceBar, "SetPoint", function()
+    hooksecurefunc(ContainerFrameContainer, "SetPoint", function()
         if hookSet then return end --Don't infinitely fire from itself
 
-        if JadeUIDB.offsetStanceBar then
-            hookSet = true
-            StanceBar:ClearAllPoints()
-            StanceBar:SetPoint("BOTTOMLEFT", JadeUIMainFrame, "TOP", -141.5, -27.5)
-            hookSet = false
-        else
-            hookSet = true
-            StanceBar:ClearAllPoints()
-            StanceBar:SetPoint("BOTTOM", JadeUIMainFrame, "TOP", -1.5, -27.5)
-            hookSet = false
-        end
+        if not JadeUIDB["moveMinimap"] then ContainerFrameContainer:SetAllPoints() return end --Rather than using the defaultPos like the other hooks, we use SetAllPoints to set both to UIParent
+
+        hookSet = true
+            ContainerFrameContainer:ClearAllPoints()
+            ContainerFrameContainer:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 0, 0)
+            ContainerFrameContainer:SetPoint("BOTTOMRIGHT", MinimapCluster, "BOTTOMLEFT", 0, 0)
+        hookSet = false
     end)
 
-    StanceBar:SetPoint(StanceBar:GetPoint()) --Fire SetPoint to fire the hook with the original frame data to prevent the hook from having bad data
-    hooksecurefunc("GetNumShapeshiftForms", function() StanceBar:SetPoint(StanceBar:GetPoint()) end) --Update the position if the UI ever checks the number of shapeshift forms, which should happen on learning a new one
-
+    ContainerFrameContainer:SetPoint(ContainerFrameContainer:GetPoint()) --Fire SetPoint to fire the hook with the original frame data to prevent the hook from having bad data
 end
-
---Adapted from https://github.com/erikbrgn/AutoHideBinds/blob/main/AutoHideBinds.lua with permission
-function JadeUI.HideKeybinds()
-    local bars = {
-        "Action",
-        "MultiBarBottomLeft",
-        "MultiBarBottomRight",
-        "MultiBarRight",
-        "MultiBarLeft",
-        "MultiBar5",
-        "MultiBar6",
-        "MultiBar7"
-    }
-    for _, barName in ipairs(bars) do
-        for buttonNumber = 1, 12 do
-            local button = barName .. "Button" .. buttonNumber
-            if _G[button] then
-                _G[button .. "HotKey"]:Hide()
-                _G[button .. "HotKey"].Show = function() end
-            end
-        end
-    end
-end
-
 
 --------------------------------------------
 --Core functions to apply changes
 --------------------------------------------
---Move various Blizzard frames
-function JadeUI.blizzUIMove()
-    JadeUI.MoveBlizzardFrame(PlayerCastingBarFrame,"BOTTOM", "BOTTOM", 0, 248) --Casting Bar
-    JadeUI.MoveBlizzardFrame(FramerateLabel, "BOTTOM", "BOTTOM", -190, 85) --Framerate
-    JadeUI.MoveBlizzardFrame(DurabilityFrame, "LEFT", "RIGHT", 0, 23, JadeUIMainFrame) --Durability Frame
+function JadeUI.SetupHooksForLayout()
+    if not JadeUI.setupHooks then
 
-    --verticalMultiBarFix()
-    JadeUI.moveUnitFramesFunc()
-    JadeUI.MinimapScaleFunc() --Minimap Scale. Needs to be above Minimap since Minimap includes scale calcs.
-    JadeUI.MoveMinimapFunc()
-    JadeUI.ClockFlipFunc()
+        local function AddArt(frame)
+            frame.UpdateDividers = UpdateDividers
+            frame.enableDividers = true
+            frame:UpdateDividers()
+            BorderArt(frame)
+        end
 
-    if JadeUI.isClassic then 
-        JadeUI.MoveBlizzardFrame(TutorialFrameParent,"BOTTOM", "BOTTOM", 0, 300) --Tutorial Frame
-    end
-end
+        --AddArt(MultiBarBottomLeft)
+        --AddArt(MultiBarBottomRight)
+        --AddArt(PetActionBar)
 
---Move Blizzard Bars
-function JadeUI.blizzBarMove()
+        if JadeUIDB["taintSafety"] < 1 then --Only on taintSafety 0
+            --These have errors with taintLog 1, otherwise work fine unless you try to drag a button in combat
+            JadeUI.HideBlizzardFrame(MultiBarBottomRightButtonContainer1)
+            JadeUI.HideBlizzardFrame(MultiBarBottomRightButtonContainer5)
+        end
 
-    --Move Bars
-    moveMicroMenu()
-    moveBagBar()
-    moveActionBars()
-    if JadeUIDB.hideKeybinds then JadeUI.HideKeybinds() end
+        if JadeUIDB["taintSafety"] < 2 then --Only on taintSafety 0 and 1
+            --Weirdly, if BottomManagedFrameContainer is disabled but RightManagedFrameContainer is not, then Right works fine
+            --If taintLog 0 is set then they both also seems to work fine
+            --Cast Bar, Extra Abilities, Encounter Bar, and Swing Timer are all part of BottomManagedFrameContainer
+            JadeUI.MoveBlizzardFrame(UIParentBottomManagedFrameContainer, "BOTTOM", "TOP", 0, 47, MultiBarBottomLeft)
+            --Boss Frames, Equipment Durability, and Objective Tracker are all part of RightManagedFrameContainer
+            --This actively causes a taint failure in combat if Boss Frames are part of it, so they are always moved when moveMinimap is true
+            JadeUI.MoveBlizzardFrame(UIParentRightManagedFrameContainer, "TOPRIGHT", "TOPLEFT", -5, 26, MultiBarLeft, "moveMinimap")
+        end
 
-    moveStanceBar()
-    movePetBar()
+        --JadeUI.OffsetBlizzardFrame(ContainerFrameCombinedBags, bagOffset, 0, nil, "moveMinimap")
+        --containerOffset()
 
-    --Other Variables
-    if stanceBarHide then
-        StanceBar:Hide()
-    end
-end
+        --StatusTrackingBarManager.ClassicScale = 0.576
+        --StatusTrackingBarManager:UpdateBarVisuals()
 
 
---Fix Bartender so the two bottom buttons go below the menu/bag
-function JadeUI.bartenderFix()
-    BT4Button54:SetFrameLevel(1)
-    BT4Button58:SetFrameLevel(1)
+        replaceBlizzExpBarTexture()
+        resizeStatusBar(MainStatusTrackingBarContainer, 598, 11)
+        replaceBlizzRepBarTexture()
+        resizeStatusBar(SecondaryStatusTrackingBarContainer, 598, 8)
+        
+        talentButtonToggle()
 
-    if stanceBarHide then
-        BT4BarStanceBar:Hide()
+        hooksecurefunc(PetActionBar, "SetBackgroundArtShown", function(self, shown) --Hook the show function to always force it to true
+            if not shown then
+                PetActionBar:SetBackgroundArtShown(true) --https://github.com/Gethe/wow-ui-source/blob/09b9db7948abc9b9648dedaab51eb0cf3ee67b31/Interface/AddOns/Blizzard_ActionBar/Shared/PetActionBar.lua#L228
+            end
+        end)
+        PetActionBar:SetBackgroundArtShown(true)
+        PetActionBar.BackgroundArt1:SetScale(PetActionBarButtonContainer1:GetScale())
+        PetActionBar.BackgroundArt2:SetScale(PetActionBarButtonContainer1:GetScale())
+
+        --Bags
+        for i = 1, 5 do JadeUI.OffsetBlizzardFrame(_G["ContainerFrame" .. i], bagOffset, 0, nil, "moveMinimap") end
+        --Tooltip
+        JadeUI.OffsetBlizzardFrame(GameTooltip, tooltipOffset, 0, nil, "moveMinimap")
+
+
+        JadeUI.setupHooks = true
     end
 end

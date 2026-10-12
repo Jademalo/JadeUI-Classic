@@ -18,7 +18,7 @@ Core.lua
 Shared.lua
 Options.lua
 [Family]\BlizzUI.lua
-[Family]\Layout.lua [ExcludeLoadGameType classic]
-[Family]\EditMode.lua [ExcludeLoadGameType classic]
+[Family]\Layout.lua
+[Family]\EditMode.lua
 [Family]\ArtFrame.lua [AllowLoadGameType classic]
 [Family]\ExpBar.lua [AllowLoadGameType classic]
