@@ -8,7 +8,7 @@ local addonName, JadeUI = ...
 --------------------------------------------
 --Calculate the width of the map to offset the bags. Pass as argument without () so the function itself is being passed and not the result 
 local function bagOffset()
-    return -(MinimapCluster:GetWidth()*MinimapCluster:GetScale())
+    return -(MinimapCluster:GetWidth()*MinimapCluster:GetScale())-10
 end
 
 --Calculate the width of the map to offset the tooltip.
