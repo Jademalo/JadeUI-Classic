@@ -195,10 +195,10 @@ function expBar.BlizzRepBarMove()
 end
 
 --Show/Hide the Max level cover depending on your level or tracked faction status
-function expBar.showMaxCover()
-    if UnitLevel("player") < GetMaxPlayerLevel() or GetWatchedFactionInfo() then
-        JadeUIMaxLevelCover:Hide()
-    else
+--[[ function expBar.showMaxCover()
+    if MainStatusTrackingBarContainer:GetShownBar() == nil then
         JadeUIMaxLevelCover:Show()
+    else
+        JadeUIMaxLevelCover:Hide()
     end
- end
+ end ]]

@@ -87,7 +87,7 @@ end
 local function resizeStatusBar(bar, width, height)
     bar:SetWidth(width)
     bar:SetHeight(height)
-    bar:GetShownBar():SetShown(false) --Hide the previously initalised bar
+    if bar:GetShownBar() then bar:GetShownBar():SetShown(false) end --Hide the previously initalised bar
     bar:InitializeBars()
     bar:SetShownBar(bar:GetShownBar()) --https://github.com/Gethe/wow-ui-source/blob/09b9db7948abc9b9648dedaab51eb0cf3ee67b31/Interface/AddOns/Blizzard_ActionBar/Shared/StatusTrackingManager.lua#L185
 end
@@ -130,6 +130,21 @@ local function talentButtonToggle()
 
     UpdateMicroButtons()
 end
+
+local function createMaxLevelCover()
+        JadeUIMaxLevelCover = JadeUIBar:CreateTexture("JadeUIMaxLevelCover")
+        JadeUIMaxLevelCover:SetPoint("BOTTOM", JadeUIBar, "BOTTOM", 0, 43)
+        JadeUIMaxLevelCover:SetTexture(JadeUI.textures.g13MaxCoverTexture)
+        JadeUIMaxLevelCover:SetDrawLayer("BACKGROUND", -1)
+end
+
+function JadeUI.showMaxCover()
+    if MainStatusTrackingBarContainer:GetShownBar() == nil then
+        JadeUIMaxLevelCover:Show()
+    else
+        JadeUIMaxLevelCover:Hide()
+    end
+ end
 
 --------------------------------------------
 --Functions to move Blizzard Action Bars
@@ -215,6 +230,9 @@ function JadeUI.SetupHooksForLayout()
         --Tooltip
         JadeUI.OffsetBlizzardFrame(GameTooltip, tooltipOffset, 0, nil, "moveMinimap")
 
+        createMaxLevelCover()
+        --JadeUI.showMaxCover()
+        hooksecurefunc(StatusTrackingBarManager, "UpdateBarVisuals", function(self, shown) JadeUI.showMaxCover() end)
 
         JadeUI.setupHooks = true
     end

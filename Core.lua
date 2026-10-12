@@ -28,8 +28,6 @@ end
 --------------------------------------------------------------------------------
 JadeUIBar:RegisterEvent("ADDON_LOADED")
 JadeUIBar:RegisterEvent("PLAYER_ENTERING_WORLD")
-JadeUIBar:RegisterEvent("PLAYER_LEVEL_UP") --Register the level up event to re-trigger the max cover after maxing
-
 
 --------------------------------------------------------------------------------
 --Event Handler
@@ -74,7 +72,6 @@ JadeUIBar:SetScript("OnEvent", function(self, event, arg1, arg2)
             --Move Blizzard status bars if not using Bartender
             --JadeUI.expBar.BlizzExpBarMove()
             --JadeUI.expBar.BlizzRepBarMove()
-            JadeUIBar:RegisterEvent("UPDATE_FACTION") --Register the update faction event to run Rep Bar Move after. For some reason if this isn't here, I get an error about JadeUIButtonParent
             --JadeUI.expBar.showMaxCover()
 
             --if C_AddOns.IsAddOnLoaded("Bartender4") then
@@ -82,14 +79,6 @@ JadeUIBar:SetScript("OnEvent", function(self, event, arg1, arg2)
             --end
 
             --JadeUI.SetDefaultStrata()
-        end
-
-    end
-
-    if event == "PLAYER_LEVEL_UP" then
-
-        if JadeUI.isClassic then
-            JadeUI.expBar.showMaxCover()
         end
 
     end
