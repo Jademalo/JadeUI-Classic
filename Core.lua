@@ -4,8 +4,6 @@
 local addonName, JadeUI = ... --Discard the addon name and set the namespace table as a variable
 JadeUI.hookTable = {}
 
-JadeUI.taintSafety = 1 --0 is no safety, 1 is no LUA errors but issues with taintLog 1, 2 is no taint
-
 --Check for project type
 JadeUI.isClassic = (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC)
 JadeUI.isForever = (WOW_PROJECT_ID == WOW_PROJECT_CAMELOT)
@@ -124,7 +122,7 @@ function JadeUI.MoveBlizzardFrame(frame, setPoint, setRelativePoint, setOffsetX,
 
     hooksecurefunc(frame, "SetPoint", function()
         if hookSet then return end --Don't infinitely fire from itself
-        if InCombatLockdown() and JadeUI.taintSafety > 1 then return end --Don't fire during combat if in taintSafety 2
+        if InCombatLockdown() and JadeUIDB["taintSafety"] > 1 then return end --Don't fire during combat if in taintSafety 2
 
         if savedVar then
             if not JadeUIDB[savedVar] then return end
@@ -148,7 +146,7 @@ function JadeUI.OffsetBlizzardFrame(frame, setOffsetX, setOffsetY, setRelativeTo
 
     hooksecurefunc(frame, "SetPoint", function()
         if hookSet then return end --Don't infinitely fire from itself
-        if InCombatLockdown() and JadeUI.taintSafety > 1 then return end --Don't fire during combat if in taintSafety 2
+        if InCombatLockdown() and JadeUIDB["taintSafety"] > 1 then return end --Don't fire during combat if in taintSafety 2
 
         if savedVar then
             if not JadeUIDB[savedVar] then return end
@@ -171,7 +169,7 @@ end
 --Forcibly hide a frame by hooking Show and forcing it to hide whenever it tries
 function JadeUI.HideBlizzardFrame(frame)
     hooksecurefunc(frame,"SetShown", function(self, shown)
-        if InCombatLockdown() and JadeUI.taintSafety > 1 then return end --Don't fire during combat if in taintSafety 2
+        if InCombatLockdown() and JadeUIDB["taintSafety"] > 1 then return end --Don't fire during combat if in taintSafety 2
         if shown then
             frame:SetShown(false)
         end

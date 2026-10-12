@@ -185,23 +185,23 @@ local function castBars(layout)
     local PlayerCastingBarFrame = getSystem(layout, Enum.EditModeSystem.CastBar)
 
     --Cast Bar
-    if JadeUI.taintSafety > 1 then editModeSetPoint(PlayerCastingBarFrame, "BOTTOM", "MultiBarBottomLeft", "TOP", 0, 120) end
+    if JadeUIDB["taintSafety"] > 1 then editModeSetPoint(PlayerCastingBarFrame, "BOTTOM", "MultiBarBottomLeft", "TOP", 0, 120) end
     setEditModeSetting(PlayerCastingBarFrame, 2, visibility) --Visibility
 
     --SwingTimerMainHandFrame
-    if JadeUI.taintSafety > 1 then editModeSetPoint(SwingTimerMainHandFrame, "TOP", "PlayerCastingBarFrame", "BOTTOM", 0, -20) end
+    if JadeUIDB["taintSafety"] > 1 then editModeSetPoint(SwingTimerMainHandFrame, "TOP", "PlayerCastingBarFrame", "BOTTOM", 0, -20) end
     setEditModeSetting(SwingTimerMainHandFrame, 2, visibility) --Visibility
     setEditModeSetting(SwingTimerMainHandFrame, 3, width) --Width
     setEditModeSetting(SwingTimerMainHandFrame, 4, height) --Height
 
     --SwingTimerOffHandFrame
-    if JadeUI.taintSafety > 1 then editModeSetPoint(SwingTimerOffHandFrame, "TOP", "SwingTimerMainHandFrame", "BOTTOM", 0, 0) end
+    if JadeUIDB["taintSafety"] > 1 then editModeSetPoint(SwingTimerOffHandFrame, "TOP", "SwingTimerMainHandFrame", "BOTTOM", 0, 0) end
     setEditModeSetting(SwingTimerOffHandFrame, 2, visibility) --Visibility
     setEditModeSetting(SwingTimerOffHandFrame, 3, width) --Width
     setEditModeSetting(SwingTimerOffHandFrame, 4, 0) --Height
 
     --SwingTimerRangedFrame
-    if JadeUI.taintSafety > 1 then editModeSetPoint(SwingTimerRangedFrame, "TOP", "SwingTimerOffHandFrame", "BOTTOM", 0, 0) end
+    if JadeUIDB["taintSafety"] > 1 then editModeSetPoint(SwingTimerRangedFrame, "TOP", "SwingTimerOffHandFrame", "BOTTOM", 0, 0) end
     setEditModeSetting(SwingTimerRangedFrame, 2, visibility) --Visibility
     setEditModeSetting(SwingTimerRangedFrame, 3, width) --Width
     setEditModeSetting(SwingTimerRangedFrame, 4, height) --Height
@@ -233,8 +233,8 @@ local function minimap(layout)
         --GameTooltip
         editModeSetPoint(GameTooltip, "BOTTOMRIGHT", "MinimapCluster", "BOTTOMLEFT", -9, 85)
         --Boss Frames
-        if JadeUI.taintSafety > 0 then editModeSetPoint(BossTargetFrameContainer, "LEFT", "UIParent", "LEFT", 10, 0) end
-        if JadeUI.taintSafety > 1 then editModeSetPoint(ObjectiveTrackerFrame, "TOPRIGHT", "MultiBarLeft", "TOPLEFT", -5, 0) end
+        if JadeUIDB["taintSafety"] > 0 then editModeSetPoint(BossTargetFrameContainer, "LEFT", "UIParent", "LEFT", 10, 0) end
+        if JadeUIDB["taintSafety"] > 1 then editModeSetPoint(ObjectiveTrackerFrame, "TOPRIGHT", "MultiBarLeft", "TOPLEFT", -5, 0) end
 
         JadeUI.minimapTainted = true
 

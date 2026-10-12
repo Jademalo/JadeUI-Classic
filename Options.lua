@@ -19,7 +19,7 @@ end
 
 
 StaticPopupDialogs["JADEUI_RELOAD_REQUIRED"] = {
-    text = "Switching to another profile from JadeUI requires a reload",
+    text = "This action requires a full UI reload",
     button1 = "Reload UI",
     button2 = "Cancel",
     OnAccept = function()
@@ -105,7 +105,7 @@ local function hideKeybindsCheckbox(category)
 
     Settings.GetSetting(addonName.."_"..variable):SetValueChangedCallback(function()
         if not JadeUIDB[variable] then
-            C_UI.Reload()
+            StaticPopup_Show("JADEUI_RELOAD_REQUIRED")
         else
             JadeUI.HideKeybinds()
         end
@@ -206,6 +206,30 @@ local function editModeInitButton(layout)
 
 end
 
+local function taintSafetyDropDown(category)
+
+    local variable = "taintSafety"
+    local name = "Set Taint Safety"
+    local description = "Configure the level of safety with regards to problematic UI actions"
+    local defaultValue = 1
+
+    local setting = Settings.RegisterAddOnSetting(category, addonName.."_"..variable, variable, JadeUIDB, type(defaultValue), name, defaultValue)
+    local function GetOptions()
+        local container = Settings.CreateControlTextContainer()
+        container:Add(0, "None", "No taint safety, can cause errors in combat")
+        container:Add(1, "Regular", "Fairly safe, but causes errors with taintLog 1")
+        container:Add(2, "High", "Safe, no actions that cause any Lua errors")
+        return container:GetData()
+    end
+    Settings.CreateDropdown(category, setting, GetOptions, description)
+
+    Settings.GetSetting(addonName.."_"..variable):SetValueChangedCallback(function()
+        JadeUI.SetJadeUILayout(true)
+        C_UI.Reload()
+    end)
+
+end
+
 --------------------------------------------------------------------------------
 --Event Handler
 --------------------------------------------------------------------------------
@@ -229,7 +253,10 @@ optionsPanel:SetScript("OnEvent", function(self, event, arg1, arg2)
         if JadeUI.isClassic then minimapScaleSlider(category) end
         hideKeybindsCheckbox(category)
         uiScaleCheckbox(category)
-
+        --@debug@
+        taintSafetyDropDown(category)
+        --@end-debug@
+        if not JadeUIDB["taintSafety"] then JadeUIDB["taintSafety"] = 1 end
     end
 
 end)

@@ -110,13 +110,13 @@ function JadeUI.SetupHooksForLayout()
         AddArt(MultiBarBottomRight)
         --AddArt(PetActionBar)
 
-        if JadeUI.taintSafety < 1 then --Only on taintSafety 0
+        if JadeUIDB["taintSafety"] < 1 then --Only on taintSafety 0
             --These have errors with taintLog 1, otherwise work fine unless you try to drag a button in combat
             JadeUI.HideBlizzardFrame(MultiBarBottomRightButtonContainer1)
             JadeUI.HideBlizzardFrame(MultiBarBottomRightButtonContainer5)
         end
 
-        if JadeUI.taintSafety < 2 then --Only on taintSafety 0 and 1
+        if JadeUIDB["taintSafety"] < 2 then --Only on taintSafety 0 and 1
             --Weirdly, if BottomManagedFrameContainer is disabled but RightManagedFrameContainer is not, then Right works fine
             --If taintLog 0 is set then they both also seems to work fine
             --Cast Bar, Extra Abilities, Encounter Bar, and Swing Timer are all part of BottomManagedFrameContainer
