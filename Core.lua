@@ -38,6 +38,29 @@ function JadeUI.SetScale()
     end
 end
 
+--Adapted from https://github.com/erikbrgn/AutoHideBinds/blob/main/AutoHideBinds.lua with permission
+function JadeUI.HideKeybinds()
+    local bars = {
+        "Action",
+        "MultiBarBottomLeft",
+        "MultiBarBottomRight",
+        "MultiBarRight",
+        "MultiBarLeft",
+        "MultiBar5",
+        "MultiBar6",
+        "MultiBar7"
+    }
+    for _, barName in ipairs(bars) do
+        for buttonNumber = 1, 12 do
+            local button = barName .. "Button" .. buttonNumber
+            if _G[button] then
+                _G[button .. "HotKey"]:Hide()
+                _G[button .. "HotKey"].Show = function() end
+            end
+        end
+    end
+end
+
 --If the passed variable is a function calculate it, else return the variable.
 local function calcFunction(var)
     if type(var) == "function" then --Calculate functions for the offsets if we're being passed one
@@ -47,6 +70,40 @@ local function calcFunction(var)
     end
 end
 
+--Get a dynamic child object
+function GetDynamicChildren(frame, child, index)
+    index = index or 1
+
+    local count = 0
+    for _, children in ipairs({frame:GetChildren()}) do
+        if children[child] then
+            count = count + 1
+            if count == index then
+                return children[child]
+            end
+        end
+    end
+end
+
+function GetIndexedChild(frame, index)
+    local count = 0
+    for _, child in ipairs({frame:GetChildren()}) do
+        count = count + 1
+        if count == index then
+            return child
+        end
+    end
+end
+
+function GetIndexedRegion(frame, index)
+    local count = 0
+    for _, region in ipairs({frame:GetRegions()}) do
+        count = count + 1
+        if count == index then
+            return region
+        end
+    end
+end
 
 --------------------------------------------
 --Hooks
@@ -151,14 +208,14 @@ JadeUIBar:SetScript("OnEvent", function(self, event, arg1, arg2)
         JadeUIBar:SetSize(790, 209)
         JadeUIBar:SetPoint("BOTTOM", UIParent, "BOTTOM")
 
-        --Move various Blizzard frames
-        --JadeUI.blizzUIMove()
-        if not C_AddOns.IsAddOnLoaded("Bartender4") then
-            --JadeUIButtonParent = CreateFrame("Frame", "JadeUIButtonParent", JadeUIBar)
-            --JadeUI.blizzBarMove() --Move the Blizzard Action Bars
-        end
-
         if JadeUI.isClassic then
+
+            --Move various Blizzard frames
+            JadeUI.blizzUIMove()
+            if not C_AddOns.IsAddOnLoaded("Bartender4") then
+                JadeUIButtonParent = CreateFrame("Frame", "JadeUIButtonParent", JadeUIBar)
+                JadeUI.blizzBarMove() --Move the Blizzard Action Bars
+            end
             JadeUI.createArtFrame() --Create the main art frame for the bars
             JadeUI.setEndstop(JadeUIDB.endstopType) --Set the endstop type based on the saved variable
 
