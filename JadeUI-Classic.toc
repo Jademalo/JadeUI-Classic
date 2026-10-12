@@ -15,6 +15,7 @@
 
 ## Core ##
 Core.lua
+Shared.lua
 Options.lua
 [Family]\BlizzUI.lua
 [Family]\Layout.lua [ExcludeLoadGameType classic]
