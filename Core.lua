@@ -49,36 +49,16 @@ JadeUIBar:SetScript("OnEvent", function(self, event, arg1, arg2)
         JadeUIBar:SetSize(790, 209)
         JadeUIBar:SetPoint("BOTTOM", UIParent, "BOTTOM")
 
-        --[[         if JadeUI.isForever then  ]]
             JadeUI.SetJadeUILayout()
             if C_EditMode.GetLayouts().activeLayout == JadeUI.layoutIndex then
                 --ExportToSavedVariables()
                 JadeUI.SetupHooksForLayout()
             end
             JadeUIBar:RegisterEvent("EDIT_MODE_LAYOUTS_UPDATED") --Register this event to handle changing layouts
---[[         end ]]
 
         if JadeUI.isClassic then
-
-            --Move various Blizzard frames
-            --JadeUI.blizzUIMove()
-            if not C_AddOns.IsAddOnLoaded("Bartender4") then
-                JadeUIButtonParent = CreateFrame("Frame", "JadeUIButtonParent", JadeUIBar)
-                --JadeUI.blizzBarMove() --Move the Blizzard Action Bars
-            end
             JadeUI.createArtFrame() --Create the main art frame for the bars
             JadeUI.setEndstop(JadeUIDB.endstopType) --Set the endstop type based on the saved variable
-
-            --Move Blizzard status bars if not using Bartender
-            --JadeUI.expBar.BlizzExpBarMove()
-            --JadeUI.expBar.BlizzRepBarMove()
-            --JadeUI.expBar.showMaxCover()
-
-            --if C_AddOns.IsAddOnLoaded("Bartender4") then
-                --JadeUI.bartenderFix() --Fix some issues with Bartender
-            --end
-
-            --JadeUI.SetDefaultStrata()
         end
 
     end

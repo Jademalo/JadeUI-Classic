@@ -28,8 +28,8 @@ JadeUI.textures = {
    g13TopBarTexture = "Interface/AddOns/JadeUI-Classic/Media/G13TopBar.tga",
    g13ExpBarTexture = "Interface/AddOns/JadeUI-Classic/Media/G13XPBar.tga",
    petBarTexture = "Interface/AddOns/JadeUI-Classic/Media/PetBar.tga",
-   endstopGryphonTexture = "Interface/MAINMENUBAR/UI-MainMenuBar-EndCap-Dwarf",
-   endstopLionTexture = "Interface/MAINMENUBAR/UI-MainMenuBar-EndCap-Human"
+   endCapGryphonTexture = "Interface/MAINMENUBAR/UI-MainMenuBar-EndCap-Dwarf",
+   endCapLionTexture = "Interface/MAINMENUBAR/UI-MainMenuBar-EndCap-Human"
 }
 --@end-non-debug@]===]
 
@@ -51,12 +51,12 @@ function JadeUI.createArtFrame()
 
    JadeUIBarLeftEndCap = JadeUIBarArtFrame:CreateTexture("JadeUIBarLeftEndCap")
    JadeUIBarLeftEndCap:SetPoint("BOTTOMRIGHT", JadeUIBarArtFrame, "BOTTOMLEFT", 32, 0)
-   JadeUIBarLeftEndCap:SetTexture(textures.endstopDwarfTexture)
+   JadeUIBarLeftEndCap:SetTexture(textures.endCapGryphonTexture)
    JadeUIBarLeftEndCap:SetDrawLayer("ARTWORK")
 
    JadeUIBarRightEndCap = JadeUIBarArtFrame:CreateTexture("JadeUIBarRightEndCap")
    JadeUIBarRightEndCap:SetPoint("BOTTOMLEFT", JadeUIBarArtFrame, "BOTTOMRIGHT", -32, 0)
-   JadeUIBarRightEndCap:SetTexture(textures.endstopDwarfTexture)
+   JadeUIBarRightEndCap:SetTexture(textures.endCapGryphonTexture)
    JadeUIBarRightEndCap:SetTexCoord(1, 0, 0, 1) --Mirror Texture
    JadeUIBarRightEndCap:SetDrawLayer("ARTWORK")
 
@@ -80,35 +80,6 @@ function JadeUI.createArtFrame()
    JadeUIStanceBarTexture:SetParent(StanceBar)
    JadeUIStanceBarTexture:SetPoint("BOTTOMLEFT", StanceBar, "BOTTOMLEFT", -10, -4)
    JadeUIStanceBarTexture:SetTexture(textures.stanceBarTexture)
-end
-
-
---[[ MEDIUM
-    Level 13    - MultiBarBottomLeftButtons + MultiBarBottomRightButtons
-    Level 12    - ActionButtons + MultiBarBottomRight + MultiBarBottomLeft
-    Level 11    - JadeUIButtonParent
-    Level 10    - 
-    Level 9     - 
-    Level 8     - JadeUIBarTopArtFrame                                      - Must be on top of the Exp bar
-    Level 7     - 
-    Level 6     - 
-    Level 5     - 
-    Level 4     - ExhaustionTick
-    Level 3     - MainMenuExpBar                                            - Must be on top of the Rep bar
-    Level 2     - ReputationWatchBar + JadeUIBarArtFrame
-    Level 1     - JadeUIBar (Invisible parent) 
-    Level 0     - UIParent
- ]]
-
---Set the frame strata to standard values for correct layering
-function JadeUI.SetDefaultStrata()
-   MultiBarBottomRight:SetFrameLevel(JadeUIButtonParent:GetFrameLevel()+1) --Children are given +1 to their parent by default
-   JadeUIButtonParent:SetFrameLevel(11)
-   JadeUIBarArtFrame:SetFrameLevel(9)
-   JadeUIBarTopArtFrame:SetFrameLevel(JadeUIBarArtFrame:GetFrameLevel()+3)
-   JadeUIBarTopArtFrame:SetFrameStrata("MEDIUM")
-   SetExpFrameLevel(JadeUIBarArtFrame:GetFrameLevel()-3)
-   SetRepFrameLevel(JadeUIBarTopArtFrame:GetFrameLevel()-3)
 end
 
 --Sets the endstop texture based on a variable passed to it

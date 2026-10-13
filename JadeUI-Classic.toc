@@ -21,4 +21,3 @@ Options.lua
 [Family]\Layout.lua
 [Family]\EditMode.lua
 [Family]\ArtFrame.lua [AllowLoadGameType classic]
-[Family]\ExpBar.lua [AllowLoadGameType classic]
