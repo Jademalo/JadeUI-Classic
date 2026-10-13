@@ -139,6 +139,7 @@ local function createMaxLevelCover()
 end
 
 function JadeUI.showMaxCover()
+    if not JadeUIMaxLevelCover then createMaxLevelCover() end
     if MainStatusTrackingBarContainer:GetShownBar() == nil then
         JadeUIMaxLevelCover:Show()
     else
@@ -175,17 +176,6 @@ end
 function JadeUI.SetupHooksForLayout()
     if not JadeUI.setupHooks then
 
-        local function AddArt(frame)
-            frame.UpdateDividers = UpdateDividers
-            frame.enableDividers = true
-            frame:UpdateDividers()
-            BorderArt(frame)
-        end
-
-        --AddArt(MultiBarBottomLeft)
-        --AddArt(MultiBarBottomRight)
-        --AddArt(PetActionBar)
-
         if JadeUIDB["taintSafety"] < 1 then --Only on taintSafety 0
             --These have errors with taintLog 1, otherwise work fine unless you try to drag a button in combat
             JadeUI.HideBlizzardFrame(MultiBarBottomRightButtonContainer1)
@@ -213,7 +203,7 @@ function JadeUI.SetupHooksForLayout()
         resizeStatusBar(MainStatusTrackingBarContainer, 598, 11)
         replaceBlizzRepBarTexture()
         resizeStatusBar(SecondaryStatusTrackingBarContainer, 598, 8)
-        
+
         talentButtonToggle()
 
         hooksecurefunc(PetActionBar, "SetBackgroundArtShown", function(self, shown) --Hook the show function to always force it to true
@@ -230,8 +220,6 @@ function JadeUI.SetupHooksForLayout()
         --Tooltip
         JadeUI.OffsetBlizzardFrame(GameTooltip, tooltipOffset, 0, nil, "moveMinimap")
 
-        createMaxLevelCover()
-        --JadeUI.showMaxCover()
         hooksecurefunc(StatusTrackingBarManager, "UpdateBarVisuals", function(self, shown) JadeUI.showMaxCover() end)
 
         JadeUI.setupHooks = true
