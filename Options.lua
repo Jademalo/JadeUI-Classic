@@ -12,12 +12,6 @@ optionsPanel:RegisterEvent("ADDON_LOADED")
 --------------------------------------------
 --Functions
 --------------------------------------------  
---Round to decimals - https://warcraft.wiki.gg/wiki/Round
-local function round(number, decimals)
-    return (("%%.%df"):format(decimals)):format(number)
-end
-
-
 StaticPopupDialogs["JADEUI_RELOAD_REQUIRED"] = {
     text = "This action requires a full UI reload",
     button1 = "Reload UI",
@@ -236,11 +230,11 @@ optionsPanel:SetScript("OnEvent", function(self, event, arg1, arg2)
         --Add Items
         editModeInitButton(layout)
         if JadeUI.isClassic then talentCheckbox(category) end
-        offsetStanceBarCheckbox(category)
         unitFramesCheckbox(category)
-        if JadeUI.isClassic then endstopDropDown(category) end
         minimapCheckbox(category)
+        offsetStanceBarCheckbox(category)
         if JadeUI.isClassic then minimapScaleSlider(category) end
+        if JadeUI.isClassic then endstopDropDown(category) end
         hideKeybindsCheckbox(category)
         uiScaleCheckbox(category)
         --@debug@
