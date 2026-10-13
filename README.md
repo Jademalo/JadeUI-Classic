@@ -9,5 +9,5 @@ This AddOn is largely designed around edit mode, and as such it uses standard fr
 
 The visual bar art has all been created by modifying the original assets. Details down to the levelup pips have been preserved and kept correct. The Keyring is automatically enabled regardless of level to keep the visual design consistent, and there's an option to enable the talent button at all times.
 
-![Classic Example](Media/WoWScrnShot_010724_232929.jpg)
-![Forever Example](Media/WoWScrnShot_101326_055225.jpg)
+![Classic Example](Media/Screenshots/WoWScrnShot_010724_232929.jpg)
+![Forever Example](Media/Screenshots/WoWScrnShot_101326_055225.jpg)
