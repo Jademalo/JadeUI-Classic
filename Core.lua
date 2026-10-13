@@ -60,11 +60,6 @@ JadeUIBar:SetScript("OnEvent", function(self, event, arg1, arg2)
             end
             JadeUIBar:RegisterEvent("EDIT_MODE_LAYOUTS_UPDATED") --Register this event to handle changing layouts
 
-        if JadeUI.isClassic then
-            JadeUI.createArtFrame() --Create the main art frame for the bars
-            JadeUI.setEndstop(JadeUIDB.endstopType) --Set the endstop type based on the saved variable
-        end
-
     end
 
     if event == "EDIT_MODE_LAYOUTS_UPDATED" then

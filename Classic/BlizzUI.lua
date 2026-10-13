@@ -132,6 +132,9 @@ function JadeUI.SetupHooksForLayout()
 
         hooksecurefunc(StatusTrackingBarManager, "UpdateBarVisuals", function(self, shown) JadeUI.showMaxCover() end)
 
+        JadeUI.createArtFrame() --Create the main art frame for the bars
+        JadeUI.setEndstop(JadeUIDB.endstopType) --Set the endstop type based on the saved variable
+
         JadeUI.setupHooks = true
     end
 end
