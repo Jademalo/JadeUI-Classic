@@ -6,14 +6,9 @@ local addonName, JadeUI = ...
 --------------------------------------------
 --Functions
 --------------------------------------------
---Calculate the width of the map to offset the bags. Pass as argument without () so the function itself is being passed and not the result 
-local function bagOffset()
+--Calculate the width of the map to offset the bags and tooltip. Pass as argument without () so the function itself is being passed and not the result 
+local function mapOffset()
     return -(MinimapCluster:GetWidth()*MinimapCluster:GetScale())-10
-end
-
---Calculate the width of the map to offset the tooltip.
-local function tooltipOffset()
-    return -(MinimapCluster:GetWidth()*MinimapCluster:GetScale()) 
 end
 
 --Add UpdateDividers to frames that don't have it - https://github.com/Gethe/wow-ui-source/blob/09b9db7948abc9b9648dedaab51eb0cf3ee67b31/Interface/AddOns/Blizzard_ActionBar/Shared/MainActionBar.lua#L86
@@ -216,9 +211,9 @@ function JadeUI.SetupHooksForLayout()
         PetActionBar.BackgroundArt2:SetScale(PetActionBarButtonContainer1:GetScale())
 
         --Bags
-        for i = 1, 5 do JadeUI.OffsetBlizzardFrame(_G["ContainerFrame" .. i], bagOffset, 0, nil, "moveMinimap") end
+        for i = 1, 5 do JadeUI.OffsetBlizzardFrame(_G["ContainerFrame" .. i], mapOffset, 0, nil, "moveMinimap") end
         --Tooltip
-        JadeUI.OffsetBlizzardFrame(GameTooltip, tooltipOffset, 0, nil, "moveMinimap")
+        JadeUI.OffsetBlizzardFrame(GameTooltip, mapOffset, 0, nil, "moveMinimap")
 
         hooksecurefunc(StatusTrackingBarManager, "UpdateBarVisuals", function(self, shown) JadeUI.showMaxCover() end)
 
