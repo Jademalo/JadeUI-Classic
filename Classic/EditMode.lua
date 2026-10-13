@@ -80,7 +80,6 @@ local function durabilityFrame(layout)
 end
 
 local function statusBars(layout)
-    --STATUS_BAR_MANAGER_WIDTH = 772 --Override the base variable for status bar width - https://github.com/Gethe/wow-ui-source/blob/e3ecc27b64d30fdc735a3f6579b866858f9f9df1/Interface/AddOns/Blizzard_StatusTrackingBar/Shared/StatusTrackingManager.lua#L6
     --MainStatusTrackingBarContainer
     local MainStatusTrackingBarContainer = edit.GetSystem(layout, Enum.EditModeSystem.StatusTrackingBar, 1)
     --edit.SetOption(MainStatusTrackingBarContainer, 3, 1.5) --Width
@@ -125,9 +124,6 @@ local function minimap(layout)
     local DebuffFrame = edit.GetSystem(layout, Enum.EditModeSystem.AuraFrame, 2)
     local MultiBarRight = edit.GetSystem(layout, Enum.EditModeSystem.ActionBar, 4)
     local MultiBarLeft = edit.GetSystem(layout, Enum.EditModeSystem.ActionBar, 5)
-    local GameTooltip = edit.GetSystem(layout, Enum.EditModeSystem.HudTooltip)
-    local BossTargetFrameContainer = edit.GetSystem(layout, Enum.EditModeSystem.UnitFrame, 6)
-    local ObjectiveTrackerFrame = edit.GetSystem(layout, Enum.EditModeSystem.ObjectiveTracker)
 
     if Settings.GetValue(addonName.."_moveMinimap") == true then
 
@@ -142,11 +138,6 @@ local function minimap(layout)
         --ActionBars
         edit.SetPoint(MultiBarRight, "BOTTOMRIGHT", "MinimapCluster", "TOPRIGHT", -5, 30)
         edit.SetPoint(MultiBarLeft, "RIGHT", "MultiBarRight", "LEFT", -5, -0)
-        --GameTooltip
-        --edit.SetPoint(GameTooltip, "BOTTOMRIGHT", "MinimapCluster", "BOTTOMLEFT", -9, 85)
-        --Boss Frames
-        --if JadeUIDB["taintSafety"] > 0 then edit.SetPoint(BossTargetFrameContainer, "LEFT", "UIParent", "LEFT", 10, 0) end
-        --if JadeUIDB["taintSafety"] > 1 then edit.SetPoint(ObjectiveTrackerFrame, "TOPRIGHT", "MultiBarLeft", "TOPLEFT", -5, 0) end
 
         JadeUI.minimapTainted = true
 
@@ -158,9 +149,6 @@ local function minimap(layout)
             edit.SetDefault(layout, Enum.EditModeSystem.AuraFrame, 2)
             edit.SetDefault(layout, Enum.EditModeSystem.ActionBar, 4)
             edit.SetDefault(layout, Enum.EditModeSystem.ActionBar, 5)
-            --edit.SetDefault(layout, Enum.EditModeSystem.HudTooltip)
-            --edit.SetDefault(layout, Enum.EditModeSystem.UnitFrame, 6)
-            --edit.SetDefault(layout, Enum.EditModeSystem.ObjectiveTracker)
 
             JadeUI.minimapTainted = false
         end
