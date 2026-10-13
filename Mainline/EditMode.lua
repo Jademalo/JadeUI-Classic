@@ -1,134 +1,74 @@
 local addonName, JadeUI = ...
-
---Get layout
---If the layout doesn't contain JadeUI, import the default to edit
---If it does, import existing to edit
---This means changes outside of the managed frames will be saved
---Make sure to actually apply the modified layouts *after* the edit functions
+local edit = JadeUI.edit
 
 ----------------------------------
 -- Layout Modification
 ----------------------------------
---Get a specific entry within the edit mode systems, with index to differentiate between those which use the same enum
-local function getSystem(layout, system, systemIndex)
-    for _, sys in ipairs(layout.systems) do
-        if sys.system == system then
-            if not systemIndex or sys.systemIndex == systemIndex then
-                return sys
-            end
-        end
-    end
-end
-
---SetPoint equivalent to modify the anchor info of a given system
-local function editModeSetPoint(system, point, relativeTo, relativePoint, offsetX, offsetY)
-    system.anchorInfo = {
-        ["relativeTo"] = relativeTo,
-        ["point"] = point,
-        ["relativePoint"] = relativePoint,
-        ["offsetY"] = offsetY,
-        ["offsetX"] = offsetX,
-    }
-    system.isInDefaultPosition = false
-end
-
-local function editModeSetDefault(layout, system, systemIndex)
-    local defaultLayout = CopyTable(JadeUI.defaultLayout)
-    local targetFrame = getSystem(layout, system, systemIndex)
-    local defaultFrame = getSystem(defaultLayout, system, systemIndex)
-
-    for key in pairs(targetFrame) do
-        targetFrame[key] = nil
-    end
-
-    for key, value in pairs(defaultFrame) do
-        targetFrame[key] = value
-    end
-end
-
-local function setEditModeSetting(system, id, value)
-
-    --Look for existing settings in the array
-    for _, entry in ipairs(system.settings) do
-        if entry.setting == id then
-            entry.value = value
-            return
-        end
-    end
-
-    --If setting not found, insert a new table to the array
-    table.insert(system.settings, {
-        ["setting"] = id,
-        ["value"] = value,
-    })
-end
-
-
 local function actionBars(layout)
     --MainActionBar
-    local MainActionBar = getSystem(layout, Enum.EditModeSystem.ActionBar, 1)
-    setEditModeSetting(MainActionBar, 2, 7) --# of Icons
-    setEditModeSetting(MainActionBar, 8, 1) --Hide bar scrolling
-    editModeSetPoint(MainActionBar, "BOTTOM", "UIParent", "BOTTOM", 0, 98)
+    local MainActionBar = edit.GetSystem(layout, Enum.EditModeSystem.ActionBar, 1)
+    edit.SetOption(MainActionBar, 2, 7) --# of Icons
+    edit.SetOption(MainActionBar, 8, 1) --Hide bar scrolling
+    edit.SetPoint(MainActionBar, "BOTTOM", "UIParent", "BOTTOM", 0, 98)
     --LeftEndCap
-    local LeftEndCap = getSystem(layout, Enum.EditModeSystem.MainActionBarEndCap, 1)
-    editModeSetPoint(LeftEndCap, "BOTTOMRIGHT", "MicroMenu", "BOTTOMLEFT", 28.25, -7)
+    local LeftEndCap = edit.GetSystem(layout, Enum.EditModeSystem.MainActionBarEndCap, 1)
+    edit.SetPoint(LeftEndCap, "BOTTOMRIGHT", "MicroMenu", "BOTTOMLEFT", 28.25, -7)
 
     --MultiBarBottomLeft
-    local MultiBarBottomLeft = getSystem(layout, Enum.EditModeSystem.ActionBar, 2)
-    setEditModeSetting(MultiBarBottomLeft, 2, 7) --# of Icons
-    setEditModeSetting(MultiBarBottomLeft, 6, 0) --Add Hide Bar Art and set false
-    editModeSetPoint(MultiBarBottomLeft, "BOTTOM", "MainActionBar", "TOP", 0, 3)
+    local MultiBarBottomLeft = edit.GetSystem(layout, Enum.EditModeSystem.ActionBar, 2)
+    edit.SetOption(MultiBarBottomLeft, 2, 7) --# of Icons
+    edit.SetOption(MultiBarBottomLeft, 6, 0) --Add Hide Bar Art and set false
+    edit.SetPoint(MultiBarBottomLeft, "BOTTOM", "MainActionBar", "TOP", 0, 3)
 
     --MultiBarBottomRight
-    local MultiBarBottomRight = getSystem(layout, Enum.EditModeSystem.ActionBar, 3)
-    setEditModeSetting(MultiBarBottomRight, 1, 2) --# of Rows
-    setEditModeSetting(MultiBarBottomRight, 2, 10) --# of Icons
-    setEditModeSetting(MultiBarBottomRight, 6, 0) --Add Hide Bar Art and set false
-    editModeSetPoint(MultiBarBottomRight, "TOP", "MainActionBar", "BOTTOM", 0, -3)
+    local MultiBarBottomRight = edit.GetSystem(layout, Enum.EditModeSystem.ActionBar, 3)
+    edit.SetOption(MultiBarBottomRight, 1, 2) --# of Rows
+    edit.SetOption(MultiBarBottomRight, 2, 10) --# of Icons
+    edit.SetOption(MultiBarBottomRight, 6, 0) --Add Hide Bar Art and set false
+    edit.SetPoint(MultiBarBottomRight, "TOP", "MainActionBar", "BOTTOM", 0, -3)
 
     --Stance Bar, Pet Bar, and Possess Bar all stack when default above MainActionBar
     --PetActionBar
-    local PetActionBar = getSystem(layout, Enum.EditModeSystem.ActionBar, 12)
-    setEditModeSetting(PetActionBar, 3, 4) --Icon size
+    local PetActionBar = edit.GetSystem(layout, Enum.EditModeSystem.ActionBar, 12)
+    edit.SetOption(PetActionBar, 3, 4) --Icon size
     --Position without Bar Art
-    editModeSetPoint(PetActionBar, "BOTTOM", "MultiBarBottomLeft", "TOP", -1, 5)
+    edit.SetPoint(PetActionBar, "BOTTOM", "MultiBarBottomLeft", "TOP", -1, 5)
     --Position with Bar Art
-    --editModeSetPoint(PetActionBar, "BOTTOM", "MultiBarBottomLeft", "TOP", 0, 8)
-    --setEditModeSetting(PetActionBar, 6, 0) --Add Hide Bar Art and set false
-    --setEditModeSetting(PetActionBar, 9, 1) --Always show buttons
+    --edit.SetPoint(PetActionBar, "BOTTOM", "MultiBarBottomLeft", "TOP", 0, 8)
+    --edit.SetOption(PetActionBar, 6, 0) --Add Hide Bar Art and set false
+    --edit.SetOption(PetActionBar, 9, 1) --Always show buttons
 
     --PossessActionBar
-    local PossessActionBar = getSystem(layout, Enum.EditModeSystem.ActionBar, 13)
-    editModeSetPoint(PossessActionBar, "BOTTOM", "MultiBarBottomLeft", "TOP", 0, 8)
-    setEditModeSetting(PossessActionBar, 6, 0) --Add Hide Bar Art and set false
+    local PossessActionBar = edit.GetSystem(layout, Enum.EditModeSystem.ActionBar, 13)
+    edit.SetPoint(PossessActionBar, "BOTTOM", "MultiBarBottomLeft", "TOP", 0, 8)
+    edit.SetOption(PossessActionBar, 6, 0) --Add Hide Bar Art and set false
 
     --MultiCastActionBarFrame
-    local MultiCastActionBarFrame = getSystem(layout, Enum.EditModeSystem.TotemActionBar)
-    editModeSetPoint(MultiCastActionBarFrame, "BOTTOM", "MultiBarBottomLeft", "TOP", 0, 8)
+    local MultiCastActionBarFrame = edit.GetSystem(layout, Enum.EditModeSystem.TotemActionBar)
+    edit.SetPoint(MultiCastActionBarFrame, "BOTTOM", "MultiBarBottomLeft", "TOP", 0, 8)
 end
 
 local function stanceBar(layout)
-    local StanceBar = getSystem(layout, Enum.EditModeSystem.ActionBar, 11)
+    local StanceBar = edit.GetSystem(layout, Enum.EditModeSystem.ActionBar, 11)
     if Settings.GetValue(addonName.."_offsetStanceBar") == true then
         --StanceBar
-        editModeSetPoint(StanceBar, "BOTTOMLEFT", "MultiBarBottomLeft", "TOPLEFT", 0, 5)
-        --setEditModeSetting(StanceBar, 6, 0) --Add Hide Bar Art and set false
+        edit.SetPoint(StanceBar, "BOTTOMLEFT", "MultiBarBottomLeft", "TOPLEFT", 0, 5)
+        --edit.SetOption(StanceBar, 6, 0) --Add Hide Bar Art and set false
     else
-        editModeSetPoint(StanceBar, "BOTTOM", "MultiBarBottomLeft", "TOP", -1, 5)
+        edit.SetPoint(StanceBar, "BOTTOM", "MultiBarBottomLeft", "TOP", -1, 5)
     end
 end
 
 local function microMenu(layout)
     --MicroMenu
-    local MicroMenu = getSystem(layout, Enum.EditModeSystem.MicroMenu)
-    editModeSetPoint(MicroMenu, "BOTTOMRIGHT", "MultiBarBottomRight", "BOTTOMLEFT", 38.5, 2)
+    local MicroMenu = edit.GetSystem(layout, Enum.EditModeSystem.MicroMenu)
+    edit.SetPoint(MicroMenu, "BOTTOMRIGHT", "MultiBarBottomRight", "BOTTOMLEFT", 38.5, 2)
 end
 
 local function bagsBar(layout)
     --BagsBar
-    local BagsBar = getSystem(layout, Enum.EditModeSystem.Bags)
-    editModeSetPoint(BagsBar, "BOTTOMLEFT", "MultiBarBottomRight", "BOTTOMRIGHT", -41.5, -1)
+    local BagsBar = edit.GetSystem(layout, Enum.EditModeSystem.Bags)
+    edit.SetPoint(BagsBar, "BOTTOMLEFT", "MultiBarBottomRight", "BOTTOMRIGHT", -41.5, -1)
 
     if not GetCVarBool("showKeyring") then
         SetCVar("showKeyring", 1)
@@ -137,41 +77,41 @@ end
 
 local function durabilityFrame(layout)
     --DurabilityFrame
-    local DurabilityFrame = getSystem(layout, Enum.EditModeSystem.DurabilityFrame)
-    editModeSetPoint(DurabilityFrame, "LEFT", "MainActionBar", "TOPRIGHT", 88.5, 1)
+    local DurabilityFrame = edit.GetSystem(layout, Enum.EditModeSystem.DurabilityFrame)
+    edit.SetPoint(DurabilityFrame, "LEFT", "MainActionBar", "TOPRIGHT", 88.5, 1)
 end
 
 local function statusBars(layout)
     --STATUS_BAR_MANAGER_WIDTH = 772 --Override the base variable for status bar width - https://github.com/Gethe/wow-ui-source/blob/e3ecc27b64d30fdc735a3f6579b866858f9f9df1/Interface/AddOns/Blizzard_StatusTrackingBar/Shared/StatusTrackingManager.lua#L6
     --MainStatusTrackingBarContainer
-    local MainStatusTrackingBarContainer = getSystem(layout, Enum.EditModeSystem.StatusTrackingBar, 1)
-    setEditModeSetting(MainStatusTrackingBarContainer, 3, 3) --Width
-    editModeSetPoint(MainStatusTrackingBarContainer, "BOTTOMLEFT", "MicroMenu", "TOPLEFT", -3, 6)
+    local MainStatusTrackingBarContainer = edit.GetSystem(layout, Enum.EditModeSystem.StatusTrackingBar, 1)
+    edit.SetOption(MainStatusTrackingBarContainer, 3, 3) --Width
+    edit.SetPoint(MainStatusTrackingBarContainer, "BOTTOMLEFT", "MicroMenu", "TOPLEFT", -3, 6)
 
     --SecondaryStatusTrackingBarContainer
-    local SecondaryStatusTrackingBarContainer = getSystem(layout, Enum.EditModeSystem.StatusTrackingBar, 2)
-    setEditModeSetting(SecondaryStatusTrackingBarContainer, 3, 3) --Width
-    editModeSetPoint(SecondaryStatusTrackingBarContainer, "BOTTOMLEFT", "MainStatusTrackingBarContainer", "TOPLEFT", 0, -1)
+    local SecondaryStatusTrackingBarContainer = edit.GetSystem(layout, Enum.EditModeSystem.StatusTrackingBar, 2)
+    edit.SetOption(SecondaryStatusTrackingBarContainer, 3, 3) --Width
+    edit.SetPoint(SecondaryStatusTrackingBarContainer, "BOTTOMLEFT", "MainStatusTrackingBarContainer", "TOPLEFT", 0, -1)
 end
 
 local function unitFrames(layout)
     if Settings.GetValue(addonName.."_moveUnitFrames") == true then
         --PlayerFrame
-        local PlayerFrame = getSystem(layout, Enum.EditModeSystem.UnitFrame, 1)
-        editModeSetPoint(PlayerFrame, "BOTTOMRIGHT", "UIParent", "BOTTOM", -172, 209)
+        local PlayerFrame = edit.GetSystem(layout, Enum.EditModeSystem.UnitFrame, 1)
+        edit.SetPoint(PlayerFrame, "BOTTOMRIGHT", "UIParent", "BOTTOM", -172, 209)
 
         --TargetFrame
-        local TargetFrame = getSystem(layout, Enum.EditModeSystem.UnitFrame, 2)
-        editModeSetPoint(TargetFrame, "BOTTOMLEFT", "UIParent", "BOTTOM", 172, 209)
+        local TargetFrame = edit.GetSystem(layout, Enum.EditModeSystem.UnitFrame, 2)
+        edit.SetPoint(TargetFrame, "BOTTOMLEFT", "UIParent", "BOTTOM", 172, 209)
 
         --FocusFrame
-        local FocusFrame = getSystem(layout, Enum.EditModeSystem.UnitFrame, 3)
-        --editModeSetPoint(FocusFrame, "BOTTOMLEFT", "PlayerFrame", "TOPRIGHT", -26, -26) --Traditional Top Right of player frame position
-        editModeSetPoint(FocusFrame, "TOP", "PlayerFrame", "BOTTOM", 0, -20)
+        local FocusFrame = edit.GetSystem(layout, Enum.EditModeSystem.UnitFrame, 3)
+        --edit.SetPoint(FocusFrame, "BOTTOMLEFT", "PlayerFrame", "TOPRIGHT", -26, -26) --Traditional Top Right of player frame position
+        edit.SetPoint(FocusFrame, "TOP", "PlayerFrame", "BOTTOM", 0, -20)
     else
-        editModeSetDefault(layout, Enum.EditModeSystem.UnitFrame, 1)
-        editModeSetDefault(layout, Enum.EditModeSystem.UnitFrame, 2)
-        editModeSetDefault(layout, Enum.EditModeSystem.UnitFrame, 3)
+        edit.SetDefault(layout, Enum.EditModeSystem.UnitFrame, 1)
+        edit.SetDefault(layout, Enum.EditModeSystem.UnitFrame, 2)
+        edit.SetDefault(layout, Enum.EditModeSystem.UnitFrame, 3)
     end
 end
 
@@ -179,76 +119,76 @@ local function castBars(layout)
     local visibility = 1 --0: Always Visible, 1: In Combat, 2: Hidden
     local width = 100
     local height = 5
-    local SwingTimerMainHandFrame = getSystem(layout, Enum.EditModeSystem.SwingTimer, 1)
-    local SwingTimerOffHandFrame = getSystem(layout, Enum.EditModeSystem.SwingTimer, 2)
-    local SwingTimerRangedFrame = getSystem(layout, Enum.EditModeSystem.SwingTimer, 3)
-    local PlayerCastingBarFrame = getSystem(layout, Enum.EditModeSystem.CastBar)
+    local SwingTimerMainHandFrame = edit.GetSystem(layout, Enum.EditModeSystem.SwingTimer, 1)
+    local SwingTimerOffHandFrame = edit.GetSystem(layout, Enum.EditModeSystem.SwingTimer, 2)
+    local SwingTimerRangedFrame = edit.GetSystem(layout, Enum.EditModeSystem.SwingTimer, 3)
+    local PlayerCastingBarFrame = edit.GetSystem(layout, Enum.EditModeSystem.CastBar)
 
     --Cast Bar
-    if JadeUIDB["taintSafety"] > 1 then editModeSetPoint(PlayerCastingBarFrame, "BOTTOM", "MultiBarBottomLeft", "TOP", 0, 120) end
-    setEditModeSetting(PlayerCastingBarFrame, 2, visibility) --Visibility
+    if JadeUIDB["taintSafety"] > 1 then edit.SetPoint(PlayerCastingBarFrame, "BOTTOM", "MultiBarBottomLeft", "TOP", 0, 120) end
+    edit.SetOption(PlayerCastingBarFrame, 2, visibility) --Visibility
 
     --SwingTimerMainHandFrame
-    if JadeUIDB["taintSafety"] > 1 then editModeSetPoint(SwingTimerMainHandFrame, "TOP", "PlayerCastingBarFrame", "BOTTOM", 0, -20) end
-    setEditModeSetting(SwingTimerMainHandFrame, 2, visibility) --Visibility
-    setEditModeSetting(SwingTimerMainHandFrame, 3, width) --Width
-    setEditModeSetting(SwingTimerMainHandFrame, 4, height) --Height
+    if JadeUIDB["taintSafety"] > 1 then edit.SetPoint(SwingTimerMainHandFrame, "TOP", "PlayerCastingBarFrame", "BOTTOM", 0, -20) end
+    edit.SetOption(SwingTimerMainHandFrame, 2, visibility) --Visibility
+    edit.SetOption(SwingTimerMainHandFrame, 3, width) --Width
+    edit.SetOption(SwingTimerMainHandFrame, 4, height) --Height
 
     --SwingTimerOffHandFrame
-    if JadeUIDB["taintSafety"] > 1 then editModeSetPoint(SwingTimerOffHandFrame, "TOP", "SwingTimerMainHandFrame", "BOTTOM", 0, 0) end
-    setEditModeSetting(SwingTimerOffHandFrame, 2, visibility) --Visibility
-    setEditModeSetting(SwingTimerOffHandFrame, 3, width) --Width
-    setEditModeSetting(SwingTimerOffHandFrame, 4, 0) --Height
+    if JadeUIDB["taintSafety"] > 1 then edit.SetPoint(SwingTimerOffHandFrame, "TOP", "SwingTimerMainHandFrame", "BOTTOM", 0, 0) end
+    edit.SetOption(SwingTimerOffHandFrame, 2, visibility) --Visibility
+    edit.SetOption(SwingTimerOffHandFrame, 3, width) --Width
+    edit.SetOption(SwingTimerOffHandFrame, 4, 0) --Height
 
     --SwingTimerRangedFrame
-    if JadeUIDB["taintSafety"] > 1 then editModeSetPoint(SwingTimerRangedFrame, "TOP", "SwingTimerOffHandFrame", "BOTTOM", 0, 0) end
-    setEditModeSetting(SwingTimerRangedFrame, 2, visibility) --Visibility
-    setEditModeSetting(SwingTimerRangedFrame, 3, width) --Width
-    setEditModeSetting(SwingTimerRangedFrame, 4, height) --Height
+    if JadeUIDB["taintSafety"] > 1 then edit.SetPoint(SwingTimerRangedFrame, "TOP", "SwingTimerOffHandFrame", "BOTTOM", 0, 0) end
+    edit.SetOption(SwingTimerRangedFrame, 2, visibility) --Visibility
+    edit.SetOption(SwingTimerRangedFrame, 3, width) --Width
+    edit.SetOption(SwingTimerRangedFrame, 4, height) --Height
 
 end
 
 local function minimap(layout)
-    local MinimapCluster = getSystem(layout, Enum.EditModeSystem.Minimap)
-    local BuffFrame = getSystem(layout, Enum.EditModeSystem.AuraFrame, 1)
-    local DebuffFrame = getSystem(layout, Enum.EditModeSystem.AuraFrame, 2)
-    local MultiBarRight = getSystem(layout, Enum.EditModeSystem.ActionBar, 4)
-    local MultiBarLeft = getSystem(layout, Enum.EditModeSystem.ActionBar, 5)
-    local GameTooltip = getSystem(layout, Enum.EditModeSystem.HudTooltip)
-    local BossTargetFrameContainer = getSystem(layout, Enum.EditModeSystem.UnitFrame, 6)
-    local ObjectiveTrackerFrame = getSystem(layout, Enum.EditModeSystem.ObjectiveTracker)
+    local MinimapCluster = edit.GetSystem(layout, Enum.EditModeSystem.Minimap)
+    local BuffFrame = edit.GetSystem(layout, Enum.EditModeSystem.AuraFrame, 1)
+    local DebuffFrame = edit.GetSystem(layout, Enum.EditModeSystem.AuraFrame, 2)
+    local MultiBarRight = edit.GetSystem(layout, Enum.EditModeSystem.ActionBar, 4)
+    local MultiBarLeft = edit.GetSystem(layout, Enum.EditModeSystem.ActionBar, 5)
+    local GameTooltip = edit.GetSystem(layout, Enum.EditModeSystem.HudTooltip)
+    local BossTargetFrameContainer = edit.GetSystem(layout, Enum.EditModeSystem.UnitFrame, 6)
+    local ObjectiveTrackerFrame = edit.GetSystem(layout, Enum.EditModeSystem.ObjectiveTracker)
 
     if Settings.GetValue(addonName.."_moveMinimap") == true then
 
         --Minimap
-        editModeSetPoint(MinimapCluster, "BOTTOMRIGHT", "UIParent", "BOTTOMRIGHT", 0, 0)
-        setEditModeSetting(MinimapCluster, 0, 1) --Header Underneath
+        edit.SetPoint(MinimapCluster, "BOTTOMRIGHT", "UIParent", "BOTTOMRIGHT", 0, 0)
+        edit.SetOption(MinimapCluster, 0, 1) --Header Underneath
         --Buffs
-        editModeSetPoint(BuffFrame, "TOPRIGHT", "UIParent", "TOPRIGHT", -10, -10)
+        edit.SetPoint(BuffFrame, "TOPRIGHT", "UIParent", "TOPRIGHT", -10, -10)
         --Debuffs
-        editModeSetPoint(DebuffFrame, "TOPRIGHT", "UIParent", "TOPRIGHT", -25, -155)
+        edit.SetPoint(DebuffFrame, "TOPRIGHT", "UIParent", "TOPRIGHT", -25, -155)
         --ActionBars
-        editModeSetPoint(MultiBarRight, "BOTTOMRIGHT", "MinimapCluster", "TOPRIGHT", -5, -0)
-        editModeSetPoint(MultiBarLeft, "RIGHT", "MultiBarRight", "LEFT", -5, -0)
+        edit.SetPoint(MultiBarRight, "BOTTOMRIGHT", "MinimapCluster", "TOPRIGHT", -5, -0)
+        edit.SetPoint(MultiBarLeft, "RIGHT", "MultiBarRight", "LEFT", -5, -0)
         --GameTooltip
-        editModeSetPoint(GameTooltip, "BOTTOMRIGHT", "MinimapCluster", "BOTTOMLEFT", -9, 85)
+        edit.SetPoint(GameTooltip, "BOTTOMRIGHT", "MinimapCluster", "BOTTOMLEFT", -9, 85)
         --Boss Frames
-        if JadeUIDB["taintSafety"] > 0 then editModeSetPoint(BossTargetFrameContainer, "LEFT", "UIParent", "LEFT", 10, 0) end
-        if JadeUIDB["taintSafety"] > 1 then editModeSetPoint(ObjectiveTrackerFrame, "TOPRIGHT", "MultiBarLeft", "TOPLEFT", -5, 0) end
+        if JadeUIDB["taintSafety"] > 0 then edit.SetPoint(BossTargetFrameContainer, "LEFT", "UIParent", "LEFT", 10, 0) end
+        if JadeUIDB["taintSafety"] > 1 then edit.SetPoint(ObjectiveTrackerFrame, "TOPRIGHT", "MultiBarLeft", "TOPLEFT", -5, 0) end
 
         JadeUI.minimapTainted = true
 
     else
 
         if JadeUI.minimapTainted then --Specifically only do this if the minimap config is tainted
-            editModeSetDefault(layout, Enum.EditModeSystem.Minimap)
-            editModeSetDefault(layout, Enum.EditModeSystem.AuraFrame, 1)
-            editModeSetDefault(layout, Enum.EditModeSystem.AuraFrame, 2)
-            editModeSetDefault(layout, Enum.EditModeSystem.ActionBar, 4)
-            editModeSetDefault(layout, Enum.EditModeSystem.ActionBar, 5)
-            editModeSetDefault(layout, Enum.EditModeSystem.HudTooltip)
-            editModeSetDefault(layout, Enum.EditModeSystem.UnitFrame, 6)
-            editModeSetDefault(layout, Enum.EditModeSystem.ObjectiveTracker)
+            edit.SetDefault(layout, Enum.EditModeSystem.Minimap)
+            edit.SetDefault(layout, Enum.EditModeSystem.AuraFrame, 1)
+            edit.SetDefault(layout, Enum.EditModeSystem.AuraFrame, 2)
+            edit.SetDefault(layout, Enum.EditModeSystem.ActionBar, 4)
+            edit.SetDefault(layout, Enum.EditModeSystem.ActionBar, 5)
+            edit.SetDefault(layout, Enum.EditModeSystem.HudTooltip)
+            edit.SetDefault(layout, Enum.EditModeSystem.UnitFrame, 6)
+            edit.SetDefault(layout, Enum.EditModeSystem.ObjectiveTracker)
 
             JadeUI.minimapTainted = false
         end
@@ -259,59 +199,12 @@ end
 ----------------------------------
 -- Layout Activation
 ----------------------------------
-local function generateLayout(base, force)
-    force = force or false --Forcibly refresh the JadeUI layout
-
-    --Find the existing JadeUI layout if it exists
-    for _, layout in ipairs(base.layouts) do
-        if layout.layoutName == JadeUI.defaultLayout.layoutName and not force then --If it finds an existing JadeUI layout and reInit is not enabled
-            return layout, false
-        end
-    end
-
-    --Return the existing JadeUI layout if it exists, else return the default blank layout
-    return CopyTable(JadeUI.defaultLayout), true --This must be a copy or Unitframes can't be moved repeatedly as it gets polluted
-
-end
-
-
-local function updateLayout(base, addition)
-
-    local layoutOffset = 0
-    --Offset the base index to index 4, which is the first custom layout
-    if JadeUI.isForever then
-        layoutOffset = 3
-    end
-
-    -- Get index of JadeUI if it already exists
-    local targetIndex = nil
-    for index, layout in ipairs(base.layouts) do
-        if layout.layoutName == addition.layoutName then
-            targetIndex = index
-            break
-        end
-    end
-
-    --If JadeUI doesn't exist then update the table in the layout, else add it
-    if targetIndex then
-        base.layouts[targetIndex] = addition
-    else
-        table.insert(base.layouts, addition)
-        targetIndex = #base.layouts
-    end
-
-    JadeUI.layoutIndex = targetIndex+layoutOffset
-    return base
-
-end
-
-
 function JadeUI.SetJadeUILayout(forceInit)
     --Only switch to the JadeUI profile if the re-init button is pressed, or if the profile is being created
     forceInit = forceInit or false
 
     local baseLayout = C_EditMode.GetLayouts()
-    local jadeUILayout, initProfile = generateLayout(baseLayout, forceInit)
+    local jadeUILayout, initProfile = edit.GenerateLayout(baseLayout, forceInit)
 
     actionBars(jadeUILayout)
     stanceBar(jadeUILayout)
@@ -323,7 +216,7 @@ function JadeUI.SetJadeUILayout(forceInit)
     castBars(jadeUILayout)
     minimap(jadeUILayout)
 
-    C_EditMode.SaveLayouts(updateLayout(baseLayout, jadeUILayout))
+    C_EditMode.SaveLayouts(edit.UpdateLayout(baseLayout, jadeUILayout))
 
     --Set JadeUI to the active layout if re-initialised, or if already applied to fix bar backgrounds
     if initProfile or C_EditMode.GetLayouts().activeLayout == JadeUI.layoutIndex then

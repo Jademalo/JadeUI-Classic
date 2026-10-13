@@ -1,16 +1,6 @@
 local addonName, JadeUI = ...
 
---Dump the current edit mode layouts into a savedvariable
-JadeUIEditDB = JadeUIEditDB or {}
-function ExportToSavedVariables()
-    local layoutInfo = C_EditMode.GetLayouts()
-    if layoutInfo then
-        JadeUIEditDB = layoutInfo
-        print("Layout info saved! Type /reload to write to SavedVariables.")
-    end
-end
-
---Basic UI Layout, based on Modern. This is necessary because GetLayouts doesn't dump the default presets.
+--Basic UI Layout, based on Classic. This is necessary because GetLayouts doesn't dump the default presets.
 JadeUI.defaultLayout = {
     ["layoutName"] = "JadeUI",
     ["interfaceStyle"] = 0,

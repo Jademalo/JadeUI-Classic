@@ -163,3 +163,121 @@ function JadeUI.HideBlizzardFrame(frame)
     end)
     frame:SetShown(false)
 end
+
+
+--------------------------------------------
+--Edit Mode
+--------------------------------------------
+JadeUI.edit = {}
+local edit = JadeUI.edit
+
+--Get a specific entry within the edit mode systems, with index to differentiate between those which use the same enum
+function edit.GetSystem(layout, system, systemIndex)
+    for _, sys in ipairs(layout.systems) do
+        if sys.system == system then
+            if not systemIndex or sys.systemIndex == systemIndex then
+                return sys
+            end
+        end
+    end
+end
+
+--SetPoint equivalent to modify the anchor info of a given system
+function edit.SetPoint(system, point, relativeTo, relativePoint, offsetX, offsetY)
+    system.anchorInfo = {
+        ["relativeTo"] = relativeTo,
+        ["point"] = point,
+        ["relativePoint"] = relativePoint,
+        ["offsetY"] = offsetY,
+        ["offsetX"] = offsetX,
+    }
+    system.isInDefaultPosition = false
+end
+
+--Restore a given system to default
+function edit.SetDefault(layout, system, systemIndex)
+    local defaultLayout = CopyTable(JadeUI.defaultLayout)
+    local targetFrame = edit.GetSystem(layout, system, systemIndex)
+    local defaultFrame = edit.GetSystem(defaultLayout, system, systemIndex)
+
+    for key in pairs(targetFrame) do
+        targetFrame[key] = nil
+    end
+
+    for key, value in pairs(defaultFrame) do
+        targetFrame[key] = value
+    end
+end
+
+--Modify an option within a given system
+function edit.SetOption(system, id, value)
+    --Look for existing settings in the array
+    for _, entry in ipairs(system.settings) do
+        if entry.setting == id then
+            entry.value = value
+            return
+        end
+    end
+
+    --If setting not found, insert a new table to the array
+    table.insert(system.settings, {
+        ["setting"] = id,
+        ["value"] = value,
+    })
+end
+
+--Fetch the JadeUI Layout either from the game if it exists or from the default in Layout.lua
+function edit.GenerateLayout(base, force)
+    force = force or false --Forcibly refresh the JadeUI layout
+
+    --Find the existing JadeUI layout if it exists
+    for _, layout in ipairs(base.layouts) do
+        if layout.layoutName == JadeUI.defaultLayout.layoutName and not force then --If it finds an existing JadeUI layout and reInit is not enabled
+            return layout, false
+        end
+    end
+
+    --Return the existing JadeUI layout if it exists, else return the default blank layout
+    return CopyTable(JadeUI.defaultLayout), true --This must be a copy or Unitframes can't be moved repeatedly as it gets polluted
+end
+
+--Update the full layout table with the modifications
+function edit.UpdateLayout(base, addition)
+    local layoutOffset = 0
+    --Offset the base index to index 4, which is the first custom layout
+    if JadeUI.isForever then
+        layoutOffset = 3
+    elseif JadeUI.isClassic then
+        layoutOffset = 2
+    end
+
+    -- Get index of JadeUI if it already exists
+    local targetIndex = nil
+    for index, layout in ipairs(base.layouts) do
+        if layout.layoutName == addition.layoutName then
+            targetIndex = index
+            break
+        end
+    end
+
+    --If JadeUI doesn't exist then update the table in the layout, else add it
+    if targetIndex then
+        base.layouts[targetIndex] = addition
+    else
+        table.insert(base.layouts, addition)
+        targetIndex = #base.layouts
+    end
+
+    JadeUI.layoutIndex = targetIndex+layoutOffset
+    return base
+end
+
+--Dump the current edit mode layouts into a savedvariable
+function edit.ExportToSavedVariables()
+    JadeUIEditDB = {}
+    local layoutInfo = C_EditMode.GetLayouts()
+    if layoutInfo then
+        JadeUIEditDB = layoutInfo
+        print("Layout info saved! Type /reload to write to SavedVariables.")
+    end
+end
