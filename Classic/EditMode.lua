@@ -156,11 +156,11 @@ local function unitFrames(layout)
     if Settings.GetValue(addonName.."_moveUnitFrames") == true then
         --PlayerFrame
         local PlayerFrame = getSystem(layout, Enum.EditModeSystem.UnitFrame, 1)
-        editModeSetPoint(PlayerFrame, "BOTTOMRIGHT", "UIParent", "BOTTOM", -172, 209)
+        editModeSetPoint(PlayerFrame, "BOTTOMRIGHT", "UIParent", "BOTTOM", -145.75, 212.5)
 
         --TargetFrame
         local TargetFrame = getSystem(layout, Enum.EditModeSystem.UnitFrame, 2)
-        editModeSetPoint(TargetFrame, "BOTTOMLEFT", "UIParent", "BOTTOM", 172, 209)
+        editModeSetPoint(TargetFrame, "BOTTOMLEFT", "UIParent", "BOTTOM", 145, 212.5)
 
         --FocusFrame
         local FocusFrame = getSystem(layout, Enum.EditModeSystem.UnitFrame, 3)
