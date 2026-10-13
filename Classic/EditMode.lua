@@ -174,36 +174,9 @@ local function unitFrames(layout)
 end
 
 local function castBars(layout)
-    local visibility = 1 --0: Always Visible, 1: In Combat, 2: Hidden
-    local width = 100
-    local height = 5
-    local SwingTimerMainHandFrame = getSystem(layout, Enum.EditModeSystem.SwingTimer, 1)
-    local SwingTimerOffHandFrame = getSystem(layout, Enum.EditModeSystem.SwingTimer, 2)
-    local SwingTimerRangedFrame = getSystem(layout, Enum.EditModeSystem.SwingTimer, 3)
     local PlayerCastingBarFrame = getSystem(layout, Enum.EditModeSystem.CastBar)
-
     --Cast Bar
-    if JadeUIDB["taintSafety"] > 1 then editModeSetPoint(PlayerCastingBarFrame, "BOTTOM", "MultiBarBottomLeft", "TOP", 0, 120) end
-    setEditModeSetting(PlayerCastingBarFrame, 2, visibility) --Visibility
-
---[[     --SwingTimerMainHandFrame
-    if JadeUIDB["taintSafety"] > 1 then editModeSetPoint(SwingTimerMainHandFrame, "TOP", "PlayerCastingBarFrame", "BOTTOM", 0, -20) end
-    setEditModeSetting(SwingTimerMainHandFrame, 2, visibility) --Visibility
-    setEditModeSetting(SwingTimerMainHandFrame, 3, width) --Width
-    setEditModeSetting(SwingTimerMainHandFrame, 4, height) --Height
-
-    --SwingTimerOffHandFrame
-    if JadeUIDB["taintSafety"] > 1 then editModeSetPoint(SwingTimerOffHandFrame, "TOP", "SwingTimerMainHandFrame", "BOTTOM", 0, 0) end
-    setEditModeSetting(SwingTimerOffHandFrame, 2, visibility) --Visibility
-    setEditModeSetting(SwingTimerOffHandFrame, 3, width) --Width
-    setEditModeSetting(SwingTimerOffHandFrame, 4, 0) --Height
-
-    --SwingTimerRangedFrame
-    if JadeUIDB["taintSafety"] > 1 then editModeSetPoint(SwingTimerRangedFrame, "TOP", "SwingTimerOffHandFrame", "BOTTOM", 0, 0) end
-    setEditModeSetting(SwingTimerRangedFrame, 2, visibility) --Visibility
-    setEditModeSetting(SwingTimerRangedFrame, 3, width) --Width
-    setEditModeSetting(SwingTimerRangedFrame, 4, height) --Height ]]
-
+    if JadeUIDB["taintSafety"] > 1 then editModeSetPoint(PlayerCastingBarFrame, "BOTTOM", "MultiBarBottomLeft", "TOP", 0, 117) end
 end
 
 local function minimap(layout)
