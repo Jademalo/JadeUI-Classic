@@ -1,4 +1,4 @@
-package-as: JadeUI-Classic
+package-as: JadeUI
 
 ignore:
     - README.md
@@ -6,4 +6,4 @@ ignore:
     - WeakAura
 
 move-folders:
-    JadeUI-Classic/Media/background/G13Classic: JadeUI-Classic/Media
+    JadeUI/Media/background/G13Classic: JadeUI/Media

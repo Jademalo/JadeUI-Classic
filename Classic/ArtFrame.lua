@@ -8,13 +8,13 @@ local addonName, JadeUI = ...
 --------------------------------------------
 --@debug@
 JadeUI.textures = {
-   g13MainBarTexture = "Interface/AddOns/JadeUI-Classic/Media/background/G13Classic/G13MainBar.tga",
-   g13MaxCoverTexture = "Interface/AddOns/JadeUI-Classic/Media/background/G13Classic/G13MaxCover.tga",
-   g13RepBarTexture = "Interface/AddOns/JadeUI-Classic/Media/background/G13Classic/G13RepBar.tga",
-   g13TopBarTexture = "Interface/AddOns/JadeUI-Classic/Media/background/G13Classic/G13TopBar.tga",
-   g13ExpBarTexture = "Interface/AddOns/JadeUI-Classic/Media/background/G13Classic/G13XPBar.tga",
-   petBarTexture = "Interface/AddOns/JadeUI-Classic/Media/background/G13Classic/PetBar.tga",
-   stanceBarTexture = "Interface/AddOns/JadeUI-Classic/Media/background/G13Classic/StanceBar/StanceBar1.tga",
+   g13MainBarTexture = "Interface/AddOns/JadeUI/Media/background/G13Classic/G13MainBar.tga",
+   g13MaxCoverTexture = "Interface/AddOns/JadeUI/Media/background/G13Classic/G13MaxCover.tga",
+   g13RepBarTexture = "Interface/AddOns/JadeUI/Media/background/G13Classic/G13RepBar.tga",
+   g13TopBarTexture = "Interface/AddOns/JadeUI/Media/background/G13Classic/G13TopBar.tga",
+   g13ExpBarTexture = "Interface/AddOns/JadeUI/Media/background/G13Classic/G13XPBar.tga",
+   petBarTexture = "Interface/AddOns/JadeUI/Media/background/G13Classic/PetBar.tga",
+   stanceBarTexture = "Interface/AddOns/JadeUI/Media/background/G13Classic/StanceBar/StanceBar1.tga",
    endCapGryphonTexture = "Interface/MAINMENUBAR/UI-MainMenuBar-EndCap-Dwarf",
    endCapLionTexture = "Interface/MAINMENUBAR/UI-MainMenuBar-EndCap-Human"
 }
@@ -22,12 +22,12 @@ JadeUI.textures = {
 
 --[===[@non-debug@
 JadeUI.textures = {
-   g13MainBarTexture = "Interface/AddOns/JadeUI-Classic/Media/G13MainBar.tga",
-   g13MaxCoverTexture = "Interface/AddOns/JadeUI-Classic/Media/G13MaxCover.tga",
-   g13RepBarTexture = "Interface/AddOns/JadeUI-Classic/Media/G13RepBar.tga",
-   g13TopBarTexture = "Interface/AddOns/JadeUI-Classic/Media/G13TopBar.tga",
-   g13ExpBarTexture = "Interface/AddOns/JadeUI-Classic/Media/G13XPBar.tga",
-   petBarTexture = "Interface/AddOns/JadeUI-Classic/Media/PetBar.tga",
+   g13MainBarTexture = "Interface/AddOns/JadeUI/Media/G13MainBar.tga",
+   g13MaxCoverTexture = "Interface/AddOns/JadeUI/Media/G13MaxCover.tga",
+   g13RepBarTexture = "Interface/AddOns/JadeUI/Media/G13RepBar.tga",
+   g13TopBarTexture = "Interface/AddOns/JadeUI/Media/G13TopBar.tga",
+   g13ExpBarTexture = "Interface/AddOns/JadeUI/Media/G13XPBar.tga",
+   petBarTexture = "Interface/AddOns/JadeUI/Media/PetBar.tga",
    endCapGryphonTexture = "Interface/MAINMENUBAR/UI-MainMenuBar-EndCap-Dwarf",
    endCapLionTexture = "Interface/MAINMENUBAR/UI-MainMenuBar-EndCap-Human"
 }

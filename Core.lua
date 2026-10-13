@@ -14,12 +14,11 @@ JadeUIBar = CreateFrame("Frame", "JadeUIMainFrame", UIParent)
 --Core Functions
 --------------------------------------------------------------------------------
 local function startupPrint() --Startup message
-    print ("~JadeUI~")
     if JadeUI.isClassic then
-        print("Classic WoW Detected")
+        print("~JadeUI Classic~")
     end
     if JadeUI.isForever then
-        print("WoW Forever Detected")
+        print("~JadeUI Forever~")
     end
 end
 

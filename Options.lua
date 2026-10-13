@@ -224,7 +224,7 @@ optionsPanel:SetScript("OnEvent", function(self, event, arg1, arg2)
         JadeUIDB = JadeUIDB or {}
 
         --Register the Options Panel in the AddOn Menu
-        local category, layout = Settings.RegisterVerticalLayoutCategory("JadeUI Classic")
+        local category, layout = Settings.RegisterVerticalLayoutCategory(addonName)
         Settings.RegisterAddOnCategory(category)
 
         --Add Items

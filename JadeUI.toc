@@ -1,6 +1,8 @@
 ## Interface: 11509, 16001
 
-## Title: JadeUI Classic
+## Title: JadeUI
+## Title: JadeUI Classic [AllowLoadGameType classic]
+## Title: JadeUI Forever [AllowLoadGameType camelot][ExcludeLoadGameType classic]
 ## Notes: A Redesigned Blizzard interface for use with a Logitech G13
 ## IconTexture: 134134
 
