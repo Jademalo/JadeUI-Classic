@@ -83,7 +83,7 @@ local function hideKeybindsCheckbox(category)
     local variable = "hideKeybinds"
     local name = "Hide Keybinds"
     local description = "Hides keybinds on action bars\nReload required to disable"
-    local defaultValue = true
+    local defaultValue = false
 
     local setting = Settings.RegisterAddOnSetting(category, addonName.."_"..variable, variable, JadeUIDB, type(defaultValue), name, defaultValue)
     Settings.CreateCheckbox(category, setting, description)

@@ -44,6 +44,10 @@ JadeUIBar:SetScript("OnEvent", function(self, event, arg1, arg2)
             JadeUI.SetScale()
         end
 
+        if JadeUIDB.hideKeybinds then
+            JadeUI.HideKeybinds()
+        end
+
         --Create Main JadeUI Frame
         JadeUIBar:SetFrameStrata("MEDIUM")
         JadeUIBar:SetSize(790, 209)
