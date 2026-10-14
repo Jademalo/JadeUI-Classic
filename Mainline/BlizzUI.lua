@@ -32,7 +32,7 @@ function UpdateDividers(self)
 	local wasLastButtonShown = false;
 	for i, actionButton in pairs(self.actionButtons) do
 		if actionButton:IsShown() then
-			if wasLastButtonShown and (actionButton ~= _G["MultiBarBottomRightButton"..math.ceil(self.numButtonsShowable/self.numRows)+1]) then --Specifically don't draw the divider if the next button is on the second level
+			if wasLastButtonShown and (actionButton ~= _G["MultiBarBottomRightButton"..math.ceil(self.numButtonsShowable/self.numRows)+1]) and (actionButton ~= _G["MultiBarBottomLeftButton"..math.ceil(self.numButtonsShowable/self.numRows)+1]) then --Specifically don't draw the divider if the next button is on the second level
                 local divider = dividersPool:Acquire();
 				divider:ClearAllPoints();
 				if self.isHorizontal then
