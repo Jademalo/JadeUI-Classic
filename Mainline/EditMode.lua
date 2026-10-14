@@ -5,31 +5,59 @@ local edit = JadeUI.edit
 -- Layout Modification
 ----------------------------------
 local function actionBars(layout)
-    --MainActionBar
     local MainActionBar = edit.GetSystem(layout, Enum.EditModeSystem.ActionBar, 1)
-    edit.SetOption(MainActionBar, 2, 7) --# of Icons
-    edit.SetOption(MainActionBar, 8, 1) --Hide bar scrolling
-    edit.SetPoint(MainActionBar, "BOTTOM", "UIParent", "BOTTOM", 0, 98)
-    --LeftEndCap
     local LeftEndCap = edit.GetSystem(layout, Enum.EditModeSystem.MainActionBarEndCap, 1)
-    edit.SetPoint(LeftEndCap, "BOTTOMRIGHT", "MicroMenu", "BOTTOMLEFT", 28.25, -7)
-
-    --MultiBarBottomLeft
     local MultiBarBottomLeft = edit.GetSystem(layout, Enum.EditModeSystem.ActionBar, 2)
-    edit.SetOption(MultiBarBottomLeft, 2, 7) --# of Icons
-    edit.SetOption(MultiBarBottomLeft, 6, 0) --Add Hide Bar Art and set false
-    edit.SetPoint(MultiBarBottomLeft, "BOTTOM", "MainActionBar", "TOP", 0, 3)
-
-    --MultiBarBottomRight
     local MultiBarBottomRight = edit.GetSystem(layout, Enum.EditModeSystem.ActionBar, 3)
-    edit.SetOption(MultiBarBottomRight, 1, 2) --# of Rows
-    edit.SetOption(MultiBarBottomRight, 2, 10) --# of Icons
-    edit.SetOption(MultiBarBottomRight, 6, 0) --Add Hide Bar Art and set false
-    edit.SetPoint(MultiBarBottomRight, "TOP", "MainActionBar", "BOTTOM", 0, -3)
+    local PetActionBar = edit.GetSystem(layout, Enum.EditModeSystem.ActionBar, 12)
+    local PossessActionBar = edit.GetSystem(layout, Enum.EditModeSystem.ActionBar, 13)
+    local MultiCastActionBarFrame = edit.GetSystem(layout, Enum.EditModeSystem.TotemActionBar)
+
+    if JadeUIDB["gameboardType"] == 0 then
+
+        --MainActionBar
+        edit.SetOption(MainActionBar, 2, 7) --# of Icons
+        edit.SetOption(MainActionBar, 8, 1) --Hide bar scrolling
+        edit.SetPoint(MainActionBar, "BOTTOM", "UIParent", "BOTTOM", 0, 98)
+
+        --MultiBarBottomLeft
+        edit.SetOption(MultiBarBottomLeft, 1, 1) --# of Rows
+        edit.SetOption(MultiBarBottomLeft, 2, 7) --# of Icons
+        edit.SetOption(MultiBarBottomLeft, 6, 0) --Add Hide Bar Art and set false
+        edit.SetPoint(MultiBarBottomLeft, "BOTTOM", "MainActionBar", "TOP", 0, 3)
+
+        --MultiBarBottomRight
+        edit.SetOption(MultiBarBottomRight, 1, 2) --# of Rows
+        edit.SetOption(MultiBarBottomRight, 2, 10) --# of Icons
+        edit.SetOption(MultiBarBottomRight, 6, 0) --Add Hide Bar Art and set false
+        edit.SetPoint(MultiBarBottomRight, "TOP", "MainActionBar", "BOTTOM", 0, -3)
+
+    elseif JadeUIDB["gameboardType"] == 1 then
+
+        --MainActionBar
+        edit.SetOption(MainActionBar, 2, 6) --# of Icons
+        edit.SetOption(MainActionBar, 8, 1) --Hide bar scrolling
+        edit.SetPoint(MainActionBar, "BOTTOM", "UIParent", "BOTTOM", 23.5, 98)
+
+        --MultiBarBottomLeft
+        edit.SetOption(MultiBarBottomLeft, 1, 2) --# of Rows
+        edit.SetOption(MultiBarBottomLeft, 2, 12) --# of Icons
+        edit.SetOption(MultiBarBottomLeft, 6, 0) --Add Hide Bar Art and set false
+        edit.SetPoint(MultiBarBottomLeft, "BOTTOM", "MainActionBar", "TOP", 0, 3)
+
+        --MultiBarBottomRight
+        edit.SetOption(MultiBarBottomRight, 1, 2) --# of Rows
+        edit.SetOption(MultiBarBottomRight, 2, 10) --# of Icons
+        edit.SetOption(MultiBarBottomRight, 6, 0) --Add Hide Bar Art and set false
+        edit.SetPoint(MultiBarBottomRight, "TOPLEFT", "MainActionBar", "BOTTOMLEFT", 0, -3)
+
+    end
+
+    --LeftEndCap
+    edit.SetPoint(LeftEndCap, "BOTTOMRIGHT", "MicroMenu", "BOTTOMLEFT", 28.25, -7)
 
     --Stance Bar, Pet Bar, and Possess Bar all stack when default above MainActionBar
     --PetActionBar
-    local PetActionBar = edit.GetSystem(layout, Enum.EditModeSystem.ActionBar, 12)
     edit.SetOption(PetActionBar, 3, 4) --Icon size
     --Position without Bar Art
     edit.SetPoint(PetActionBar, "BOTTOM", "MultiBarBottomLeft", "TOP", -1, 5)
@@ -39,13 +67,12 @@ local function actionBars(layout)
     --edit.SetOption(PetActionBar, 9, 1) --Always show buttons
 
     --PossessActionBar
-    local PossessActionBar = edit.GetSystem(layout, Enum.EditModeSystem.ActionBar, 13)
     edit.SetPoint(PossessActionBar, "BOTTOM", "MultiBarBottomLeft", "TOP", 0, 8)
     edit.SetOption(PossessActionBar, 6, 0) --Add Hide Bar Art and set false
 
     --MultiCastActionBarFrame
-    local MultiCastActionBarFrame = edit.GetSystem(layout, Enum.EditModeSystem.TotemActionBar)
     edit.SetPoint(MultiCastActionBarFrame, "BOTTOM", "MultiBarBottomLeft", "TOP", 0, 8)
+
 end
 
 local function stanceBar(layout)
@@ -62,7 +89,11 @@ end
 local function microMenu(layout)
     --MicroMenu
     local MicroMenu = edit.GetSystem(layout, Enum.EditModeSystem.MicroMenu)
-    edit.SetPoint(MicroMenu, "BOTTOMRIGHT", "MultiBarBottomRight", "BOTTOMLEFT", 38.5, 2)
+    if JadeUIDB["gameboardType"] == 0 then
+        edit.SetPoint(MicroMenu, "BOTTOMRIGHT", "MultiBarBottomRight", "BOTTOMLEFT", 38.5, 2)
+    elseif JadeUIDB["gameboardType"] == 1 then
+        edit.SetPoint(MicroMenu, "BOTTOMRIGHT", "MultiBarBottomRight", "BOTTOMLEFT", -6, 2)
+    end
 end
 
 local function bagsBar(layout)
@@ -82,16 +113,30 @@ local function durabilityFrame(layout)
 end
 
 local function statusBars(layout)
-    --STATUS_BAR_MANAGER_WIDTH = 772 --Override the base variable for status bar width - https://github.com/Gethe/wow-ui-source/blob/e3ecc27b64d30fdc735a3f6579b866858f9f9df1/Interface/AddOns/Blizzard_StatusTrackingBar/Shared/StatusTrackingManager.lua#L6
-    --MainStatusTrackingBarContainer
     local MainStatusTrackingBarContainer = edit.GetSystem(layout, Enum.EditModeSystem.StatusTrackingBar, 1)
-    edit.SetOption(MainStatusTrackingBarContainer, 3, 3) --Width
-    edit.SetPoint(MainStatusTrackingBarContainer, "BOTTOMLEFT", "MicroMenu", "TOPLEFT", -3, 6)
-
-    --SecondaryStatusTrackingBarContainer
     local SecondaryStatusTrackingBarContainer = edit.GetSystem(layout, Enum.EditModeSystem.StatusTrackingBar, 2)
-    edit.SetOption(SecondaryStatusTrackingBarContainer, 3, 3) --Width
-    edit.SetPoint(SecondaryStatusTrackingBarContainer, "BOTTOMLEFT", "MainStatusTrackingBarContainer", "TOPLEFT", 0, -1)
+
+    if JadeUIDB["gameboardType"] == 0 then
+        --STATUS_BAR_MANAGER_WIDTH = 772 --Override the base variable for status bar width - https://github.com/Gethe/wow-ui-source/blob/e3ecc27b64d30fdc735a3f6579b866858f9f9df1/Interface/AddOns/Blizzard_StatusTrackingBar/Shared/StatusTrackingManager.lua#L6
+
+        --MainStatusTrackingBarContainer
+        edit.SetOption(MainStatusTrackingBarContainer, 3, 3) --Width
+        edit.SetPoint(MainStatusTrackingBarContainer, "BOTTOMLEFT", "MicroMenu", "TOPLEFT", -3, 6)
+
+        --SecondaryStatusTrackingBarContainer
+        edit.SetOption(SecondaryStatusTrackingBarContainer, 3, 3) --Width
+        edit.SetPoint(SecondaryStatusTrackingBarContainer, "BOTTOMLEFT", "MainStatusTrackingBarContainer", "TOPLEFT", 0, -1)
+
+    elseif JadeUIDB["gameboardType"] == 1 then
+        --MainStatusTrackingBarContainer
+        edit.SetOption(MainStatusTrackingBarContainer, 3, 4) --Width
+        edit.SetPoint(MainStatusTrackingBarContainer, "BOTTOM", "MultiBarBottomRight", "CENTER", -18, 2)
+
+        --SecondaryStatusTrackingBarContainer
+        edit.SetOption(SecondaryStatusTrackingBarContainer, 3, 4) --Width
+        edit.SetPoint(SecondaryStatusTrackingBarContainer, "BOTTOM", "MainStatusTrackingBarContainer", "TOP", 0, -1)
+    end
+
 end
 
 local function unitFrames(layout)

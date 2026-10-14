@@ -1,7 +1,7 @@
 # JadeUI
-This is a UI modification designed around the key layout of the Logitech G13, with the goal of keeping as close to the feel and look of the vanilla UI as possible while implementing a few changes to suit more modern sensibilities.
+This is a UI modification primarily designed around the key layout of the Logitech G13, with the goal of keeping as close to the feel and look of the vanilla UI as possible while implementing a few changes to suit more modern sensibilities.
 
-It has support for both Classic Era and Forever, with the same general concepts but unique art for each.
+It has support for both Classic Era and Forever, with the same general concepts but unique art for each. Forever also has support for the Razer Tartarus V2 Pro.
 
 There are a variety of options, such as selecting the end cap artwork and moving things such as the Unitframes or the Map into more preferable places.
 

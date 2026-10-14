@@ -214,6 +214,28 @@ local function taintSafetyDropDown(category)
 
 end
 
+local function gameboardDropDown(category)
+
+    local variable = "gameboardType"
+    local name = "Select Gameboard"
+    local description = "Select the gameboard you are using for bar configuration"
+    local defaultValue = 0
+
+    local setting = Settings.RegisterAddOnSetting(category, addonName.."_"..variable, variable, JadeUIDB, type(defaultValue), name, defaultValue)
+    local function GetOptions()
+        local container = Settings.CreateControlTextContainer()
+        container:Add(0, "G13", "Logitech G13 Advanced Gameboard")
+        container:Add(1, "Tartarus V2 Pro", "Razer Tartarus V2 Pro")
+        return container:GetData()
+    end
+    Settings.CreateDropdown(category, setting, GetOptions, description)
+
+    Settings.GetSetting(addonName.."_"..variable):SetValueChangedCallback(function()
+        JadeUI.SetJadeUILayout()
+    end)
+
+end
+
 --------------------------------------------------------------------------------
 --Event Handler
 --------------------------------------------------------------------------------
@@ -228,6 +250,7 @@ optionsPanel:SetScript("OnEvent", function(self, event, arg1, arg2)
         Settings.RegisterAddOnCategory(category)
 
         --Add Items
+        if JadeUI.isForever then gameboardDropDown(category) end
         editModeInitButton(layout)
         if JadeUI.isClassic then talentCheckbox(category) end
         unitFramesCheckbox(category)
