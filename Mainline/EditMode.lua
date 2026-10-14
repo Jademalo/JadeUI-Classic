@@ -37,7 +37,7 @@ local function actionBars(layout)
         --MainActionBar
         edit.SetOption(MainActionBar, 2, 6) --# of Icons
         edit.SetOption(MainActionBar, 8, 1) --Hide bar scrolling
-        edit.SetPoint(MainActionBar, "BOTTOM", "UIParent", "BOTTOM", 23.5, 98)
+        edit.SetPoint(MainActionBar, "BOTTOM", "UIParent", "BOTTOM", 0, 98) --23.5 to offset so buttons are in the middle
 
         --MultiBarBottomLeft
         edit.SetOption(MultiBarBottomLeft, 1, 2) --# of Rows
