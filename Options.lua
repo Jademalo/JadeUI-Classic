@@ -236,6 +236,22 @@ local function gameboardDropDown(category)
 
 end
 
+local function classicPetFrameCheckbox(category)
+
+    local variable = "classicPetFrame"
+    local name = "Classic Pet Frame"
+    local description = "Move the pet frame to be in the same position as it was in Classic"
+    local defaultValue = false
+
+    local setting = Settings.RegisterAddOnSetting(category, addonName.."_"..variable, variable, JadeUIDB, type(defaultValue), name, defaultValue)
+    Settings.CreateCheckbox(category, setting, description)
+
+    Settings.GetSetting(addonName.."_"..variable):SetValueChangedCallback(function()
+            JadeUI.SetJadeUILayout()
+    end)
+
+end
+
 --------------------------------------------------------------------------------
 --Event Handler
 --------------------------------------------------------------------------------
@@ -254,6 +270,7 @@ optionsPanel:SetScript("OnEvent", function(self, event, arg1, arg2)
         editModeInitButton(layout)
         if JadeUI.isClassic then talentCheckbox(category) end
         unitFramesCheckbox(category)
+        if JadeUI.isForever then classicPetFrameCheckbox(category) end
         minimapCheckbox(category)
         offsetStanceBarCheckbox(category)
         if JadeUI.isClassic then minimapScaleSlider(category) end

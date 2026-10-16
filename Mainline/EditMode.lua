@@ -145,6 +145,14 @@ local function unitFrames(layout)
         local PlayerFrame = edit.GetSystem(layout, Enum.EditModeSystem.UnitFrame, 1)
         edit.SetPoint(PlayerFrame, "BOTTOMRIGHT", "MultiBarBottomLeft", "TOP", -160, 39)
 
+        --PetFrame
+        local PlayerFrame = edit.GetSystem(layout, Enum.EditModeSystem.UnitFrame, 8)
+        if JadeUIDB["classicPetFrame"] then
+            edit.SetPoint(PlayerFrame, "TOP", "PlayerBottomManagedFrameContainer", "TOP", -27, 6.5)
+        else
+            edit.SetDefault(layout, Enum.EditModeSystem.UnitFrame, 8)
+        end
+
         --TargetFrame
         local TargetFrame = edit.GetSystem(layout, Enum.EditModeSystem.UnitFrame, 2)
         edit.SetPoint(TargetFrame, "BOTTOMLEFT", "MultiBarBottomLeft", "TOP", 160, 39)
