@@ -154,13 +154,36 @@ function JadeUI.OffsetBlizzardFrame(frame, setOffsetX, setOffsetY, setRelativeTo
 end
 
 --Forcibly hide a frame by hooking Show and forcing it to hide whenever it tries
-function JadeUI.HideBlizzardFrame(frame)
-    hooksecurefunc(frame,"SetShown", function(self, shown)
+function JadeUI.HideBlizzardFrame(frame, savedVar)
+
+    hooksecurefunc(frame, "SetShown", function(self, shown)
         if InCombatLockdown() and JadeUIDB["taintSafety"] > 1 then return end --Don't fire during combat if in taintSafety 2
+        if savedVar then
+            if not JadeUIDB[savedVar] then return end
+        end
+
         if shown then
+            --This is guarded to prevent it firing on itself. False ignores it, true sets false and then ignores next run
             frame:SetShown(false)
         end
+
     end)
+
+    hooksecurefunc(frame, "Show", function(self)
+        if InCombatLockdown() and JadeUIDB["taintSafety"] > 1 then return end --Don't fire during combat if in taintSafety 2
+        if savedVar then
+            if not JadeUIDB[savedVar] then return end
+        end
+
+        frame:SetShown(false)
+
+    end)
+
+    --Guard to prevent false being sent if there's a savedVar and it's disabled
+    if savedVar then
+        if not JadeUIDB[savedVar] then return end
+    end
+
     frame:SetShown(false)
 end
 

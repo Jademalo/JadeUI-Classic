@@ -112,7 +112,9 @@ function JadeUI.SetupHooksForLayout()
 
         if JadeUIDB["taintSafety"] < 1 then --Only on taintSafety 0
             --These have errors with taintLog 1, otherwise work fine unless you try to drag a button in combat
-            JadeUI.HideBlizzardFrame(MultiBarBottomRightButtonContainer1)
+            if JadeUIDB["gameboardType"] == 0 then
+                JadeUI.HideBlizzardFrame(MultiBarBottomRightButtonContainer1)
+            end
             JadeUI.HideBlizzardFrame(MultiBarBottomRightButtonContainer5)
         end
 
@@ -128,6 +130,8 @@ function JadeUI.SetupHooksForLayout()
 
         JadeUI.OffsetBlizzardFrame(ContainerFrameCombinedBags, bagOffset, 0, nil, "moveMinimap")
         containerOffset()
+
+        JadeUI.HideBlizzardFrame(StoreMicroButton, "hideShop")
 
         JadeUI.setupHooks = true
     end

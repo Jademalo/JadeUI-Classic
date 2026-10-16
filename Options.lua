@@ -173,7 +173,7 @@ local function offsetStanceBarCheckbox(category)
     Settings.CreateCheckbox(category, setting, description)
 
     Settings.GetSetting(addonName.."_"..variable):SetValueChangedCallback(function()
-            JadeUI.SetJadeUILayout()
+        JadeUI.SetJadeUILayout()
     end)
 
 end
@@ -247,7 +247,23 @@ local function classicPetFrameCheckbox(category)
     Settings.CreateCheckbox(category, setting, description)
 
     Settings.GetSetting(addonName.."_"..variable):SetValueChangedCallback(function()
-            JadeUI.SetJadeUILayout()
+        JadeUI.SetJadeUILayout()
+    end)
+
+end
+
+local function hideShopCheckbox(category)
+
+    local variable = "hideShop"
+    local name = "Hide Shop"
+    local description = "Hide the shop button in the Micro menu"
+    local defaultValue = false
+
+    local setting = Settings.RegisterAddOnSetting(category, addonName.."_"..variable, variable, JadeUIDB, type(defaultValue), name, defaultValue)
+    Settings.CreateCheckbox(category, setting, description)
+
+    Settings.GetSetting(addonName.."_"..variable):SetValueChangedCallback(function()
+        StoreMicroButton:SetShown(true) --Hook has to be true since we're relying on the logic to decide whether to hide or not
     end)
 
 end
@@ -275,6 +291,7 @@ optionsPanel:SetScript("OnEvent", function(self, event, arg1, arg2)
         offsetStanceBarCheckbox(category)
         if JadeUI.isClassic then minimapScaleSlider(category) end
         if JadeUI.isClassic then endstopDropDown(category) end
+        if JadeUI.isForever then hideShopCheckbox(category) end
         hideKeybindsCheckbox(category)
         uiScaleCheckbox(category)
         --@debug@
