@@ -264,6 +264,7 @@ local function hideShopCheckbox(category)
 
     Settings.GetSetting(addonName.."_"..variable):SetValueChangedCallback(function()
         StoreMicroButton:SetShown(true) --Hook has to be true since we're relying on the logic to decide whether to hide or not
+        JadeUI.SetJadeUILayout()
     end)
 
 end

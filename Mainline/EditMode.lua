@@ -115,27 +115,26 @@ end
 local function statusBars(layout)
     local MainStatusTrackingBarContainer = edit.GetSystem(layout, Enum.EditModeSystem.StatusTrackingBar, 1)
     local SecondaryStatusTrackingBarContainer = edit.GetSystem(layout, Enum.EditModeSystem.StatusTrackingBar, 2)
+    local x = 4.5
+    local width = 3
+    --STATUS_BAR_MANAGER_WIDTH = 772 --Override the base variable for status bar width - https://github.com/Gethe/wow-ui-source/blob/e3ecc27b64d30fdc735a3f6579b866858f9f9df1/Interface/AddOns/Blizzard_StatusTrackingBar/Shared/StatusTrackingManager.lua#L6
 
-    if JadeUIDB["gameboardType"] == 0 then
-        --STATUS_BAR_MANAGER_WIDTH = 772 --Override the base variable for status bar width - https://github.com/Gethe/wow-ui-source/blob/e3ecc27b64d30fdc735a3f6579b866858f9f9df1/Interface/AddOns/Blizzard_StatusTrackingBar/Shared/StatusTrackingManager.lua#L6
-
-        --MainStatusTrackingBarContainer
-        edit.SetOption(MainStatusTrackingBarContainer, 3, 3) --Width
-        edit.SetPoint(MainStatusTrackingBarContainer, "BOTTOMLEFT", "MicroMenu", "TOPLEFT", -3, 6)
-
-        --SecondaryStatusTrackingBarContainer
-        edit.SetOption(SecondaryStatusTrackingBarContainer, 3, 3) --Width
-        edit.SetPoint(SecondaryStatusTrackingBarContainer, "BOTTOMLEFT", "MainStatusTrackingBarContainer", "TOPLEFT", 0, -1)
-
-    elseif JadeUIDB["gameboardType"] == 1 then
-        --MainStatusTrackingBarContainer
-        edit.SetOption(MainStatusTrackingBarContainer, 3, 4) --Width
-        edit.SetPoint(MainStatusTrackingBarContainer, "BOTTOM", "MultiBarBottomRight", "CENTER", -18, 2)
-
-        --SecondaryStatusTrackingBarContainer
-        edit.SetOption(SecondaryStatusTrackingBarContainer, 3, 4) --Width
-        edit.SetPoint(SecondaryStatusTrackingBarContainer, "BOTTOM", "MainStatusTrackingBarContainer", "TOP", 0, -1)
+    if JadeUIDB["gameboardType"] == 1 then
+        x = -18
+        width = 4
     end
+
+    if JadeUIDB["hideShop"] then
+        x = x + 13.5
+    end
+
+    --MainStatusTrackingBarContainer
+    edit.SetOption(MainStatusTrackingBarContainer, 3, width) --Width
+    edit.SetPoint(MainStatusTrackingBarContainer, "BOTTOM", "MultiBarBottomRight", "CENTER", x, 2)
+
+    --SecondaryStatusTrackingBarContainer
+    edit.SetOption(SecondaryStatusTrackingBarContainer, 3, width) --Width
+    edit.SetPoint(SecondaryStatusTrackingBarContainer, "BOTTOM", "MainStatusTrackingBarContainer", "TOP", 0, -1)
 
 end
 
